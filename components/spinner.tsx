@@ -2,11 +2,12 @@ import SpinnerPart from './spinner-part'
 
 export default function Spinner() {
     const range = (len: number) => Array.from({ length: len }, (_, i) => i)
+    const n = 10;
     return (
         <div className="spinner">
             <div className="background">
-                {range(5).map((i) => (
-                    <SpinnerPart key={i} color={{h: 200, s: 80, l: 50 + 8*i}} delay={-0.1*i}/>
+                {range(n).map((i) => (
+                    <SpinnerPart key={i} color={{h: 200, s: 80, l: 40 + (50/n)*i}} delay={-0.1-0.1*i}/>
                 ))}
             </div>
             <style jsx>{`

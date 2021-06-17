@@ -3,8 +3,9 @@ import ItemForm from '../components/item-form'
 import { getItemList } from '../lib/get-s3'
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-    //const itemList = await getItemList()
+    const itemList = await getItemList()
     
+    /*
     const itemList = [
         {category: '銅素材', item: '証'},
         {category: '銅素材', item: '骨'},
@@ -23,15 +24,20 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         {category: '金素材', item: '幼角'},
         {category: '金素材', item: '涙石'},
     ]
+    */
     return {
         props: {
             itemList
         }
     }
+    
 }
 
 export default function Form({itemList}: {itemList: {category: string, item: string}[]}) {
     return (
+        <main>
+        <h1>FGO周回ソルバー</h1>
         <ItemForm itemList={itemList}/>
+        </main>
     )
 }

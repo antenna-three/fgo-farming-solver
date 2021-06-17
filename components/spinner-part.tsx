@@ -22,7 +22,7 @@ export default function SpinnerPart({
                     0%, 40%, 100% {
                         background: hsl(${color.h}, ${color.s}%, ${color.l}%);
                     } 20% {
-                        background: hsl(${color.h}, ${color.s}%, ${(100 + color.l) / 2}%);
+                        background: hsl(${color.h}, ${color.s}%, ${20 + color.l}%);
                     }
                 }
             `}</style>

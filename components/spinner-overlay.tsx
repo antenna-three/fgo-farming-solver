@@ -24,6 +24,7 @@ export default function SpinnerOverlay() {
                     width: 100%;
                     height: 100%;
                     background: #0007;
+                    z-index: 1;
                 }
             `}</style>
         </div>

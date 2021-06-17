@@ -17,10 +17,28 @@ export default function Result({
     const questLaps = quest_laps
     const itemCounts = item_counts
     return (
-        <>
-        {Object.entries(questLaps).map(([quest, lap]) => (
-            <p>{quest}:{ }{lap}</p>
-        ))}
-        </>
+        <main>
+        <section>
+            <header>
+                <h1>計算結果</h1>
+            </header>
+            <table>
+                <thead>
+                    <tr>
+                        <th>クエスト名</th>
+                        <th>周回数</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {Object.entries(questLaps).map(([quest, lap]) => (
+                    <tr>
+                        <td>{quest}</td>
+                        <td>{lap}</td>
+                    </tr>
+                ))}
+                </tbody>
+            </table>
+            </section>
+        </main>
     )
 }
