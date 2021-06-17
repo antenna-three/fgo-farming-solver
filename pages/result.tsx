@@ -4,7 +4,7 @@ import { callApi } from "../lib/call-api";
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const query = context.query
     const result = await callApi(query)
-    return { props: result }
+    return { props: {...result, query} }
 }
 
 export default function Result({
