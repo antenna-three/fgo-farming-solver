@@ -50,7 +50,6 @@ export default function ItemForm({ itemList }: { itemList: {category: string, it
     )
     return (<>
         <form onSubmit={handleSubmit}>
-            <input type="checkbox" onChange={(e) => setIsWaiting(e.currentTarget.checked)}/>
             <ObjectiveFieldset inputValues={inputValues} handleObjectiveChange={handleObjectiveChange} />
             <div className="category-fieldsets">
                 {Object.entries(categoryGroups).map(( [largeCategory, categoryGroup] ) => (

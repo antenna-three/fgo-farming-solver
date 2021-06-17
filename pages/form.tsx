@@ -1,6 +1,6 @@
 import { GetStaticProps } from 'next'
 import ItemForm from '../components/item-form'
-import { getItemList } from '../lib/get-s3'
+import { getItemList } from '../lib/get-item-list'
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
     const itemList = await getItemList()

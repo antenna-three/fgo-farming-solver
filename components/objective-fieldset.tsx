@@ -9,7 +9,7 @@ export default function ObjectiveFieldset({
 ) {
     return (
         <fieldset>
-            <legend>最小化:</legend>
+            <legend>最小化</legend>
             {[['ap', '消費AP'], ['lap', '周回数']].map(([ objective, description]) => (
                 <label key={objective}>
                     <input
