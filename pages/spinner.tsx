@@ -1,7 +1,14 @@
-import SpinnerOverlay from '../components/spinner-overlay'
+import Spinner from '../components/spinner'
 
 export default function SpinnerPage() {
     return (
-        <SpinnerOverlay/>
+        <>
+        <Spinner/>
+        <style jsx>{`
+            h2 {
+                color: #333;
+            }
+        `}</style>
+        </>
     )
 }

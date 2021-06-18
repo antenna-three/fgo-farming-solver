@@ -12,6 +12,9 @@ export default function ItemInput({ itemName, handleChange }: { itemName: string
                     justify-content: space-around;
                     align-items: center;
                 }
+                label {
+                    text-align: right;
+                }
                 input {
                     flex-basis: 5rem;
                     width: 5rem;

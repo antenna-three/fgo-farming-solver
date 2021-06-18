@@ -17,7 +17,7 @@ export default function ItemForm({ itemList }: { itemList: {category: string, it
         event.preventDefault()
         setIsWaiting(true)
         router.push({
-            pathname: '/result',
+            pathname: '/res',
             query: inputValues
         })
     }
@@ -53,7 +53,7 @@ export default function ItemForm({ itemList }: { itemList: {category: string, it
             <ObjectiveFieldset inputValues={inputValues} handleObjectiveChange={handleObjectiveChange} />
             <div className="category-fieldsets">
                 {Object.entries(categoryGroups).map(( [largeCategory, categoryGroup] ) => (
-                    <details>
+                    <details key={largeCategory}>
                         <summary>{largeCategory}</summary>
                         <div className="item-fieldsets">
                             {categoryGroup.map(([category, items]) => (

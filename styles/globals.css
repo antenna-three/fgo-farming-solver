@@ -4,6 +4,7 @@ body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  color: #333;
 }
 
 a {
@@ -17,15 +18,19 @@ a {
 
 fieldset {
   margin: 1rem;
-  padding: 1.25rem;
+  padding: 1.25rem 0;
   flex-grow: 1;
-  border: 1px solid var(--color-bg-secondary);
-  border-radius: var(--border-radius);
-  box-shadow: var(--box-shadow) var(--color-shadow);
+  border: none;
 }
+
 legend {
+  width: 100%;
+  padding: .3rem 0;
+  margin-bottom: .3em;
+  border-bottom: 1px solid #ccc;
   font-weight: bold;
 }
-label {
+
+fieldset label {
     font-weight: normal;
 }
