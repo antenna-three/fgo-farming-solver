@@ -7,13 +7,31 @@ body {
   color: #333;
 }
 
+  /*
 a {
   color: inherit;
   text-decoration: none;
 }
+  */
 
 * {
   box-sizing: border-box;
+}
+
+header {
+  padding-bottom: 0;
+}
+
+nav {
+  margin-bottom: 0;
+}
+
+.nav {
+  display: flex;
+}
+
+.nav > h1 {
+  margin-left: 1rem;
 }
 
 fieldset {

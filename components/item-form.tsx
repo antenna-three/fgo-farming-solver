@@ -63,7 +63,7 @@ export default function ItemForm({ itemList }: { itemList: {category: string, it
                     </details>
                 ))}
             </div>
-            <button type="submit">Solve</button>
+            <button type="submit">計算</button>
             <style jsx>{`
                 .item-fieldsets {
                     display: flex;

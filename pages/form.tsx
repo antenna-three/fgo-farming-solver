@@ -16,32 +16,26 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
 export default function Form({itemList}: {itemList: {category: string, item: string}[]}) {
     return (
-        <main>
-            <div className="header">
-                <img src="/hermes.svg" width="32" height="32"/>
-                <h1>FGO周回ソルバー</h1>
-                <Link href='./about'>
-                    <a>About</a>
-                </Link>
-            </div>
-            
-            <ItemForm itemList={itemList}/>
-            <style jsx>{`
-                main {
-                    max-width: var(--width-card-wide)
-                }
-                .header {
-                    display: flex;
-                    flex-direction: row;
-                    align-items: center;
-                }
-                img {
-                    margin-right: 12px;
-                }
-                a {
-                    margin-left: auto;
-                }
-            `}</style>
-        </main>
+        <>
+            <main>            
+                <ItemForm itemList={itemList}/>
+                <style jsx>{`
+                    main {
+                        max-width: var(--width-card-wide)
+                    }
+                    .header {
+                        display: flex;
+                        flex-direction: row;
+                        align-items: center;
+                    }
+                    img {
+                        margin-right: 12px;
+                    }
+                    a {
+                        margin-left: auto;
+                    }
+                `}</style>
+            </main>
+        </>
     )
 }
