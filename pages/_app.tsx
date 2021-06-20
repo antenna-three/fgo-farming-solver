@@ -29,7 +29,9 @@ function MyApp({ Component, pageProps }: AppProps) {
           </ul>
         </nav>
       </header>
-      <Component {...pageProps} />
+      <main>
+        <Component {...pageProps} />
+      </main>
     </>
   )
 }

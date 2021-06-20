@@ -17,25 +17,23 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 export default function Form({itemList}: {itemList: {category: string, item: string}[]}) {
     return (
         <>
-            <main>            
-                <ItemForm itemList={itemList}/>
-                <style jsx>{`
-                    main {
-                        max-width: var(--width-card-wide)
-                    }
-                    .header {
-                        display: flex;
-                        flex-direction: row;
-                        align-items: center;
-                    }
-                    img {
-                        margin-right: 12px;
-                    }
-                    a {
-                        margin-left: auto;
-                    }
-                `}</style>
-            </main>
+            <ItemForm itemList={itemList}/>
+            <style jsx>{`
+                main {
+                    max-width: var(--width-card-wide)
+                }
+                .header {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                }
+                img {
+                    margin-right: 12px;
+                }
+                a {
+                    margin-left: auto;
+                }
+            `}</style>
         </>
     )
 }

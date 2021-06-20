@@ -17,7 +17,6 @@ export default function Result({
     const questLaps = quest_laps
     const itemCounts = item_counts
     return (
-        <main>
         <section>
             <header>
                 <h1>計算結果</h1>
@@ -38,7 +37,6 @@ export default function Result({
                 ))}
                 </tbody>
             </table>
-            </section>
-        </main>
+        </section>
     )
 }
