@@ -1,3 +1,9 @@
+:root {
+  --color-bg-secondary: #ccc;
+  --color: #18e;
+  --color-text: #333;
+}
+/*
 html,
 body {
   padding: 0;
