@@ -1,34 +1,17 @@
 import '../styles/mvp.css'
 import '../styles/globals.css'
+import Head from 'next/head'
 import type { AppProps } from 'next/app'
-import Link from 'next/link'
-import Image from 'next/image'
+import Nav from '../components/nav'
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
-      <header>
-        <nav>
-          <Link href='/'>
-            <a className="nav">
-              <Image
-                src="/hermes.svg"
-                height={32}
-                width={32}
-                alt="site logo"
-              />
-              <h1>FGO周回ソルバー</h1>
-            </a>
-          </Link>
-          <ul>
-            <li>
-              <Link href='/about'>
-                <a>About</a>
-              </Link>
-            </li>
-          </ul>
-        </nav>
-      </header>
+      <Head>
+        <link rel="icon" href="hermes.svg" type="image/svg+xml"/>
+        <meta httpEquiv="content-language" content="ja"></meta>
+      </Head>
+      <Nav/>
       <main>
         <Component {...pageProps} />
       </main>
