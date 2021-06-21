@@ -52,7 +52,7 @@
      inkscape:label="レイヤー 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(2.8610229e-6,-169)">
+     transform="translate(0,-169)">
     <rect
        style="opacity:1;fill:#001450;fill-opacity:1;stroke:none;stroke-width:1.26508355;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect4615"
@@ -65,7 +65,7 @@
        id="rect4518"
        width="128"
        height="16"
-       x="-7.1054274e-15"
+       x="0"
        y="265" />
     <rect
        style="opacity:1;fill:#2db9ff;fill-opacity:1;stroke:none;stroke-width:1.08540273;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
@@ -87,13 +87,13 @@
        width="128"
        height="16"
        x="0"
-       y="193.00002" />
+       y="193" />
     <rect
        style="opacity:1;fill:#009ff0;fill-opacity:1;stroke:none;stroke-width:1.08540273;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect4518-9-3-1"
        width="128"
        height="16"
-       x="-2.8610229e-06"
-       y="169.00002" />
+       x="0"
+       y="169" />
   </g>
 </svg>
