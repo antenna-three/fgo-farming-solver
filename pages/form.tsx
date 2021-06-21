@@ -1,5 +1,5 @@
+import Head from 'next/head'
 import { GetStaticProps } from 'next'
-import Link from 'next/link'
 import ItemForm from '../components/item-form'
 import { getS3 } from '../lib/get-s3'
 
@@ -11,29 +11,15 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
             itemList
         }
     }
-    
 }
 
 export default function Form({itemList}: {itemList: {category: string, item: string}[]}) {
     return (
         <>
-            <ItemForm itemList={itemList}/>
-            <style jsx>{`
-                main {
-                    max-width: var(--width-card-wide)
-                }
-                .header {
-                    display: flex;
-                    flex-direction: row;
-                    align-items: center;
-                }
-                img {
-                    margin-right: 12px;
-                }
-                a {
-                    margin-left: auto;
-                }
-            `}</style>
+            <Head><title>FGO周回ソルバー</title></Head>
+            <section>
+                <ItemForm itemList={itemList}/>
+            </section>
         </>
     )
 }

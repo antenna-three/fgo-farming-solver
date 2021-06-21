@@ -12,6 +12,13 @@ export default function ItemForm({ itemList }: { itemList: {category: string, it
     const router = useRouter()
     const [isWaiting, setIsWaiting] = useState(false)
     const [isOpen, setIsOpen] = useState(false)
+
+    useEffect(() => {
+        const savedInputValues = localStorage.getItem('inputValues')
+        if (savedInputValues) {
+            setInputValues(JSON.parse(savedInputValues))
+        }
+    }, [])
     
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
@@ -23,16 +30,10 @@ export default function ItemForm({ itemList }: { itemList: {category: string, it
     }
 
     const handleChange = (event: React.FormEvent<HTMLInputElement>) => {
-        event.preventDefault()
         let currentInputValues = {...inputValues}
         currentInputValues[event.currentTarget.name] = event.currentTarget.value
         setInputValues(currentInputValues)
-    }
-
-    const handleObjectiveChange = (event: React.FormEvent<HTMLInputElement>) => {
-        let currentInputValues = {...inputValues}
-        currentInputValues.objective = event.currentTarget.value
-        setInputValues(currentInputValues)
+        localStorage.setItem('inputValues', JSON.stringify(currentInputValues))
     }
 
     const itemGroups = _.groupBy(itemList, item => item.category)
@@ -42,22 +43,30 @@ export default function ItemForm({ itemList }: { itemList: {category: string, it
             if (category.endsWith('素材')) {
                 return '強化素材'
             } else if (category.endsWith('石')) {
-                return 'スキル強化素材'
+                return 'スキル石'
             } else {
-                return '再臨素材'
+                return 'モニュピ'
             }
         }
     )
     return (<>
         <form onSubmit={handleSubmit}>
-            <ObjectiveFieldset inputValues={inputValues} handleObjectiveChange={handleObjectiveChange} />
+            <ObjectiveFieldset
+                inputValues={inputValues}
+                handleChange={handleChange}
+            />
             <div className="category-fieldsets">
                 {Object.entries(categoryGroups).map(( [largeCategory, categoryGroup] ) => (
-                    <details key={largeCategory}>
+                    <details key={largeCategory} open={largeCategory=='強化素材'}>
                         <summary>{largeCategory}</summary>
                         <div className="item-fieldsets">
                             {categoryGroup.map(([category, items]) => (
-                                <ItemFieldSet key={category} category={category} items={items.map(item => item.item)} handleChange={handleChange}/>
+                                <ItemFieldSet
+                                    key={category}
+                                    category={category}
+                                    items={items.map(item => item.item)}
+                                    handleChange={handleChange}
+                                />
                             ))}
                         </div>
                     </details>

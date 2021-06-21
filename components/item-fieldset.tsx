@@ -20,6 +20,10 @@ export default function ItemFieldSet(
                 .item-input {
                     display: flex;
                     flex-direction: column;
+                    justify-content: flex-start;
+                    align-items: flex-end;
+                    width: fit-content;
+                    margin: auto;
                 }
             `}</style>
         </fieldset>

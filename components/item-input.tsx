@@ -6,18 +6,20 @@ export default function ItemInput({ itemName, handleChange }: { itemName: string
             </label>
             <input type="number" name={itemName} id={itemName} onChange={handleChange}/>
             <style jsx>{`
-                div {
+                .item-input {
                     display: flex;
-                    flex-wrap: nowrap;
-                    justify-content: space-around;
+                    justify-content: flex-end;
                     align-items: center;
+                    width: fit-content;
                 }
                 label {
                     text-align: right;
+                    margin-right: 1rem;
+                    margin-bottom: 16px;
                 }
                 input {
-                    flex-basis: 5rem;
                     width: 5rem;
+                    margin-right: 1rem;
                 }
             `}</style>
         </div>
