@@ -1,3 +1,4 @@
+import Head from 'next/head'
 import { GetServerSideProps } from "next";
 import { callApi } from "../lib/call-api";
 
@@ -17,26 +18,29 @@ export default function Result({
     const questLaps = quest_laps
     const itemCounts = item_counts
     return (
-        <section>
-            <header>
-                <h1>計算結果</h1>
-            </header>
-            <table>
-                <thead>
-                    <tr>
-                        <th>クエスト名</th>
-                        <th>周回数</th>
-                    </tr>
-                </thead>
-                <tbody>
-                {Object.entries(questLaps).map(([quest, lap]) => (
-                    <tr>
-                        <td>{quest}</td>
-                        <td>{lap}</td>
-                    </tr>
-                ))}
-                </tbody>
-            </table>
-        </section>
+        <>
+            <Head><title>計算結果</title></Head>
+            <section>
+                <header>
+                    <h1>計算結果</h1>
+                </header>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>クエスト名</th>
+                            <th>周回数</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {Object.entries(questLaps).map(([quest, lap]) => (
+                        <tr>
+                            <td>{quest}</td>
+                            <td>{lap}</td>
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
+            </section>
+        </>
     )
 }

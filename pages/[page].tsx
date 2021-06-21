@@ -1,10 +1,14 @@
+import Head from 'next/head'
 import { GetStaticPaths, GetStaticProps } from "next"
 import ReactMarkdown from "react-markdown"
 import { getMd } from '../lib/get-md'
 
-export default function Page({ md }: { md: string }) {
+export default function Page({ title, md }: { title: string, md: string }) {
     return (
+        <>
+        <Head><title>{title}</title></Head>
         <ReactMarkdown>{md}</ReactMarkdown>
+        </>
     )
 }
 
@@ -28,11 +32,18 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
     if (params == null) return { props: {md: ''}}
-    const pageToFile = {about: 'docs/readme.md', LICENSE: 'LICENSE'}
-    const file = pageToFile[params.page as string]
+    const pageToFileTitle = (p: string) => {
+        switch(p) {
+            case 'about': return ['docs/readme.md', 'About']
+            case 'LICENSE': return ['LICENSE', 'LICENSE']
+            default: return ['', '']
+        }
+    }
+    const [file, title] = pageToFileTitle(params.page as string)
     const md = getMd(file)
     return {
         props: {
+            title,
             md
         }
     }
