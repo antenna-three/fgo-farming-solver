@@ -1,10 +1,10 @@
-export default function ItemInput({ itemName, handleChange }: { itemName: string, handleChange: React.FormEventHandler }) {
+export default function ItemInput({ itemName, inputValues, handleChange }: { itemName: string, inputValues: {[key: string]: string}, handleChange: React.FormEventHandler }) {
     return (
         <div className="item-input">
-            <label htmlFor={ itemName }>
+            <label htmlFor={ itemName } key={itemName}>
                 {itemName}
             </label>
-            <input type="number" name={itemName} id={itemName} onChange={handleChange}/>
+            <input type="number" name={itemName} id={itemName} value={inputValues[itemName]} onChange={handleChange}/>
             <style jsx>{`
                 .item-input {
                     display: flex;

@@ -65,6 +65,7 @@ export default function ItemForm({ itemList }: { itemList: {category: string, it
                                     key={category}
                                     category={category}
                                     items={items.map(item => item.item)}
+                                    inputValues={inputValues}
                                     handleChange={handleChange}
                                 />
                             ))}
