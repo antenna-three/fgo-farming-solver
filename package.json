@@ -8,6 +8,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@types/react-responsive": "^8.0.2",
     "@types/underscore": "^1.11.2",
     "aws-sdk": "^2.929.0",
     "next": "10.2.3",
