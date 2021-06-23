@@ -92,3 +92,22 @@ input[type=radio]:checked + label::after{
   background: var(--color);
   z-index: 1;
 }
+
+table {
+  border: none;
+  border-collapse: collapse;
+}
+tbody th {
+  background: #eee;
+}
+tbody td {
+  background: #fff;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+}
+.left {
+  text-align: left;
+}
+.right {
+  text-align: right;
+}

@@ -6,7 +6,7 @@ import { getMd } from '../lib/get-md'
 export default function Page({ title, md }: { title: string, md: string }) {
     return (
         <>
-        <Head><title>{title}</title></Head>
+        <Head><title>{title} | FGO周回ソルバー</title></Head>
         <ReactMarkdown>{md}</ReactMarkdown>
         </>
     )
