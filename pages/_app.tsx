@@ -1,7 +1,7 @@
 import '../styles/mvp.css'
 import '../styles/globals.css'
-import Head from 'next/head'
 import type { AppProps } from 'next/app'
+import Head from '../components/head'
 import Nav from '../components/nav'
 
 function MyApp({ Component, pageProps }: AppProps) {

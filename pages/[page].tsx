@@ -1,12 +1,12 @@
-import Head from 'next/head'
 import { GetStaticPaths, GetStaticProps } from "next"
 import ReactMarkdown from "react-markdown"
 import { getMd } from '../lib/get-md'
+import Head from '../components/head'
 
 export default function Page({ title, md }: { title: string, md: string }) {
     return (
         <>
-        <Head><title>{title} | FGO周回ソルバー</title></Head>
+        <Head title={title}/>
         <ReactMarkdown>{md}</ReactMarkdown>
         </>
     )
