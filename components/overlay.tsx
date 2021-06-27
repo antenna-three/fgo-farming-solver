@@ -1,9 +1,8 @@
-import Spinner from './spinner'
 
-export default function SpinnerOverlay() {
+export default function Overlay({children}: {children: React.ReactNode}) {
     return (
         <div className="overlay">
-                <Spinner/>
+            {children}
             <style jsx>{`
                 .overlay {
                     position: fixed;
