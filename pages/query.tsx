@@ -28,13 +28,15 @@ export default function Query() {
 
     if (data.message) return <div>{data.message}</div>
 
-    const quests: {area: string, quest: string, lap: number}[] = data.quests
-    const items: {category: string, item: string, count: number}[] = data.items
+    console.log(data)
 
-    const questsRison = quests.map(({area, quest, lap}) => (area + '_' + quest + '_' + lap)).join(',')
-    const itemsRison = items.map(({category, item, count}) => (category + '_' + item + '_' + count)).join(',')
+    const quests: {quest: string, lap: number}[] = data.quests
+    const items: {item: string, count: number}[] = data.items
+
+    const questsRison = quests.map(({quest, lap}) => (quest + ':' + lap)).join(',')
+    const itemsRison = items.map(({item, count}) => (item + ':' + count)).join(',')
     const queriesRison = Object.entries(query).filter(([item, count]) => (count != '')).map(([item, count]) => (item + ':' + count)).join(',')
 
-    router.push('/result?quests=' + questsRison + '&items=' + itemsRison + '&queries=' + queriesRison)
+    router.replace('/result?quests=' + questsRison + '&items=' + itemsRison + '&queries=' + queriesRison)
     return <Spinner/>
 }

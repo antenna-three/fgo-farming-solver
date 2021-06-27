@@ -5,7 +5,7 @@ export default function QuestTable({
     questToDrops
 }: {
     questGroups: {[key: string]: {area: string, quest: string, lap: number}[]},
-    questToDrops: {[key: string]: {item: string, dropRate: number}[]}
+    questToDrops: {[key: string]: {[key: string]: string}[]}
 }) {
     return (
         <table>
@@ -20,11 +20,11 @@ export default function QuestTable({
                 {Object.entries(questGroups).map(([area, questGroup]) =>
                     <Fragment key={area}>
                         <tr key={area} className="for-mobile"><th className="left" colSpan={3}>{area}</th></tr>
-                        {questGroup.map(({area, quest, lap}) => (
+                        {questGroup.map(({quest, lap}) => (
                             <tr key={quest}>
                                 <td className="left">{quest}</td>
                                 <td className="right">{lap}</td>
-                                <td className="left">{questToDrops[quest].map((d) => (d.item + parseInt('' + d.dropRate * lap))).join(' ')}</td>
+                                <td className="left">{questToDrops[quest].map((d) => (d.item + Math.round(parseFloat(d.dropRate) * lap))).join(' ')}</td>
                             </tr>
                         ))}
                     </Fragment>

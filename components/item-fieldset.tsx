@@ -2,7 +2,7 @@ import { useState } from 'react'
 import ItemInput from './item-input'
 
 export default function ItemFieldSet(
-        { category, items, inputValues, handleChange }: {category: string, items: string[], inputValues: {[key: string]: string}, handleChange: React.FormEventHandler }
+        { category, items, inputValues, handleChange }: {category: string, items: {item: string, id: string}[], inputValues: {[key: string]: string}, handleChange: React.FormEventHandler }
 ) {
     
     
@@ -13,7 +13,7 @@ export default function ItemFieldSet(
             </legend>
             <div className="item-input">
                 {items.map(( item ) => (
-                    <ItemInput key={item} itemName={item} inputValues={inputValues} handleChange={handleChange}/>
+                    <ItemInput key={item.id} item={item} inputValues={inputValues} handleChange={handleChange}/>
                 ))}
             </div>
             <style jsx>{`
