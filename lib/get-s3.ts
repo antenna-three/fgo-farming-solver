@@ -1,7 +1,7 @@
 import S3 from 'aws-sdk/clients/s3'
 import _ from 'underscore'
 
-export async function getS3(key: string): Promise<Object> {
+export async function getS3(key: string): Promise<{[key: string]: string}[]> {
     const bucket = 'fgodrop'
 
     const s3 = new S3()

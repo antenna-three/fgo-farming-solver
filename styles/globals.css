@@ -111,3 +111,12 @@ tbody td {
 .right {
   text-align: right;
 }
+.centered {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: fit-content;
+    text-align: center;
+    color: inherit;
+}
