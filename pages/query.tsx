@@ -3,40 +3,31 @@ import useSWR from 'swr'
 import Spinner from '../components/spinner'
 import _ from 'underscore'
 
-function parseQuery(query: Object) {
-    return Object.entries(query)
-        .filter(([item, count]) => (count != ''))
-        .map(( [item, count] ) => (encodeURIComponent(item) + '=' + count))
-        .join('&')
-}
-
-function fetcher(query: string) {
+function fetcher(params: string) {
     const url = 'https://pgdz683mk2.execute-api.ap-northeast-1.amazonaws.com/fgo-farming-solver'
     
-    return fetch(url + '?' + query)
+    return fetch(url + '?' + params)
         .then(res => res.json())
 }
 
 export default function Query() {
     const router = useRouter()
     const query = router.query
-    const parsed = parseQuery(query)
-    const {data, error} = useSWR(parsed, fetcher)
+    const params = new URLSearchParams(router.query as any)
+    const {data, error} = useSWR('' + params, fetcher)
     
     if (error) return <div>failed to load</div>
     if (!data) return <Spinner />
 
-    if (data.message) return <div>{data.message}</div>
-
-    console.log(data)
+    if (data.message) return data.message.split('\n').map((line: string) => <p>{line}</p>)
 
     const quests: {quest: string, lap: number}[] = data.quests
     const items: {item: string, count: number}[] = data.items
 
     const questsRison = quests.map(({quest, lap}) => (quest + ':' + lap)).join(',')
     const itemsRison = items.map(({item, count}) => (item + ':' + count)).join(',')
-    const queriesRison = Object.entries(query).filter(([item, count]) => (count != '')).map(([item, count]) => (item + ':' + count)).join(',')
+    const queriesRison = query.items
 
-    router.replace('/result?quests=' + questsRison + '&items=' + itemsRison + '&queries=' + queriesRison)
+    router.replace(`/result?quests=${questsRison}&items=${itemsRison}&queries=${queriesRison}`)
     return <Spinner/>
 }

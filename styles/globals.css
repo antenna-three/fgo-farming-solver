@@ -29,6 +29,33 @@ nav {
   margin-left: 1rem;
 }
 
+summary {
+  position: relative;
+  display: block;
+  padding-left: 1rem;
+  cursor: pointer;
+}
+
+summary::-webkit-details-marker {
+  display: none;
+}
+
+summary::before {
+  content: "";
+  position: absolute;
+  transform: translate(-20%, -50%) rotate(135deg);
+  top: .7rem;
+  left: 0rem;
+  width: .4rem;
+  height: .4rem;
+  border-top: 2px solid #777;
+  border-left: 2px solid #777;
+}
+
+details[open] summary::before {
+  transform: translate(0, -70%) rotate(225deg);
+}
+
 fieldset {
   margin: 1rem;
   padding: 1.25rem 0;
@@ -57,6 +84,7 @@ input[type=radio] + label{
   padding-left: .5rem;
   position: relative;
   margin-right: 1.5rem;
+  cursor: pointer;
 }
 
 input[type=radio]:focus + label::before {
@@ -70,12 +98,13 @@ input[type=radio] + label::before{
   transform: translate(-50%, -50%);
   top: 50%;
   left: -.5rem;
-  width: 1.2rem;
-  height: 1.2rem;
+  width: 1rem;
+  height: 1rem;
   border: 2px solid var(--color-bg-secondary);
   border-radius: 50%;
   background: var(--color-bg);
   z-index: 1;
+  cursor: pointer;
 }
 
 input[type=radio]:checked + label::after{
@@ -85,12 +114,13 @@ input[type=radio]:checked + label::after{
   transform: translate(-50%, -50%);
   top: 50%;
   left: -.5rem;
-  width: .75rem;
-  height: .75rem;
+  width: .6rem;
+  height: .6rem;
   border: none;
   border-radius: 50%;
   background: var(--color);
-  z-index: 1;
+  z-index: 2;
+  cursor: pointer;
 }
 
 table {

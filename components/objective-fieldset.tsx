@@ -1,28 +1,28 @@
 import { Fragment } from "react"
 
 export default function ObjectiveFieldset({
-    inputValues,
+    objective,
     handleChange
 }:
 {
-    inputValues: {[key: string]: string},
+    objective: string,
     handleChange: React.FormEventHandler
 }
 ) {
     return (
         <fieldset>
             <legend>最小化</legend>
-            {[['ap', '消費AP'], ['lap', '周回数']].map(([ objective, description]) => (
-                <Fragment key={objective}>
+            {[['ap', '消費AP'], ['lap', '周回数']].map(([ value, description]) => (
+                <Fragment key={value}>
                     <input
                         type="radio"
                         name="objective"
-                        value={objective}
+                        value={value}
                         onChange={handleChange}
-                        checked={objective==inputValues.objective}
-                        id={objective}
+                        checked={value==objective}
+                        id={value}
                     />
-                    <label htmlFor={objective}>
+                    <label htmlFor={value}>
                         {description}
                     </label>
                 </Fragment>

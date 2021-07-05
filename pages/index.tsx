@@ -4,28 +4,27 @@ import ItemForm from '../components/item-form'
 import { getS3 } from '../lib/get-s3'
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-    const itemList = await getS3('items.csv')
+    const items = await getS3('items.csv')
+    const quests = await getS3('quests.csv')
     
     return {
         props: {
-            itemList
+            items,
+            quests
         }
     }
 }
 
-export default function Form({
-    itemList
+export default function Index({
+    items,
+    quests
 }: {
-    itemList: {category: string, item: string, id: string}[]
+    items: {category: string, item: string, id: string}[],
+    quests: {chapter: string, area: string, quest: string, id: string}[]
 }) {
     return (
         <>
-            <header>
-                <h2>集めたい素材の数を入力してください</h2>
-            </header>
-            <section>
-                <ItemForm itemList={itemList}/>
-            </section>
+            <ItemForm items={items} quests={quests}/>
         </>
     )
 }
