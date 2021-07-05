@@ -13,10 +13,10 @@ export default function TweetIntent({
         .map(({area, quest, lap}) => (`${area} ${quest} ${lap}周`))
         .join('\r\n')
     const lapSum = questLaps.map(({lap}) => lap).reduce((acc, cur) => (acc + cur), 0)
-    const text = `最も効率的に必要素材を集められるクエスト:
+    const text = `必要な周回数:
 ${displayedLaps}${questLaps.length > 3 && "など"}
 合計 ${lapSum}周
-詳細:`
+詳細: `
     const hashtags = 'FGO周回ソルバー'
     const intentUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}&hashtags=${encodeURIComponent(hashtags)}`
 
