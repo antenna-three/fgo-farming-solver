@@ -3,14 +3,14 @@ export default function TweetIntent({
     questLaps,
     url
 }: {
-    questLaps: {area: string, quest: string, lap: number}[],
+    questLaps: {area: string, name: string, lap: number}[],
     url: string
 }) {
     const displayedLaps = questLaps
         .slice()
         .sort((a, b) => (b.lap - a.lap))
         .slice(0, 3)
-        .map(({area, quest, lap}) => (`${area} ${quest} ${lap}周`))
+        .map(({area, name, lap}) => (`${area} ${name} ${lap}周`))
         .join('\r\n')
     const lapSum = questLaps.map(({lap}) => lap).reduce((acc, cur) => (acc + cur), 0)
     const text = `必要な周回数:

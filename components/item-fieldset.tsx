@@ -1,15 +1,20 @@
-import { useState } from 'react'
 import ItemInput from './item-input'
 
-export default function ItemFieldSet(
-        { category, items, inputValues, handleChange }: {category: string, items: {item: string, id: string}[], inputValues: {[key: string]: string}, handleChange: React.FormEventHandler }
-) {
-    
-    
+export default function ItemFieldSet({
+    category,
+    items,
+    inputValues,
+    handleChange
+}: {
+    category: string,
+    items: {name: string, id: string}[],
+    inputValues: {[key: string]: string},
+    handleChange: React.FormEventHandler 
+}) {
     return (
         <fieldset>
             <legend>
-                    {category}
+                {category}
             </legend>
             <div className="item-input">
                 {items.map(( item ) => (

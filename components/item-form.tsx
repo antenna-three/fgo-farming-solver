@@ -10,20 +10,17 @@ import ObjectiveFieldset from './objective-fieldset'
 import { getLargeCategory } from '../lib/get-large-category'
 import QuestTree from './quest-tree'
 import { createTree } from '../lib/create-tree'
-import { useSavedState, loadSavedState } from '../lib/use-saved-state'
 
-function inputToQuery(inputObjective: string, inputItems: {[key: string]: string}, inputQuests: string[]) {
-    const items = Object.entries(inputItems)
-        .filter(([item, count]) => (count != ''))
-        .map(([item, count]) => (item + ':' + count))
-        .join(',')
-    const quests = inputQuests
-        .reduce((acc, cur) => (acc[acc.length - 1] == cur[0] + '0000' || acc[acc.length - 1] == cur.slice(0, 3) + '00' ? acc : [...acc, cur]), [] as string[])
-        .join(',')
+function inputToQuery({objective, items, quests}: {objective: string, items: {[key: string]: string}, quests: string[]}) {
     return {
-        objective: inputObjective,
-        items,
-        quests
+        objective,
+        items: Object.entries(items)
+            .filter(([item, count]) => (count != ''))
+            .map(([item, count]) => (item + ':' + count))
+            .join(','),
+        quests: quests
+            .reduce((acc, cur) => (acc.includes(cur[0]) || acc.includes(cur.slice(0, 2)) ? acc : [...acc, cur]), [] as string[])
+            .join(',')
     }
 }
 
@@ -31,16 +28,16 @@ export default function ItemForm({
     items,
     quests
 }: {
-    items: {category: string, item: string, id: string}[],
-    quests: {chapter: string, area: string, quest: string, id: string}[]
+    items: {category: string, name: string, id: string}[],
+    quests: {section: string, area: string, name: string, id: string}[]
 }) {
-    const initialInputItems = Object.fromEntries(items.map(item => [item.id, '']))
-    const initialInputObjective = 'ap'
     const {ids, tree} = createTree(quests)
-    const initialInputQuests = ids
-    const [inputObjective, setInputObjective] = useSavedState(initialInputObjective, 'inputObjective')
-    const [inputItems, setInputItems] = useSavedState(initialInputItems, 'inputItems')
-    const [inputQuests, setInputQuests] = useSavedState(initialInputQuests, 'inputQuests')
+    const initialInputState = {
+        objective: 'ap',
+        items: Object.fromEntries(items.map(item => [item.id, ''])),
+        quests: ids
+    }
+    const [inputState, setInputState] = useState(initialInputState)
     const router = useRouter()
     const [isWaiting, setIsWaiting] = useState(false)
     const [isConfirming, setIsConfirming] = useState(false)
@@ -49,23 +46,27 @@ export default function ItemForm({
         if (typeof(router.query.objective) == 'string'
                 && typeof(router.query.items) == 'string'
                 && typeof(router.query.quests) == 'string') {
-            const items: {[key: string]: any} = Object.fromEntries(router.query.items.split(',').map((itemCount: string) => itemCount.split(':')))
-            const quests: string[] = router.query.quests.split(',')
-            setInputObjective(router.query.objective)
-            setInputItems(items)
-            setInputQuests(quests)
+            const query = {
+                ...initialInputState,
+                objective: router.query.objective,
+                items: Object.fromEntries(router.query.items.split(',').map((itemCount) => itemCount.split(':'))),
+                quests: router.query.quests.split(',')
+            }
+            setInputState(query)
             router.replace('/', undefined, {'scroll': false, shallow: true})
         } else {
-            setInputObjective(JSON.parse(localStorage.getItem('inputObjective') || 'null') || initialInputObjective)
-            setInputItems({...initialInputItems, ...JSON.parse(localStorage.getItem('inputItems') || 'null')})
-            setInputQuests(JSON.parse(localStorage.getItem('inputQuests') || 'null') || initialInputQuests)
+            const input = localStorage.getItem('input')
+            if (input) {
+                setInputState(JSON.parse(input))
+            }
         }
     }, [])
     
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
         setIsWaiting(true)
-        const query = inputToQuery(inputObjective, inputItems, inputQuests)
+        const query = inputToQuery(inputState)
+        console.log(query)
         router.push({
             pathname: '/query',
             query
@@ -74,8 +75,11 @@ export default function ItemForm({
 
     const handleItemChange = (event: React.FormEvent<HTMLInputElement>) => {
         const target = event.currentTarget
-        const newInputItems = {...inputItems, [target.name]: target.value}
-        setInputItems(newInputItems)
+        setInputState((state) => {
+            const newState = {...state, items: {...state.items, [target.name]: target.value}}
+            localStorage.setItem('input', JSON.stringify(newState))
+            return newState
+        })
     }
 
     const itemGroups = Object.entries(_.groupBy(items, item => item.category))
@@ -87,9 +91,10 @@ export default function ItemForm({
         <>
             <form onSubmit={handleSubmit}>
                 <ObjectiveFieldset
-                    objective={inputObjective}
+                    objective={inputState.objective}
                     handleChange={(event: React.FormEvent<HTMLInputElement>) => {
-                        setInputObjective(event.currentTarget.value)
+                        const target = event.currentTarget
+                        setInputState((state) => ({...state, objective: target.value}))
                     }}
                 />
                 <fieldset>
@@ -103,7 +108,7 @@ export default function ItemForm({
                                         key={category}
                                         category={category}
                                         items={items}
-                                        inputValues={inputItems}
+                                        inputValues={inputState.items}
                                         handleChange={handleItemChange}
                                     />
                                 ))}
@@ -111,13 +116,19 @@ export default function ItemForm({
                         </details>
                     ))}
                 </fieldset>
-                <QuestTree tree={tree} checked={inputQuests} setChecked={setInputQuests}/>
+                <QuestTree tree={tree} checked={inputState.quests} setChecked={(quests) => {
+                    setInputState((state) => {
+                        const newState = {...state, quests}
+                        localStorage.setItem('input', JSON.stringify(newState))
+                        return newState
+                    })
+                }}/>
                 <button type="submit">計算</button>
                 <button className="secondary" onClick={(e) => {
                     e.preventDefault()
                     setIsConfirming(true)
                 }}>クリア</button>
-                <Link href={{pathname: '/import-export', query: inputToQuery(inputObjective, inputItems, inputQuests)}}>
+                <Link href={{pathname: '/import-export', query: inputToQuery(inputState)}}>
                     <a>入力内容のエクスポート</a>
                 </Link>
                 <style jsx>{`
@@ -143,9 +154,7 @@ export default function ItemForm({
                         proceed="全消去"
                         cancel="キャンセル"
                         onProceed={() => {
-                            setInputObjective(initialInputObjective)
-                            setInputItems(initialInputItems)
-                            setInputQuests(initialInputQuests)
+                            setInputState(initialInputState)
                             setIsConfirming(false)
                         }}
                         onCancel={() => setIsConfirming(false)}

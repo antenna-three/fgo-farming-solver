@@ -19,8 +19,8 @@ export default function Index({
     items,
     quests
 }: {
-    items: {category: string, item: string, id: string}[],
-    quests: {chapter: string, area: string, quest: string, id: string}[]
+    items: {category: string, name: string, id: string}[],
+    quests: {section: string, area: string, name: string, id: string}[]
 }) {
     return (
         <>

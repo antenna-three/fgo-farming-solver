@@ -32,6 +32,7 @@ export default function ImportExport() {
                     </Link>
                     から入力フォームへ戻ってください。
                 </p>
+                <textarea>{JSON.stringify(router.query)}</textarea>
             </article>
         </>
     )

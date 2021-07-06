@@ -4,7 +4,7 @@ export default function ItemTable({
     itemGroups,
     itemToQuery
 }: {
-    itemGroups: [string, { item: string, count: number, id: string }[]][]
+    itemGroups: [string, { name: string, count: number, id: string }[]][]
     itemToQuery: {[key: string]: number}
 }) {
     return (
@@ -20,9 +20,9 @@ export default function ItemTable({
                 {itemGroups.map(([category, itemGroup]) => (
                     <Fragment key={category}>
                         <tr><th className="left" key={category} colSpan={3}>{category}</th></tr>
-                        {itemGroup.map(({item, count, id}) => (
-                            <tr key={item}>
-                                <td className="left">{item}</td>
+                        {itemGroup.map(({name, count, id}) => (
+                            <tr key={id}>
+                                <td className="left">{name}</td>
                                 <td className="right">{count}</td>
                                 <td className="right">{itemToQuery[id]}</td>
                             </tr>

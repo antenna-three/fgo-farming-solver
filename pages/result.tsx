@@ -26,7 +26,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         return acc
     }, {})
 
-    const questToDrops = _.groupBy(drops, (drop) => (drop.quest))
+    const questToDrops = _.groupBy(drops, (drop) => (drop.quest_id))
 
     return {
         props: {itemInfo, questInfo, questToDrops}
@@ -63,15 +63,15 @@ export default function Result({
     const questLaps = queryQuests.split(',').map((queryQuest) => {
         const [id, lap] = queryQuest.split(':')
         const area = questInfo[id].area
-        const quest = questInfo[id].quest
-        return {area, quest, id, lap:parseInt(lap)}
+        const name = questInfo[id].name
+        return {area, name, id, lap:parseInt(lap)}
     })
 
     const itemCounts = queryItems.split(',').map((queryItem) => {
         const [id, count] = queryItem.split(':')
         const category = itemInfo[id].category
-        const item = itemInfo[id].item
-        return {category, item, id, count: parseInt(count)}
+        const name = itemInfo[id].name
+        return {category, name, id, count: parseInt(count)}
     })
 
     const itemToQuery = queryQueries.split(',').reduce((acc: {[key: string]: number}, cur: string) => {
@@ -99,7 +99,9 @@ export default function Result({
                 <QuestTable questGroups={lapGroups} questToDrops={questToDrops}/>
             </section>
             <section>
-                <header><h2>合計</h2></header>
+                <header>
+                    <h2>合計</h2>
+                </header>
                 <SumTable rows={[
                     {key: '周回数', value: questLaps.map(lap => lap.lap).reduce((acc, cur) => (acc + cur)), unit: '周'},
                     {key: 'AP', value: totalAp, unit: 'AP'},
