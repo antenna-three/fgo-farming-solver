@@ -13,7 +13,7 @@ export default function Spinner() {
             <h2>計算中</h2>
             <style jsx>{`
                 .background {
-                    padding: 0 0 5px;
+                    padding: 0 0 10px;
                     background: #124;
                 }
             `}</style>

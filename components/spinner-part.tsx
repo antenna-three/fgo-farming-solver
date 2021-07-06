@@ -10,7 +10,7 @@ export default function SpinnerPart({
             <style jsx>{`
                 .part {
                     background: hsl(${color.h}, ${color.s}%, ${color.l}%});
-                    width: 300px;
+                    width: 200px;
                     height: 10px;
                     margin: 0 0 5px;
 
