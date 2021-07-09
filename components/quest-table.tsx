@@ -5,7 +5,7 @@ export default function QuestTable({
     questToDrops
 }: {
     questGroups: {[key: string]: {area: string, name: string, id: string, lap: number}[]},
-    questToDrops: {[key: string]: {[key: string]: string}[]}
+    questToDrops: {[key: string]: {item_name: string, drop_rate: string}[]}
 }) {
     return (
         <table>

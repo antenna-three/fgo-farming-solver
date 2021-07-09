@@ -25,7 +25,9 @@ export default function Query() {
     const pp = new URLSearchParams({foo: 'bar'})
     const {data, error} = useSWR('' + params, fetcher)
     
-    if (error) return <div>failed to load</div>
+    if (error) return (
+        <Error statusCode={error.status}/>
+    )
     if (!data) return <Spinner />
 
     if (data.message) return data.message.split('\n').map((line: string) => <p>{line}</p>)

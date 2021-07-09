@@ -1,34 +1,37 @@
-import ItemInput from './item-input'
+import ItemCategoryFieldset from "./item-category-fieldset"
 
-export default function ItemFieldSet({
-    category,
-    items,
-    inputValues,
+export default function ItemFieldset({
+    categoryGroups,
+    inputItems,
     handleChange
 }: {
-    category: string,
-    items: {name: string, id: string}[],
-    inputValues: {[key: string]: string},
-    handleChange: React.FormEventHandler 
+    categoryGroups: [string, [string, {name: string, id: string}[]][]][],
+    inputItems: {[key: string]: string},
+    handleChange: React.FormEventHandler
 }) {
     return (
         <fieldset>
-            <legend>
-                {category}
-            </legend>
-            <div className="item-input">
-                {items.map(( item ) => (
-                    <ItemInput key={item.id} item={item} inputValues={inputValues} handleChange={handleChange}/>
-                ))}
-            </div>
+            <legend>集めたいアイテムの数</legend>
+            {categoryGroups.map(( [largeCategory, categoryGroup] ) => (
+                <details key={largeCategory} open={largeCategory=='強化素材'}>
+                    <summary>{largeCategory}</summary>
+                    <div className="item-fieldsets">
+                        {categoryGroup.map(([category, items]) => (
+                            <ItemCategoryFieldset
+                                key={category}
+                                category={category}
+                                items={items}
+                                inputValues={inputItems}
+                                handleChange={handleChange}
+                            />
+                        ))}
+                    </div>
+                </details>
+            ))}
             <style jsx>{`
-                .item-input {
+                .item-fieldsets {
                     display: flex;
-                    flex-direction: column;
-                    justify-content: flex-start;
-                    align-items: flex-end;
-                    width: fit-content;
-                    margin: auto;
+                    flex-wrap: wrap;
                 }
             `}</style>
         </fieldset>

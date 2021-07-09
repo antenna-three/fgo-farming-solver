@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import React, {useEffect, useState} from 'react'
-import ItemFieldSet from './item-fieldset'
+import ItemFieldset from './item-fieldset'
 import _ from 'underscore'
 import { useRouter } from 'next/router'
 import Spinner from './spinner'
@@ -24,6 +24,25 @@ function inputToQuery({objective, items, quests}: {objective: string, items: {[k
     }
 }
 
+function queryToInput(
+    initialInputState: {objective: string, items: {[key: string]: string}, quests: string[]},
+    {objective, items, quests}: {objective: string, items: string, quests: string}
+) {
+    const queryQuests = quests.split(',')
+    return {
+        ...initialInputState,
+        objective,
+        items: Object.fromEntries(items.split(',').map((itemCount) => itemCount.split(':'))),
+        quests: initialInputState.quests.filter((quest) => (
+            queryQuests.includes(quest[0]) || queryQuests.includes(quest.slice(0, 2)) || queryQuests.includes(quest)
+        ))
+    }
+}
+
+function isInputState(arg: any): arg is {objective: string, items: string, quests: string} {
+    return typeof(arg.objective) == 'string' && typeof(arg.items) == 'string' && typeof(arg.quests) == 'string'
+}
+
 export default function ItemForm({
     items,
     quests
@@ -43,16 +62,8 @@ export default function ItemForm({
     const [isConfirming, setIsConfirming] = useState(false)
 
     useEffect(() => {
-        if (typeof(router.query.objective) == 'string'
-                && typeof(router.query.items) == 'string'
-                && typeof(router.query.quests) == 'string') {
-            const query = {
-                ...initialInputState,
-                objective: router.query.objective,
-                items: Object.fromEntries(router.query.items.split(',').map((itemCount) => itemCount.split(':'))),
-                quests: router.query.quests.split(',')
-            }
-            setInputState(query)
+        if (isInputState(router.query)) {
+            setInputState(queryToInput(initialInputState, router.query))
             router.replace('/', undefined, {'scroll': false, shallow: true})
         } else {
             const input = localStorage.getItem('input')
@@ -97,25 +108,11 @@ export default function ItemForm({
                         setInputState((state) => ({...state, objective: target.value}))
                     }}
                 />
-                <fieldset>
-                    <legend>集めたいアイテムの数</legend>
-                    {categoryGroups.map(( [largeCategory, categoryGroup] ) => (
-                        <details key={largeCategory} open={largeCategory=='強化素材'}>
-                            <summary>{largeCategory}</summary>
-                            <div className="item-fieldsets">
-                                {categoryGroup.map(([category, items]) => (
-                                    <ItemFieldSet
-                                        key={category}
-                                        category={category}
-                                        items={items}
-                                        inputValues={inputState.items}
-                                        handleChange={handleItemChange}
-                                    />
-                                ))}
-                            </div>
-                        </details>
-                    ))}
-                </fieldset>
+                <ItemFieldset
+                    categoryGroups={categoryGroups}
+                    inputItems={inputState.items}
+                    handleChange={handleItemChange}
+                />
                 <QuestTree tree={tree} checked={inputState.quests} setChecked={(quests) => {
                     setInputState((state) => {
                         const newState = {...state, quests}
@@ -132,10 +129,6 @@ export default function ItemForm({
                     <a>入力内容のエクスポート</a>
                 </Link>
                 <style jsx>{`
-                    .item-fieldsets {
-                        display: flex;
-                        flex-wrap: wrap;
-                    }
                     button {
                         margin-right: 1rem;
                     }

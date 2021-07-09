@@ -8,10 +8,11 @@ export default function Nav() {
                 <Link href='/'>
                     <a className="nav">
                     <Image
-                        src="/hermes.svg"
+                        src="/hermes.png"
                         height={32}
                         width={32}
                         alt="site logo"
+                        layout="fixed"
                     />
                     <h1>FGO周回ソルバー</h1>
                     </a>
@@ -24,6 +25,11 @@ export default function Nav() {
                     </li>
                 </ul>
             </nav>
+            <style jsx>{`
+                img {
+                    vertical-align: middle;
+                }
+            `}</style>
         </header>
     )
 }

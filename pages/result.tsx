@@ -29,7 +29,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const questToDrops = _.groupBy(drops, (drop) => (drop.quest_id))
 
     return {
-        props: {itemInfo, questInfo, questToDrops}
+        props: {itemInfo, questInfo, questToDrops},
     }
 }
 
@@ -39,8 +39,8 @@ export default function Result({
     questToDrops
 }: {
     itemInfo: {[key: string]: {[key: string]: string}},
-    questInfo: {[key: string]: {[key: string]: string}},
-    questToDrops: {[key: string]: {[key: string]: string}[]}
+    questInfo: {[key: string]: {area: string, name: string, id: string, ap: string}},
+    questToDrops: {[key: string]: {item_name: string, drop_rate: string}[]}
 }) {
     const router = useRouter()
     const query = router.query

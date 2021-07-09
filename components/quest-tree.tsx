@@ -3,8 +3,6 @@ import CheckboxTree from 'react-checkbox-tree'
 import 'react-checkbox-tree/lib/react-checkbox-tree.css'
 import { useState } from "react";
 
-import { createTree } from "../lib/create-tree";
-
 import type { Node } from 'react-checkbox-tree'
 
 export default function QuestTree({

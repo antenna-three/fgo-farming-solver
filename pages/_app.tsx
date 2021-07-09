@@ -8,7 +8,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
-        <link rel="icon" href="hermes.svg" type="image/svg+xml"/>
+        <link rel="icon" href="hermes.png" type="image/png"/>
         <meta httpEquiv="content-language" content="ja"></meta>
       </Head>
       <Nav/>

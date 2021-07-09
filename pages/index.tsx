@@ -11,7 +11,8 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         props: {
             items,
             quests
-        }
+        },
+        revalidate: 3600
     }
 }
 
