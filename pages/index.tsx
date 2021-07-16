@@ -1,4 +1,3 @@
-import Head from '../components/head'
 import { GetStaticProps } from 'next'
 import ItemForm from '../components/item-form'
 import { getS3 } from '../lib/get-s3'
