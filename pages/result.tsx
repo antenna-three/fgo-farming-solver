@@ -112,7 +112,7 @@ export default function Result({
             <section>
                 <TweetIntent
                     questLaps={questLaps}
-                    url={'https://fgo-farming-solver.vercel.app' + router.asPath}
+                    url={`https://${process.env.VERCEL_URL}${router.asPath}`}
                 />
             </section>
             <section>
