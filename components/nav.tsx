@@ -19,9 +19,23 @@ export default function Nav() {
                 </Link>
                 <ul>
                     <li>
-                    <Link href='/about'>
-                        <a>About</a>
-                    </Link>
+                        <Link href='/about'>
+                            <a>About</a>
+                        </Link>
+                    </li>
+                    <li>
+                        <a href='https://github.com/antenna-three'>GitHub</a>
+                        <ul>
+                            <li>
+                                <a href='https://github.com/antenna-three/fgo-farming-solver'>Front end</a>
+                            </li>
+                            <li>
+                                <a href='https://github.com/antenna-three/fgo-farming-solver-api'>API</a>
+                            </li>
+                            <li>
+                                <a href='https://github.com/antenna-three/fgo-farming-solver'>Data extraction</a>
+                            </li>
+                        </ul>
                     </li>
                 </ul>
             </nav>
