@@ -12,7 +12,7 @@ export async function getS3(key: string): Promise<{[key: string]: string}[]> {
         return []
     }
 
-    const client = new S3Client({ credentials: { accessKeyId, secretAccessKey } })
+    const client = new S3Client({ credentials: { accessKeyId, secretAccessKey }, region: 'ap-northeast-1' })
     const command = new GetObjectCommand({ Bucket: bucket, Key: key })
 
     try {
