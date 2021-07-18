@@ -68,7 +68,7 @@ export default function ItemForm({
         } else {
             const input = localStorage.getItem('input')
             if (input) {
-                setInputState(JSON.parse(input))
+                setInputState({...initialInputState, ...JSON.parse(input)})
             }
         }
     }, [])

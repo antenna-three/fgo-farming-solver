@@ -1,10 +1,12 @@
 export default function ItemInput({ item, inputValues, handleChange }: { item: {name: string, id: string}, inputValues: {[key: string]: string}, handleChange: React.FormEventHandler }) {
+    inputValues[item.id] ||= ''
+    const id = 'item-' + item.id
     return (
         <div className="item-input">
-            <label htmlFor={ item.id } key={item.id}>
+            <label htmlFor={id} key={id}>
                 {item.name}
             </label>
-            <input type="number" name={item.id} id={item.id} value={inputValues[item.id]} onChange={handleChange}/>
+            <input type="number" name={item.id} id={id} value={inputValues[item.id]} onChange={handleChange}/>
             <style jsx>{`
                 .item-input {
                     display: flex;
