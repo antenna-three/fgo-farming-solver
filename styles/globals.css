@@ -130,6 +130,7 @@ table {
   border-collapse: collapse;
 }
 tbody th {
+  font-size: medium;
   background: #eee;
 }
 tbody td {
