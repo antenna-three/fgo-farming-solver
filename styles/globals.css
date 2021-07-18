@@ -105,6 +105,7 @@ input[type=radio] + label::before{
   border-radius: 50%;
   background: var(--color-bg);
   z-index: 1;
+  box-shadow: 0 0 0 .4rem var(--color-bg);
   cursor: pointer;
 }
 
