@@ -14,7 +14,7 @@ export default function TweetIntent({
         .join('\r\n')
     const lapSum = questLaps.map(({lap}) => lap).reduce((acc, cur) => (acc + cur), 0)
     const text = `必要な周回数:
-${displayedLaps}${questLaps.length > 3 && "など"}
+${displayedLaps}${questLaps.length > 3 ? 'など': ''}
 合計 ${lapSum}周
 詳細: `
     const hashtags = 'FGO周回ソルバー'
