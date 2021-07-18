@@ -99,15 +99,17 @@ export default function Result({
                 <QuestTable questGroups={lapGroups} questToDrops={questToDrops}/>
             </section>
             <section>
-                <header>
-                    <h2>合計</h2>
-                </header>
-                <SumTable rows={[
-                    {key: '周回数', value: questLaps.map(lap => lap.lap).reduce((acc, cur) => (acc + cur)), unit: '周'},
-                    {key: 'AP', value: totalAp, unit: 'AP'},
-                    {key: '聖晶石', value: Math.ceil(totalAp / 144), unit: '個'},
-                    {key: '費用', value: (totalAp / 144 / 168).toFixed(1), unit: '万円'}
-                ]}/>
+                <details className="sum-details">
+                    <summary>合計</summary>
+                    <section>
+                    <SumTable rows={[
+                        {key: '周回数', value: questLaps.map(lap => lap.lap).reduce((acc, cur) => (acc + cur)), unit: '周'},
+                        {key: 'AP', value: totalAp, unit: 'AP'},
+                        {key: '聖晶石', value: Math.ceil(totalAp / 144), unit: '個'},
+                        {key: '費用', value: (totalAp / 144 / 168).toFixed(1), unit: '万円'}
+                    ]}/>
+                    </section>
+                </details>
             </section>
             <section>
                 <TweetIntent
@@ -120,7 +122,7 @@ export default function Result({
                     <h2>アイテム獲得数</h2>
                 </header>
                 {Object.entries(largeItemGroups).map(([largeCategory, itemGroups]) => (
-                    <details key={largeCategory}>
+                    <details className="item-details" key={largeCategory}>
                         <summary>{largeCategory}</summary>
                         <ItemTable itemGroups={itemGroups} itemToQuery={itemToQuery}/>
                     </details>
@@ -130,16 +132,11 @@ export default function Result({
                 .tw {
                     color: var(--color);
                 }
-                details {
+                .sum-details {
+                    width: 14rem;
+                }
+                .item-details {
                     width: 16rem;
-                }
-                dt {
-                    float: left;
-                    width: 5rem;
-                    font-weight: bold;
-                }
-                dd {
-                    margin-left: 5rem;
                 }
             `}</style>
         </>

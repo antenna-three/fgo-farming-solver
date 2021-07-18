@@ -33,6 +33,7 @@ nav {
 summary {
   position: relative;
   display: block;
+  margin: .5rem 0;
   padding-left: 1rem;
   cursor: pointer;
 }
@@ -128,9 +129,9 @@ input[type=radio]:checked + label::after{
 table {
   border: none;
   border-collapse: collapse;
+  font-size: 1rem;
 }
 tbody th {
-  font-size: medium;
   background: #eee;
 }
 tbody td {
