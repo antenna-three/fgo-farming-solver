@@ -7,8 +7,9 @@ import Spinner from './spinner'
 import Overlay from './overlay'
 import WarningConfirm from './warning-confirm'
 import ObjectiveFieldset from './objective-fieldset'
-import { getLargeCategory } from '../lib/get-large-category'
 import QuestTree from './quest-tree'
+import ErrorBoundary from './error-boundary'
+import { getLargeCategory } from '../lib/get-large-category'
 import { createTree } from '../lib/create-tree'
 
 function inputToQuery({objective, items, quests}: {objective: string, items: {[key: string]: string}, quests: string[]}) {
@@ -112,13 +113,15 @@ export default function ItemForm({
                     inputItems={inputState.items}
                     handleChange={handleItemChange}
                 />
-                <QuestTree tree={tree} checked={inputState.quests} setChecked={(quests) => {
-                    setInputState((state) => {
-                        const newState = {...state, quests}
-                        localStorage.setItem('input', JSON.stringify(newState))
-                        return newState
-                    })
-                }}/>
+                <ErrorBoundary>
+                    <QuestTree tree={tree} checked={inputState.quests} setChecked={(quests) => {
+                        setInputState((state) => {
+                            const newState = {...state, quests}
+                            localStorage.setItem('input', JSON.stringify(newState))
+                            return newState
+                        })
+                    }}/>
+                </ErrorBoundary>
                 <button type="submit">計算</button>
                 <button className="secondary" onClick={(e) => {
                     e.preventDefault()
