@@ -1,9 +1,14 @@
+import dynamic from 'next/dynamic'
 import _ from "underscore"
-import CheckboxTree from 'react-checkbox-tree'
 import 'react-checkbox-tree/lib/react-checkbox-tree.css'
 import { useState } from "react";
 
 import type { Node } from 'react-checkbox-tree'
+
+const CheckboxTree = dynamic(
+    () => import('react-checkbox-tree'),
+    {ssr: false}
+)
 
 export default function QuestTree({
     tree,
