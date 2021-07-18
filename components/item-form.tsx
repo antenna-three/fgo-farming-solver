@@ -68,7 +68,7 @@ export default function ItemForm({
         } else {
             const input = localStorage.getItem('input')
             if (input) {
-                setInputState({...initialInputState, ...JSON.parse(input)})
+                setInputState(JSON.parse(input))
             }
         }
     }, [])
@@ -77,7 +77,6 @@ export default function ItemForm({
         event.preventDefault()
         setIsWaiting(true)
         const query = inputToQuery(inputState)
-        console.log(query)
         router.push({
             pathname: '/query',
             query
@@ -113,7 +112,6 @@ export default function ItemForm({
                     inputItems={inputState.items}
                     handleChange={handleItemChange}
                 />
-                {/*
                 <QuestTree tree={tree} checked={inputState.quests} setChecked={(quests) => {
                     setInputState((state) => {
                         const newState = {...state, quests}
@@ -121,7 +119,6 @@ export default function ItemForm({
                         return newState
                     })
                 }}/>
-            */}
                 <button type="submit">計算</button>
                 <button className="secondary" onClick={(e) => {
                     e.preventDefault()
