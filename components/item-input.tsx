@@ -11,10 +11,6 @@ export default function ItemInput({
 }) {
     inputValues[item.id] ||= ''
     const id = 'item-' + item.id
-    const onChange = (event: React.FormEvent<HTMLInputElement>) => {
-        event.currentTarget.value = event.currentTarget.value.replaceAll(/\D/g, '')
-        handleChange(event)
-    }
     return (
         <div className="item-input">
             <label htmlFor={id} key={id}>
@@ -28,7 +24,7 @@ export default function ItemInput({
                 value={inputValues[item.id]}
                 min={0}
                 step={1}
-                onChange={onChange}
+                onChange={handleChange}
             />
             <style jsx>{`
                 .item-input {
@@ -45,6 +41,10 @@ export default function ItemInput({
                 input {
                     width: 5rem;
                     margin-right: 1rem;
+                }
+                input:invalid {
+                    background: #fee;
+                    border-color: #f33;
                 }
             `}</style>
         </div>
