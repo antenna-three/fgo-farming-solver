@@ -1,12 +1,35 @@
-export default function ItemInput({ item, inputValues, handleChange }: { item: {name: string, id: string}, inputValues: {[key: string]: string}, handleChange: React.FormEventHandler }) {
+import React from "react"
+
+export default function ItemInput({
+    item,
+    inputValues,
+    handleChange
+}: {
+    item: {name: string, id: string},
+    inputValues: {[key: string]: string},
+    handleChange: React.FormEventHandler
+}) {
     inputValues[item.id] ||= ''
     const id = 'item-' + item.id
+    const onChange = (event: React.FormEvent<HTMLInputElement>) => {
+        event.currentTarget.value = event.currentTarget.value.replaceAll(/\D/g, '')
+        handleChange(event)
+    }
     return (
         <div className="item-input">
             <label htmlFor={id} key={id}>
                 {item.name}
             </label>
-            <input type="number" name={item.id} id={id} value={inputValues[item.id]} onChange={handleChange}/>
+            <input
+                type="number"
+                inputMode="numeric"
+                name={item.id}
+                id={id}
+                value={inputValues[item.id]}
+                min={0}
+                step={1}
+                onChange={onChange}
+            />
             <style jsx>{`
                 .item-input {
                     display: flex;

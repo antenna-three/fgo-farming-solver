@@ -122,11 +122,16 @@ export default function ItemForm({
                         })
                     }}/>
                 </ErrorBoundary>
-                <button type="submit">計算</button>
+                {Object.values(inputState.items).every(s => !s) && <p className="error">集めたいアイテムの数を最低1つ入力してください。</p>}
+                {inputState.quests.length == 0 && <p className="error">周回対象に含めるクエストを選択してください。</p>}
+                <button
+                    type="submit"
+                    disabled={Object.values(inputState.items).every(s => !s) || inputState.quests.length == 0}
+                >計算</button>
                 <button className="secondary" onClick={(e) => {
                     e.preventDefault()
                     setIsConfirming(true)
-                }}>クリア</button>
+                }}>リセット</button>
                 <Link href={{pathname: '/import-export', query: inputToQuery(inputState)}}>
                     <a>入力内容のエクスポート</a>
                 </Link>
@@ -138,15 +143,18 @@ export default function ItemForm({
                         background: #aaa;
                         border-color: #aaa;
                     }
+                    .error {
+                        color: #f33;
+                    }
                 `}</style>
             </form>
             {isWaiting && (<Overlay><Spinner/></Overlay>)}
             {isConfirming && (
                 <Overlay>
                     <WarningConfirm
-                        title="本当に全消去しますか？"
-                        message="予め「入力内容のエクスポート」を使っておけば、後から入力内容を復元することができます。"
-                        proceed="全消去"
+                        title="本当にリセットしますか？"
+                        message="あらかじめ「入力内容のエクスポート」を使っておけば、後から入力内容を復元することができます。"
+                        proceed="リセット"
                         cancel="キャンセル"
                         onProceed={() => {
                             setInputState(initialInputState)
