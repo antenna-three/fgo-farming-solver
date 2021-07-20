@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
+import Error from './_error'
 import _ from 'underscore'
 import QuestTable from '../components/quest-table'
 import { getS3 } from '../lib/get-s3'
@@ -44,21 +45,29 @@ export default function Result({
 }) {
     const router = useRouter()
     const query = router.query
+    console.log(query)
 
     if (! ('quests' in query && 'items' in query && 'queries' in query)) {
         return (
-            <>
-                <h1>フォームに内容を入力してください</h1>
-                <p>このページはアイテム必要数をもとに必要なクエスト周回数を表示するページですが、アイテム必要数が入力されていないようです。</p>
-                <p>アイテム必要数を<Link href="/form"><a>こちらのページ</a></Link>から入力してください。</p>
-                <p>URLを編集した結果このページが表示された場合はブラウザバックしてください。</p>
-            </>
+            <Error statusCode={400}/>
         )
     }
 
     const queryQuests = query.quests as string
     const queryItems = query.items as string
     const queryQueries = query.queries as string
+
+    if (!queryQuests || !queryItems || !queryQueries) {
+        return (
+            <Error
+                statusCode={400}
+                message={[
+                    "結果が見つかりませんでした。",
+                    "新しく追加された素材のためドロップ率のデータがない場合などがあります。"
+                ]}
+            />
+        )
+    }
 
     const questLaps = queryQuests.split(',').map((queryQuest) => {
         const [id, lap] = queryQuest.split(':')

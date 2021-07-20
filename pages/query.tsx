@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import Error from 'next/error'
+import Error from './_error'
 import useSWR from 'swr'
 import Spinner from '../components/spinner'
 import _ from 'underscore'
@@ -30,7 +30,7 @@ export default function Query() {
     )
     if (!data) return <Spinner />
 
-    if (data.message) return data.message.split('\n').map((line: string) => <p>{line}</p>)
+    if (data.message) return <Error statusCode={400} message={data.message.split('\n')}/>
 
     const quests: {id: string, lap: number}[] = data.quests
     const items: {id: string, count: number}[] = data.items
