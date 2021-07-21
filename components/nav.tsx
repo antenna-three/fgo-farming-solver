@@ -24,7 +24,7 @@ export default function Nav() {
                         </Link>
                     </li>
                     <li>
-                        <a href='https://github.com/antenna-three'>GitHub</a>
+                        <a href='#'>GitHub</a>
                         <ul>
                             <li>
                                 <a href='https://github.com/antenna-three/fgo-farming-solver'>Front end</a>

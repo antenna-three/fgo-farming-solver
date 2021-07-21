@@ -8,6 +8,11 @@ const statusCodes: { [code: number]: string } = {
     500: 'Internal Server Error',
 }
 
+const messages: { [code: number]: string | string[] } = {
+    404: ['ページが見つかりませんでした。', 'URLが間違っている可能性があります。'],
+    500: ['サーバーに問題があります。', 'サイト管理者にお問い合わせください。']
+}
+
 export default function Error({
     statusCode,
     title,
@@ -18,13 +23,15 @@ export default function Error({
     message?: string | string[]
 }) {
     title = title || statusCodes[statusCode] || 'An unexpected error has occured'
+    message = message || messages[statusCode]
     return (
         <>
             <Head title={`${statusCode} ${title}`}/>
             <h1><span className="status-code">{statusCode}</span>{' '}<span className="title">{title}</span></h1>
-            {Array.isArray(message)
-            ? message.map(m => <p>{m}</p>)
-            : <p>{message}</p>
+            {
+                Array.isArray(message)
+                ? message.map(m => <p>{m}</p>)
+                : <p>{message}</p>
             }
             <p><Link href="/"><a>トップに戻る</a></Link></p>
             <style jsx>{`

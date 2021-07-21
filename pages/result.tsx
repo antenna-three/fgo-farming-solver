@@ -1,12 +1,12 @@
 import Link from 'next/link'
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
-import Error from './_error'
 import _ from 'underscore'
-import QuestTable from '../components/quest-table'
 import { getS3 } from '../lib/get-s3'
 import { getLargeCategory } from '../lib/get-large-category'
+import Error from './_error'
 import Head from '../components/head'
+import QuestTable from '../components/quest-table'
 import SumTable from '../components/sum-table'
 import ItemTable from '../components/item-table'
 import TweetIntent from '../components/tweet-intent'
@@ -59,13 +59,11 @@ export default function Result({
 
     if (!queryQuests || !queryItems || !queryQueries) {
         return (
-            <Error
-                statusCode={400}
-                message={[
-                    "結果が見つかりませんでした。",
-                    "新しく追加された素材のためドロップ率のデータがない場合などがあります。"
-                ]}
-            />
+            <>
+                <h1>結果が見つかりませんでした</h1>
+                <p>新しく追加された素材のためドロップ率のデータがない場合などがあります。</p>
+                <p><Link href="/"><a>トップに戻る</a></Link></p>
+            </>
         )
     }
 
@@ -136,6 +134,9 @@ export default function Result({
                         <ItemTable itemGroups={itemGroups} itemToQuery={itemToQuery}/>
                     </details>
                 ))}
+            </section>
+            <section>
+                <p><Link href="/"><a>トップに戻る</a></Link></p>
             </section>
             <style jsx>{`
                 .tw {
