@@ -29,19 +29,23 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     const questToDrops = _.groupBy(drops, (drop) => (drop.quest_id))
 
+    const bestDrops = Object.fromEntries(Object.entries(_.groupBy(drops, (drop) => (drop.item_id)))
+        .map(([id, drops]) => ([id, drops.sort((a, b) => (parseFloat(b.drop_rate) - parseFloat(a.drop_rate)))[0].drop_rate])))
     return {
-        props: {itemInfo, questInfo, questToDrops},
+        props: {itemInfo, questInfo, questToDrops, bestDrops},
     }
 }
 
 export default function Result({
     itemInfo,
     questInfo,
-    questToDrops
+    questToDrops,
+    bestDrops
 }: {
     itemInfo: {[key: string]: {[key: string]: string}},
     questInfo: {[key: string]: {area: string, name: string, id: string, ap: string}},
-    questToDrops: {[key: string]: {item_name: string, drop_rate: string}[]}
+    questToDrops: {[key: string]: {item_name: string, drop_rate: string}[]},
+    bestDrops: {[key: string]: number}
 }) {
     const router = useRouter()
     const query = router.query
@@ -76,6 +80,13 @@ export default function Result({
 
     const itemCounts = queryItems.split(',').map((queryItem) => {
         const [id, count] = queryItem.split(':')
+        const category = itemInfo[id].category
+        const name = itemInfo[id].name
+        return {category, name, id, count: parseInt(count)}
+    })
+
+    const queryItemCounts = queryQueries.split(',').map((queryQuery) => {
+        const [id, count] = queryQuery.split(':')
         const category = itemInfo[id].category
         const name = itemInfo[id].name
         return {category, name, id, count: parseInt(count)}
@@ -120,7 +131,9 @@ export default function Result({
             </section>
             <section>
                 <TweetIntent
+                    itemCounts={queryItemCounts}
                     questLaps={questLaps}
+                    bestDrops={bestDrops}
                     url={`https://fgo-farming-solver.vercel.app${router.asPath}`}
                 />
             </section>

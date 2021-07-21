@@ -1,21 +1,31 @@
 
 export default function TweetIntent({
+    itemCounts,
     questLaps,
+    bestDrops,
     url
 }: {
+    itemCounts: {category: string, name: string, id: string, count: number}[],
     questLaps: {area: string, name: string, lap: number}[],
+    bestDrops: {[key: string]: number},
     url: string
 }) {
+    const displayedItems = itemCounts
+        .slice()
+        .sort((a, b) => (b.count/bestDrops[b.id] - a.count/bestDrops[a.id]))
+        .slice(0, 3)
+        .map(({name, count}) => (`${name}${count}個`))
+        .join('、')
     const displayedLaps = questLaps
         .slice()
         .sort((a, b) => (b.lap - a.lap))
         .slice(0, 3)
         .map(({area, name, lap}) => (`${area} ${name} ${lap}周`))
         .join('\r\n')
-    const lapSum = questLaps.map(({lap}) => lap).reduce((acc, cur) => (acc + cur), 0)
-    const text = `必要な周回数:
-${displayedLaps}${questLaps.length > 3 ? 'など': ''}
-合計 ${lapSum}周
+    const lapSum = `合計 ${questLaps.map(({lap}) => lap).reduce((acc, cur) => (acc + cur), 0)}周`
+    const text = `${displayedItems}${itemCounts.length > 3 ? 'など' : ''}を集めるために必要な周回数:
+${displayedLaps}${questLaps.length > 3 ? 'など' : ''}
+${questLaps.length > 1 ? lapSum : ''}
 詳細: `
     const hashtags = 'FGO周回ソルバー'
     const intentUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}&hashtags=${encodeURIComponent(hashtags)}`
