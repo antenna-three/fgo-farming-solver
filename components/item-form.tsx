@@ -3,7 +3,6 @@ import React, {useEffect, useState} from 'react'
 import ItemFieldset from './item-fieldset'
 import _ from 'underscore'
 import { useRouter } from 'next/router'
-import Spinner from './spinner'
 import Overlay from './overlay'
 import WarningConfirm from './warning-confirm'
 import ObjectiveFieldset from './objective-fieldset'
@@ -59,7 +58,6 @@ export default function ItemForm({
     }
     const [inputState, setInputState] = useState(initialInputState)
     const router = useRouter()
-    const [isWaiting, setIsWaiting] = useState(false)
     const [isConfirming, setIsConfirming] = useState(false)
 
     useEffect(() => {
@@ -76,7 +74,6 @@ export default function ItemForm({
     
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
-        setIsWaiting(true)
         const query = inputToQuery(inputState)
         router.push({
             pathname: '/query',
@@ -148,7 +145,6 @@ export default function ItemForm({
                     }
                 `}</style>
             </form>
-            {isWaiting && (<Overlay><Spinner/></Overlay>)}
             {isConfirming && (
                 <Overlay>
                     <WarningConfirm
