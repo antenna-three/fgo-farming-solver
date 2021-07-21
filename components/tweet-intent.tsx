@@ -35,6 +35,8 @@ ${questLaps.length > 1 ? lapSum : ''}
             <a
                 className="twitter-share-button"
                 href={intentUrl}
+                target="_blank"
+                rel="noopener noreferrer"
                 data-size="large"
             >
                 <svg  width="24px" height="24px">

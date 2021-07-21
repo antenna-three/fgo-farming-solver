@@ -49,7 +49,6 @@ export default function Result({
 }) {
     const router = useRouter()
     const query = router.query
-    console.log(query)
 
     if (! ('quests' in query && 'items' in query && 'queries' in query)) {
         return (
