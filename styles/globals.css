@@ -21,15 +21,6 @@ nav {
   margin-bottom: 0;
 }
 
-.nav {
-  display: flex;
-  align-items: center;
-}
-
-.nav > h1 {
-  margin-left: 1rem;
-}
-
 summary {
   position: relative;
   display: block;

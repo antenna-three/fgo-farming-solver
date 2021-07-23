@@ -23,8 +23,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     }, {})
 
     const questInfo = quests.reduce((acc: {[key: string]: {[key: string]: string}}, cur: {[key: string]: string}) => {
-        const {section, area, name, id} = cur
-        acc[cur.id] = {section, area, name, id}
+        const {section, area, name, id, ap} = cur
+        acc[cur.id] = {section, area, name, id, ap}
         return acc
     }, {})
 
