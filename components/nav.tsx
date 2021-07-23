@@ -20,20 +20,27 @@ export default function Nav() {
                 <ul>
                     <li>
                         <Link href='/about'>
-                            <a>About</a>
+                            <a>使い方</a>
                         </Link>
+                    </li>
+                    <li>
+                        <a
+                            href={`https://twitter.com/search?q=${encodeURIComponent('#FGO周回ソルバー')}&f=live`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >みんなの結果</a>
                     </li>
                     <li>
                         <a href='#'>GitHub</a>
                         <ul>
                             <li>
-                                <a href='https://github.com/antenna-three/fgo-farming-solver'>Front end</a>
+                                <a href='https://github.com/antenna-three/fgo-farming-solver'>フロントエンド</a>
                             </li>
                             <li>
                                 <a href='https://github.com/antenna-three/fgo-farming-solver-api'>API</a>
                             </li>
                             <li>
-                                <a href='https://github.com/antenna-three/fgo-farming-solver'>Data extraction</a>
+                                <a href='https://github.com/antenna-three/fgo-farming-solver'>データ抽出</a>
                             </li>
                         </ul>
                     </li>
