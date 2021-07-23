@@ -23,7 +23,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     }, {})
 
     const questInfo = quests.reduce((acc: {[key: string]: {[key: string]: string}}, cur: {[key: string]: string}) => {
-        acc[cur.id] = cur
+        const {section, area, name, id} = cur
+        acc[cur.id] = {section, area, name, id}
         return acc
     }, {})
 
@@ -119,12 +120,12 @@ export default function Result({
                 <details className="sum-details">
                     <summary>合計</summary>
                     <section>
-                    <SumTable rows={[
-                        {key: '周回数', value: questLaps.map(lap => lap.lap).reduce((acc, cur) => (acc + cur)), unit: '周'},
-                        {key: 'AP', value: totalAp, unit: 'AP'},
-                        {key: '聖晶石', value: Math.ceil(totalAp / 144), unit: '個'},
-                        {key: '費用', value: (totalAp / 144 / 168).toFixed(1), unit: '万円'}
-                    ]}/>
+                        <SumTable rows={[
+                            {key: '周回数', value: questLaps.map(lap => lap.lap).reduce((acc, cur) => (acc + cur)), unit: '周'},
+                            {key: 'AP', value: totalAp, unit: 'AP'},
+                            {key: '聖晶石', value: Math.ceil(totalAp / 144), unit: '個'},
+                            {key: '費用', value: (totalAp / 144 / 168).toFixed(1), unit: '万円'}
+                        ]}/>
                     </section>
                 </details>
             </section>
@@ -151,9 +152,6 @@ export default function Result({
                 <p><Link href="/"><a>トップに戻る</a></Link></p>
             </section>
             <style jsx>{`
-                .tw {
-                    color: var(--color);
-                }
                 .sum-details {
                     width: 14rem;
                 }
