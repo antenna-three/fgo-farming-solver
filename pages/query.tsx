@@ -22,7 +22,6 @@ export default function Query() {
         return <Error statusCode={400}/>
     }
     const params = new URLSearchParams({...router.query, fields: 'quests,items'} as any)
-    const pp = new URLSearchParams({foo: 'bar'})
     const {data, error} = useSWR('' + params, fetcher)
     
     if (error) return (
