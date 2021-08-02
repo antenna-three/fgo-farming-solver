@@ -4,8 +4,8 @@ import ItemForm from '../components/item-form'
 import { getS3 } from '../lib/get-s3'
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-    const items = await getS3('items.csv')
-    const quests = (await getS3('quests.csv')).map(({ section, area, name, id }) => ({ section, area, name, id }))
+    const items = await getS3('items_2021.csv')
+    const quests = (await getS3('quests_2021.csv')).map(({ section, area, name, id }) => ({ section, area, name, id }))
     
     return {
         props: {

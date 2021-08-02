@@ -12,9 +12,9 @@ import ItemTable from '../components/item-table'
 import TweetIntent from '../components/tweet-intent'
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-    const itemsPromise = getS3('items.csv')
-    const questsPromise = getS3('quests.csv')
-    const dropsPromise = getS3('drop_rates.csv')
+    const itemsPromise = getS3('items_2021.csv')
+    const questsPromise = getS3('quests_2021.csv')
+    const dropsPromise = getS3('drop_rates_2021.csv')
     const [items, quests, drops] = await Promise.all([itemsPromise, questsPromise, dropsPromise])
     
     const itemInfo = items.reduce((acc: {[key: string]: {[key: string]:string}}, cur: {[key: string]: string}) => {
