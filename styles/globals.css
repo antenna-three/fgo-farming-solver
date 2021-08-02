@@ -117,6 +117,47 @@ input[type=radio]:checked + label::after{
   cursor: pointer;
 }
 
+
+input[type=checkbox] + label {
+  padding-left: .5rem;
+  position: relative;
+  margin-right: 1.5rem;
+  cursor: pointer;
+}
+input[type=checkbox] + label::before {
+  content: "";
+  position: absolute;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: -.5rem;
+  width: .8rem;
+  height: .8rem;
+  border: 2px solid var(--color-bg-secondary);
+  border-radius: 5px;
+  background: var(--color-bg);
+  z-index: 1;
+  box-shadow: 0 0 0 .4rem var(--color-bg);
+  cursor: pointer;
+}
+input[type=checkbox]:focus + label::before {
+  border-color: var(--color-text);
+}
+input[type=checkbox] + label::after {
+  content: "";
+  position: absolute;
+  transform: translate(-50%, -50%);
+  top: -.1rem;
+  left: -.8rem;
+  z-index: 2;
+  width: .5rem;
+  height: .8rem;
+  transform: rotate(45deg);
+}
+input[type=checkbox]:checked + label::after {
+  border-right: 3px solid var(--color);
+  border-bottom: 3px solid var(--color);
+}
+
 table {
   border: none;
   border-collapse: collapse;

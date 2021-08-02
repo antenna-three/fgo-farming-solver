@@ -102,7 +102,9 @@ export default function Result({
     const itemGroups = _.groupBy(itemCounts, item => item.category)
     const largeItemGroups = _.groupBy(Object.entries(itemGroups), ([category, _]) => getLargeCategory(category))
 
-    const totalAp = questLaps.map(({id, lap}) => (lap * parseInt(questInfo[id].ap))).reduce((acc, cur) => (acc + cur))
+    const totalAp = typeof query.total_ap == 'string'
+        ? parseInt(query.total_ap)
+        : questLaps.map(({id, lap}) => (lap * parseInt(questInfo[id].ap))).reduce((acc, cur) => (acc + cur))
 
     return (
         <>

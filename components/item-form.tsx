@@ -11,7 +11,17 @@ import ErrorBoundary from './error-boundary'
 import { getLargeCategory } from '../lib/get-large-category'
 import { createTree } from '../lib/create-tree'
 
-function inputToQuery({objective, items, quests}: {objective: string, items: {[key: string]: string}, quests: string[]}) {
+function inputToQuery({
+    objective,
+    items,
+    quests,
+    halfDailyAp
+}: {
+    objective: string,
+    items: {[key: string]: string},
+    quests: string[],
+    halfDailyAp: boolean
+}) {
     return {
         objective,
         items: Object.entries(items)
@@ -20,13 +30,19 @@ function inputToQuery({objective, items, quests}: {objective: string, items: {[k
             .join(','),
         quests: quests
             .reduce((acc, cur) => (acc.includes(cur[0]) || acc.includes(cur.slice(0, 2)) ? acc : [...acc, cur]), [] as string[])
-            .join(',')
+            .join(','),
+        ap_coefficients: halfDailyAp ? '0:0.5' : ''
     }
 }
 
 function queryToInput(
-    initialInputState: {objective: string, items: {[key: string]: string}, quests: string[]},
-    {objective, items, quests}: {objective: string, items: string, quests: string}
+    initialInputState: {
+        objective: string,
+        items: {[key: string]: string},
+        quests: string[],
+        halfDailyAp: boolean
+    },
+    {objective, items, quests, halfDailyAp}: {objective: string, items: string, quests: string, halfDailyAp: string}
 ) {
     const queryQuests = quests.split(',')
     return {
@@ -35,12 +51,13 @@ function queryToInput(
         items: Object.fromEntries(items.split(',').map((itemCount) => itemCount.split(':'))),
         quests: initialInputState.quests.filter((quest) => (
             queryQuests.includes(quest[0]) || queryQuests.includes(quest.slice(0, 2)) || queryQuests.includes(quest)
-        ))
+        )),
+        halfDailyAp: (halfDailyAp === 'true')
     }
 }
 
-function isInputState(arg: any): arg is {objective: string, items: string, quests: string} {
-    return typeof(arg.objective) == 'string' && typeof(arg.items) == 'string' && typeof(arg.quests) == 'string'
+function isInputState(arg: any): arg is {objective: string, items: string, quests: string, halfDailyAp: string} {
+    return typeof(arg.objective) == 'string' && typeof(arg.items) == 'string' && typeof(arg.quests) == 'string' && typeof(arg.halfDailyAp) == 'string'
 }
 
 export default function ItemForm({
@@ -54,7 +71,8 @@ export default function ItemForm({
     const initialInputState = {
         objective: 'ap',
         items: Object.fromEntries(items.map(item => [item.id, ''])),
-        quests: ids
+        quests: ids,
+        halfDailyAp: false
     }
     const [inputState, setInputState] = useState(initialInputState)
     const router = useRouter()
@@ -67,7 +85,7 @@ export default function ItemForm({
         } else {
             const input = localStorage.getItem('input')
             if (input) {
-                setInputState(JSON.parse(input))
+                setInputState({...initialInputState, ...JSON.parse(input)})
             }
         }
     }, [])
@@ -119,16 +137,33 @@ export default function ItemForm({
                         })
                     }}/>
                 </ErrorBoundary>
+                <fieldset>
+                    <legend>キャンペーン</legend>
+                    <input
+                        type="checkbox"
+                        value="half-daily-ap"
+                        id="half-daily-ap"
+                        checked={inputState.halfDailyAp}
+                        onChange={event => {setInputState((state) => ({...state, halfDailyAp: event.currentTarget.checked}))}}
+                    />
+                    <label htmlFor="half-daily-ap">
+                        修練場AP半減
+                    </label>
+                </fieldset>
                 {Object.values(inputState.items).every(s => !s) && <p className="error">集めたいアイテムの数を最低1つ入力してください。</p>}
                 {inputState.quests.length == 0 && <p className="error">周回対象に含めるクエストを選択してください。</p>}
                 <button
                     type="submit"
                     disabled={Object.values(inputState.items).every(s => !s) || inputState.quests.length == 0}
-                >計算</button>
+                >
+                    計算
+                </button>
                 <button className="secondary" onClick={(e) => {
                     e.preventDefault()
                     setIsConfirming(true)
-                }}>リセット</button>
+                }}>
+                    リセット
+                </button>
                 <Link href={{pathname: '/import-export', query: inputToQuery(inputState)}}>
                     <a>入力内容のエクスポート</a>
                 </Link>
