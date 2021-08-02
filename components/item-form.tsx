@@ -144,7 +144,7 @@ export default function ItemForm({
                         value="half-daily-ap"
                         id="half-daily-ap"
                         checked={inputState.halfDailyAp}
-                        onChange={event => {setInputState((state) => ({...state, halfDailyAp: event.currentTarget.checked}))}}
+                        onChange={event => {setInputState((state) => ({...state, halfDailyAp: !state.halfDailyAp}))}}
                     />
                     <label htmlFor="half-daily-ap">
                         修練場AP半減
