@@ -24,6 +24,11 @@ export default function Nav() {
                 <div className="nav">
                     <ul>
                         <li>
+                            <Link href='/news'>
+                                <a>お知らせ</a>
+                            </Link>
+                        </li>
+                        <li>
                             <Link href='/about'>
                                 <a><span>このサイト</span><span>について</span></a>
                             </Link>

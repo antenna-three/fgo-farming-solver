@@ -1,4 +1,5 @@
 import { GetStaticProps } from 'next'
+import Link from 'next/link'
 import ItemForm from '../components/item-form'
 import { getS3 } from '../lib/get-s3'
 
@@ -24,6 +25,7 @@ export default function Index({
 }) {
     return (
         <>
+            <p><Link href="/news"><a>お知らせ: ドロップ率改定に伴う対応について</a></Link></p>
             <ItemForm items={items} quests={quests}/>
         </>
     )
