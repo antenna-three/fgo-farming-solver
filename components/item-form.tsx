@@ -120,7 +120,11 @@ export default function ItemForm({
                     objective={inputState.objective}
                     handleChange={(event: React.FormEvent<HTMLInputElement>) => {
                         const target = event.currentTarget
-                        setInputState((state) => ({...state, objective: target.value}))
+                        setInputState((state) => {
+                            const newState = {...state, objective: target.value}
+                            localStorage.setItem('input', JSON.stringify(newState))
+                            return newState
+                        })
                     }}
                 />
                 <ItemFieldset
@@ -144,7 +148,11 @@ export default function ItemForm({
                         value="half-daily-ap"
                         id="half-daily-ap"
                         checked={inputState.halfDailyAp}
-                        onChange={event => {setInputState((state) => ({...state, halfDailyAp: !state.halfDailyAp}))}}
+                        onChange={() => {setInputState((state) => {
+                            const newState = {...state, halfDailyAp: !state.halfDailyAp}
+                            localStorage.setItem('input', JSON.stringify(newState))
+                            return newState
+                        })}}
                     />
                     <label htmlFor="half-daily-ap">
                         修練場AP半減
