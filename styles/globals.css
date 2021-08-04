@@ -3,12 +3,11 @@
   --color: #18e;
   --color-text: #333;
 }
-/*
-html,
-body {
-  color: #333;
+
+html {
+  text-size-adjust: 100%;
 }
-*/
+
 * {
   box-sizing: border-box;
 }
