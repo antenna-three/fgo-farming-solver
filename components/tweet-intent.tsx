@@ -2,17 +2,25 @@
 export default function TweetIntent({
     itemCounts,
     questLaps,
-    bestDrops,
     url
 }: {
     itemCounts: {category: string, name: string, id: string, count: number}[],
     questLaps: {area: string, name: string, lap: number}[],
-    bestDrops: {[key: string]: number},
     url: string
 }) {
+    const weights: {[key: string]: number} = {
+        銅素材: 1,
+        銀素材: 3,
+        金素材: 5,
+        輝石: 0.3,
+        魔石: 0.5,
+        秘石: 5,
+        ピース: 1,
+        モニュ: 3
+    }
     const displayedItems = itemCounts
         .slice()
-        .sort((a, b) => (b.count/bestDrops[b.id] - a.count/bestDrops[a.id]))
+        .sort((a, b) => (b.count*weights[b.category] - a.count*weights[a.category]))
         .slice(0, 3)
         .map(({name, count}) => (`${name}${count}個`))
         .join('、')

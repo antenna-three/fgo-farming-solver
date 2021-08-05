@@ -21,7 +21,7 @@ export default function Query() {
     if (!isStrToStr(query)) {
         return <Error statusCode={400}/>
     }
-    const params = new URLSearchParams({...router.query, fields: 'quests,items,total_ap'} as any)
+    const params = new URLSearchParams({...router.query, fields: 'id'} as any)
     const {data, error} = useSWR('' + params, fetcher)
     
     if (error) return (
@@ -31,13 +31,6 @@ export default function Query() {
 
     if (data.message) return <Error statusCode={400} message={data.message.split('\n')}/>
 
-    const quests: {id: string, lap: number}[] = data.quests
-    const items: {id: string, count: number}[] = data.items
-
-    const questsRison = quests.map(({id, lap}) => (id + ':' + lap)).join(',')
-    const itemsRison = items.map(({id, count}) => (id + ':' + count)).join(',')
-    const queriesRison = query.items
-
-    router.replace(`/result?quests=${questsRison}&items=${itemsRison}&queries=${queriesRison}&total_ap=${data.total_ap}`)
+    router.replace('/results/' + data.id)
     return <Spinner/>
 }
