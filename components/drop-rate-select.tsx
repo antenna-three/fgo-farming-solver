@@ -25,7 +25,7 @@ export default function DropRateSelect({
                             name="dropMergeMethod"
                             value={value}
                             onChange={handleChange}
-                            checked={value=='add'}
+                            defaultChecked={value=='add'}
                             id={value}
                         />
                         <label htmlFor={value}>
