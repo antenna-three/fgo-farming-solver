@@ -113,8 +113,10 @@ export default function ItemForm({
         ([category, _]) => getLargeCategory(category)
     ))
 
+    /*
     const totalSamples1 = quests.reduce((acc, cur) => (acc + cur.samples_1), 0)
     const totalSamples2 = quests.reduce((acc, cur) => (acc + cur.samples_2), 0)
+    */
 
     return (
         <>
@@ -174,8 +176,6 @@ export default function ItemForm({
                             return newState
                         })
                     }}
-                    totalSamples1={totalSamples1}
-                    totalSamples2={totalSamples2}
                 />
                 {Object.values(inputState.items).every(s => !s) && <p className="error">集めたいアイテムの数を最低1つ入力してください。</p>}
                 {inputState.quests.length == 0 && <p className="error">周回対象に含めるクエストを選択してください。</p>}
