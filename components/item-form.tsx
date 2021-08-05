@@ -8,20 +8,21 @@ import WarningConfirm from './warning-confirm'
 import ObjectiveFieldset from './objective-fieldset'
 import QuestTree from './quest-tree'
 import ErrorBoundary from './error-boundary'
+import DropRateSelect from './drop-rate-select'
 import { getLargeCategory } from '../lib/get-large-category'
 import { createTree } from '../lib/create-tree'
+
+type InputState = {objective: string, items: {[key: string]: string}, quests: string[], halfDailyAp: boolean, dropMergeMethod: string}
+type QueryInputState = {objective: string, items: string, quests: string, halfDailyAp: string, dropMergeMethod: string}
 
 function inputToQuery({
     objective,
     items,
     quests,
-    halfDailyAp
-}: {
-    objective: string,
-    items: {[key: string]: string},
-    quests: string[],
-    halfDailyAp: boolean
-}) {
+    halfDailyAp,
+    dropMergeMethod
+}: InputState
+) {
     return {
         objective,
         items: Object.entries(items)
@@ -31,18 +32,14 @@ function inputToQuery({
         quests: quests
             .reduce((acc, cur) => (acc.includes(cur[0]) || acc.includes(cur.slice(0, 2)) ? acc : [...acc, cur]), [] as string[])
             .join(','),
-        ap_coefficients: halfDailyAp ? '0:0.5' : ''
+        ap_coefficients: halfDailyAp ? '0:0.5' : '',
+        drop_merge_method: dropMergeMethod
     }
 }
 
 function queryToInput(
-    initialInputState: {
-        objective: string,
-        items: {[key: string]: string},
-        quests: string[],
-        halfDailyAp: boolean
-    },
-    {objective, items, quests, halfDailyAp}: {objective: string, items: string, quests: string, halfDailyAp: string}
+    initialInputState: InputState,
+    {objective, items, quests, halfDailyAp, dropMergeMethod}: QueryInputState
 ) {
     const queryQuests = quests.split(',')
     return {
@@ -52,11 +49,12 @@ function queryToInput(
         quests: initialInputState.quests.filter((quest) => (
             queryQuests.includes(quest[0]) || queryQuests.includes(quest.slice(0, 2)) || queryQuests.includes(quest)
         )),
-        halfDailyAp: (halfDailyAp === 'true')
+        halfDailyAp: (halfDailyAp === 'true'),
+        dropMergeMethod
     }
 }
 
-function isInputState(arg: any): arg is {objective: string, items: string, quests: string, halfDailyAp: string} {
+function isInputState(arg: any): arg is QueryInputState {
     return typeof(arg.objective) == 'string' && typeof(arg.items) == 'string' && typeof(arg.quests) == 'string' && typeof(arg.halfDailyAp) == 'string'
 }
 
@@ -72,7 +70,8 @@ export default function ItemForm({
         objective: 'ap',
         items: Object.fromEntries(items.map(item => [item.id, ''])),
         quests: ids,
-        halfDailyAp: false
+        halfDailyAp: false,
+        dropMergeMethod: 'add'
     }
     const [inputState, setInputState] = useState(initialInputState)
     const router = useRouter()
@@ -158,6 +157,14 @@ export default function ItemForm({
                         修練場AP半減
                     </label>
                 </fieldset>
+                <DropRateSelect
+                    dropMergeMethod={inputState.dropMergeMethod}
+                    handleChange={(event: React.FormEvent<HTMLInputElement>) => {setInputState((state) => {
+                        const newState = {...state, dropMergeMethod: event.currentTarget.value}
+                        localStorage.setItem('input', JSON.stringify(newState))
+                        return newState
+                    })}}
+                />
                 {Object.values(inputState.items).every(s => !s) && <p className="error">集めたいアイテムの数を最低1つ入力してください。</p>}
                 {inputState.quests.length == 0 && <p className="error">周回対象に含めるクエストを選択してください。</p>}
                 <button

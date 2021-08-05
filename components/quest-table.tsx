@@ -2,10 +2,12 @@ import { Fragment } from "react"
 
 export default function QuestTable({
     questGroups, 
-    questToDrops
+    questToDrops,
+    itemIndexes
 }: {
     questGroups: {[key: string]: {area: string, name: string, id: string, lap: number}[]},
-    questToDrops: {[key: string]: {item_name: string, drop_rate: number | string}[]}
+    questToDrops: {[key: string]: {item_id: string, drop_rate: number | string}[]},
+    itemIndexes: {[key: string]: {name: string}}
 }) {
     return (
         <table>
@@ -24,7 +26,7 @@ export default function QuestTable({
                             <tr key={id}>
                                 <td className="left">{name}</td>
                                 <td className="right">{lap}</td>
-                                <td className="left">{questToDrops[id].map((d) => (d.item_name + Math.round((typeof d.drop_rate == 'string' ? parseFloat(d.drop_rate) : d.drop_rate) * lap))).join(' ')}</td>
+                                <td className="left">{questToDrops[id].map((d) => (itemIndexes[d.item_id].name + Math.round((typeof d.drop_rate == 'string' ? parseFloat(d.drop_rate) : d.drop_rate) * lap))).join(' ')}</td>
                             </tr>
                         ))}
                     </Fragment>

@@ -42,7 +42,7 @@ export default function Result({
 }: {
     itemInfo: {[key: string]: {[key: string]: string}},
     questInfo: {[key: string]: {area: string, name: string, id: string, ap: string}},
-    questToDrops: {[key: string]: {item_name: string, drop_rate: string}[]}
+    questToDrops: {[key: string]: {item_id: string, drop_rate: string}[]}
 }) {
     const router = useRouter()
     const query = router.query
@@ -112,7 +112,7 @@ export default function Result({
                 <header>
                     <h2>クエスト周回数</h2>
                 </header>
-                <QuestTable questGroups={lapGroups} questToDrops={questToDrops}/>
+                <QuestTable questGroups={lapGroups} questToDrops={questToDrops} itemIndexes={itemInfo as {[key: string]: {name: string}}}/>
             </section>
             <section>
                 <details className="sum-details">

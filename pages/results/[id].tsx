@@ -73,7 +73,7 @@ export default function Result({
                 <header>
                     <h2>クエスト周回数</h2>
                 </header>
-                <QuestTable questGroups={lapGroups} questToDrops={questToDrops}/>
+                <QuestTable questGroups={lapGroups} questToDrops={questToDrops} itemIndexes={itemIndexes}/>
             </section>
             <section>
                 <details className="sum-details">
