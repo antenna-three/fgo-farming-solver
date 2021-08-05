@@ -147,11 +147,14 @@ export default function ItemForm({
                         value="half-daily-ap"
                         id="half-daily-ap"
                         checked={inputState.halfDailyAp}
-                        onChange={() => {setInputState((state) => {
-                            const newState = {...state, halfDailyAp: !state.halfDailyAp}
-                            localStorage.setItem('input', JSON.stringify(newState))
-                            return newState
-                        })}}
+                        onChange={(event) => {
+                            const target = event.currentTarget
+                            setInputState((state) => {
+                                const newState = {...state, halfDailyAp: target.checked}
+                                localStorage.setItem('input', JSON.stringify(newState))
+                                return newState
+                            })
+                        }}
                     />
                     <label htmlFor="half-daily-ap">
                         修練場AP半減
@@ -159,11 +162,14 @@ export default function ItemForm({
                 </fieldset>
                 <DropRateSelect
                     dropMergeMethod={inputState.dropMergeMethod}
-                    handleChange={(event: React.FormEvent<HTMLInputElement>) => {setInputState((state) => {
-                        const newState = {...state, dropMergeMethod: event.currentTarget.value}
-                        localStorage.setItem('input', JSON.stringify(newState))
-                        return newState
-                    })}}
+                    handleChange={(event: React.FormEvent<HTMLInputElement>) => {
+                        const target = event.currentTarget
+                        setInputState((state) => {
+                            const newState = {...state, dropMergeMethod: target.value}
+                            localStorage.setItem('input', JSON.stringify(newState))
+                            return newState
+                        })
+                    }}
                 />
                 {Object.values(inputState.items).every(s => !s) && <p className="error">集めたいアイテムの数を最低1つ入力してください。</p>}
                 {inputState.quests.length == 0 && <p className="error">周回対象に含めるクエストを選択してください。</p>}
