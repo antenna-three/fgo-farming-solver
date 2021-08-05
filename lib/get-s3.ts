@@ -56,3 +56,37 @@ export async function getS3(key: string): Promise<{[key: string]: string}[]> {
         return []
     }
 }
+
+export async function getJSON(key: string): Promise<{[key: string]: string}[]> {
+    const bucket = 'fgodrop'
+
+    const accessKeyId = process.env.MY_AWS_ACCESS_KEY_ID
+    const secretAccessKey = process.env.MY_AWS_SECRET_ACCESS_KEY
+    if (accessKeyId == null || secretAccessKey == null) {
+        console.log('Environment variables are not set')
+        return []
+    }
+
+    const client = new S3Client({ credentials: { accessKeyId, secretAccessKey }, region: 'ap-northeast-1' })
+    const command = new GetObjectCommand({ Bucket: bucket, Key: key })
+
+    try {
+        const response = await client.send(command)
+        const body = response.Body as Readable
+
+        if (body == null) {
+            console.log('Response body is empty')
+            return []
+        }
+        
+        let data: string = ''
+        for await (const chunk of body) {
+            data += chunk
+        }
+        
+        return JSON.parse(data)
+    } catch (e) {
+        console.log(e, e.stack)
+        return []
+    }
+}

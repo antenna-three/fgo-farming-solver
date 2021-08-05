@@ -1,18 +1,13 @@
 import { GetStaticProps } from 'next'
 import Link from 'next/link'
 import ItemForm from '../components/item-form'
-import { getS3 } from '../lib/get-s3'
+import { getJSON } from '../lib/get-s3'
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-    const items = await getS3('items_2021.csv')
-    const quests = (await getS3('quests_2021.csv')).map(({ section, area, name, id }) => ({ section, area, name, id }))
+    const props = await getJSON('all.json')
     
     return {
-        props: {
-            items,
-            quests
-        },
-        revalidate: 60 * 60 * 24
+        props
     }
 }
 
@@ -21,7 +16,7 @@ export default function Index({
     quests
 }: {
     items: {category: string, name: string, id: string}[],
-    quests: {section: string, area: string, name: string, id: string}[]
+    quests: {section: string, area: string, name: string, id: string, samples_1: number, samples_2: number}[]
 }) {
     return (
         <>
