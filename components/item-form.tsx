@@ -13,7 +13,7 @@ import { getLargeCategory } from '../lib/get-large-category'
 import { createTree } from '../lib/create-tree'
 
 type InputState = {objective: string, items: {[key: string]: string}, quests: string[], halfDailyAp: boolean, dropMergeMethod: string}
-type QueryInputState = {objective: string, items: string, quests: string, halfDailyAp: string, dropMergeMethod: string}
+type QueryInputState = {objective: string, items: string, quests: string, ap_coefficients: string, drop_merge_method: string}
 
 function inputToQuery({
     objective,
@@ -39,7 +39,7 @@ function inputToQuery({
 
 function queryToInput(
     initialInputState: InputState,
-    {objective, items, quests, halfDailyAp, dropMergeMethod}: QueryInputState
+    {objective, items, quests, ap_coefficients, drop_merge_method}: QueryInputState
 ) {
     const queryQuests = quests.split(',')
     return {
@@ -49,13 +49,13 @@ function queryToInput(
         quests: initialInputState.quests.filter((quest) => (
             queryQuests.includes(quest[0]) || queryQuests.includes(quest.slice(0, 2)) || queryQuests.includes(quest)
         )),
-        halfDailyAp: (halfDailyAp === 'true'),
-        dropMergeMethod
+        halfDailyAp: (ap_coefficients === '0:0.5'),
+        dropMergeMethod: drop_merge_method || 'add'
     }
 }
 
 function isInputState(arg: any): arg is QueryInputState {
-    return typeof(arg.objective) == 'string' && typeof(arg.items) == 'string' && typeof(arg.quests) == 'string' && typeof(arg.halfDailyAp) == 'string'
+    return typeof(arg.objective) == 'string' && typeof(arg.items) == 'string' && typeof(arg.quests) == 'string'
 }
 
 export default function ItemForm({
