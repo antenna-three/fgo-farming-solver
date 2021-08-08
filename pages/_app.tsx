@@ -7,10 +7,7 @@ import Nav from '../components/nav'
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
-      <Head>
-        <link rel="icon" href="hermes.png" type="image/png"/>
-        <meta httpEquiv="content-language" content="ja"></meta>
-      </Head>
+      <Head/>
       <Nav/>
       <main>
         <Component {...pageProps} />
