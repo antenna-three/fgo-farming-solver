@@ -1,5 +1,5 @@
 import { GetStaticProps } from 'next'
-import Link from 'next/link'
+import Head from '../components/head'
 import ItemForm from '../components/item-form'
 import { getJSON } from '../lib/get-s3'
 
@@ -20,6 +20,9 @@ export default function Index({
 }) {
     return (
         <>
+            <Head>
+                <meta name="description" content="欲しい素材の数を入力すると、どのフリクエを何周するのが最も効率的かを求めます。"/>
+            </Head>
             <ItemForm items={items} quests={quests}/>
         </>
     )
