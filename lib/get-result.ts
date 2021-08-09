@@ -12,7 +12,13 @@ export async function getResult(id: string) {
     const client = new DynamoDBClient({ credentials: { accessKeyId, secretAccessKey }, region: 'ap-northeast-1' })
     const { Item } = await client.send(command)
     if (Item == null) {
-        throw `DB returned null for id ${id}`
+        throw new DBError(`DB returned null for id ${id}`)
     }
     return unmarshall(Item)
+}
+
+export class DBError extends Error {
+    constructor(message: string) {
+        super(message)
+    }
 }

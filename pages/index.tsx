@@ -7,7 +7,8 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     const props = await getJSON('all.json')
     
     return {
-        props
+        props,
+        revalidate: 86400
     }
 }
 

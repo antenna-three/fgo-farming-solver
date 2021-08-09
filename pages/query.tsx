@@ -27,7 +27,7 @@ export default function Query() {
     if (error) return (
         <Error statusCode={error.status}/>
     )
-    if (!data) return <Spinner />
+    if (!data) return <Spinner message={'計算中'}/>
 
     if (data.message) return <Error statusCode={400} message={data.message.split('\n')}/>
 
