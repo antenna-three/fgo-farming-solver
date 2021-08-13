@@ -1,4 +1,5 @@
 import { Fragment } from 'react'
+import ItemLink from './item-link'
 
 export default function ItemTable({
     itemGroups,
@@ -19,12 +20,12 @@ export default function ItemTable({
             <tbody>
                 {itemGroups.map(([category, itemGroup]) => (
                     <Fragment key={category}>
-                        <tr><th className="left" key={category} colSpan={3}>{category}</th></tr>
-                        {itemGroup.map(({name, count, id}) => (
-                            <tr key={id}>
-                                <td className="left">{name}</td>
-                                <td className="right">{count}</td>
-                                <td className="right">{itemToQuery[id]}</td>
+                        <tr><th className="left" colSpan={3}>{category}</th></tr>
+                        {itemGroup.map((item) => (
+                            <tr key={item.id}>
+                                <td className="left"><ItemLink item={item}/></td>
+                                <td className="right">{item.count}</td>
+                                <td className="right">{itemToQuery[item.id] || '-'}</td>
                             </tr>
                         ))}
                     </Fragment>

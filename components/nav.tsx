@@ -24,35 +24,42 @@ export default function Nav() {
                 <div className="nav">
                     <ul>
                         <li>
+                            <Link href='/items'>
+                                <a>Items</a>
+                            </Link>
+                        </li>
+                        <li>
                             <Link href='/news'>
-                                <a>お知らせ</a>
+                                <a>News</a>
                             </Link>
                         </li>
                         <li>
                             <Link href='/about'>
-                                <a><span>このサイト</span><span>について</span></a>
+                                <a>About</a>
                             </Link>
                         </li>
                         <li>
-                            <a
-                                href={`https://twitter.com/search?q=${encodeURIComponent('#FGO周回ソルバー')}&f=live`}
+                            <a href={`https://twitter.com/search?q=${encodeURIComponent('#FGO周回ソルバー')}&f=live`}
                                 target="_blank"
-                                rel="noopener noreferrer"
-                            >
-                                <span>みんなの</span><span>結果↗</span>
-                            </a>
+                                rel="noopener noreferrer">Results↗</a>
                         </li>
                         <li>
                             <a href='#'>GitHub↗</a>
                             <ul>
                                 <li>
-                                    <a href='https://github.com/antenna-three/fgo-farming-solver'>フロントエンド</a>
+                                    <a href='https://github.com/antenna-three/fgo-farming-solver'
+                                        target="_blank"
+                                        rel="noopener noreferrer">フロントエンド</a>
                                 </li>
                                 <li>
-                                    <a href='https://github.com/antenna-three/fgo-farming-solver-api'>API</a>
+                                    <a href='https://github.com/antenna-three/fgo-farming-solver-api'
+                                        target="_blank"
+                                        rel="noopener noreferrer">API</a>
                                 </li>
                                 <li>
-                                    <a href='https://github.com/antenna-three/fgo-farming-solver'>データ抽出</a>
+                                    <a href='https://github.com/antenna-three/fgodrop'
+                                        target="_blank"
+                                        rel="noopener noreferrer">データ抽出</a>
                                 </li>
                             </ul>
                         </li>

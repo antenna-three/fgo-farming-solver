@@ -101,6 +101,9 @@ export default function Result({
     const totalAp = typeof query.total_ap == 'string'
         ? parseInt(query.total_ap)
         : questLaps.map(({id, lap}) => (lap * parseInt(questInfo[id].ap))).reduce((acc, cur) => (acc + cur))
+    
+    const questIds = questLaps.map(({id}) => id)
+    questToDrops = Object.fromEntries(Object.entries(questToDrops).filter(([questId, drops]) => (questIds.includes(questId))))
 
     return (
         <>
@@ -112,7 +115,7 @@ export default function Result({
                 <header>
                     <h2>クエスト周回数</h2>
                 </header>
-                <QuestTable questGroups={lapGroups} questToDrops={questToDrops} itemIndexes={itemInfo as {[key: string]: {name: string}}}/>
+                <QuestTable questGroups={lapGroups} questToDrops={questToDrops} itemIndexes={itemInfo as {[key: string]: {id: string, name: string}}}/>
             </section>
             <section>
                 <details className="sum-details">
