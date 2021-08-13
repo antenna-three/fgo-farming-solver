@@ -1,6 +1,7 @@
 import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3'
 import _ from 'underscore'
-import {Readable} from 'stream'
+import { Readable, PassThrough } from 'stream'
+import { createGunzip } from 'zlib'
 
 export async function getS3(key: string): Promise<{[key: string]: string}[]> {
     const bucket = 'fgodrop'
@@ -57,14 +58,14 @@ export async function getS3(key: string): Promise<{[key: string]: string}[]> {
     }
 }
 
-export async function getJSON(key: string): Promise<{[key: string]: string}[]> {
+export async function getJSON(key: string): Promise<{[key: string]: {[key: string]: string}[]}> {
     const bucket = 'fgodrop'
 
     const accessKeyId = process.env.MY_AWS_ACCESS_KEY_ID
     const secretAccessKey = process.env.MY_AWS_SECRET_ACCESS_KEY
     if (accessKeyId == null || secretAccessKey == null) {
         console.log('Environment variables are not set')
-        return []
+        return {}
     }
 
     const client = new S3Client({ credentials: { accessKeyId, secretAccessKey }, region: 'ap-northeast-1' })
@@ -76,7 +77,7 @@ export async function getJSON(key: string): Promise<{[key: string]: string}[]> {
 
         if (body == null) {
             console.log('Response body is empty')
-            return []
+            return {}
         }
         
         let data: string = ''
@@ -87,6 +88,46 @@ export async function getJSON(key: string): Promise<{[key: string]: string}[]> {
         return JSON.parse(data)
     } catch (e) {
         console.log(e, e.stack)
-        return []
+        return {}
     }
+}
+
+
+export async function getGzip(key: string): Promise<{[key: string]: {[key: string]: string | number}[]}> {
+    const bucket = 'fgodrop'
+
+    const accessKeyId = process.env.MY_AWS_ACCESS_KEY_ID
+    const secretAccessKey = process.env.MY_AWS_SECRET_ACCESS_KEY
+    if (accessKeyId == null || secretAccessKey == null) {
+        console.log('Environment variables are not set')
+        return {}
+    }
+
+    const client = new S3Client({ credentials: { accessKeyId, secretAccessKey }, region: 'ap-northeast-1' })
+    const command = new GetObjectCommand({ Bucket: bucket, Key: key })
+
+    try {
+        const response = await client.send(command)
+        const src = response.Body as Readable
+
+        if (src == null) {
+            console.log('Response body is empty')
+            return {}
+        }
+
+        const gunzip = createGunzip()
+        const dst = new PassThrough()
+        src.pipe(gunzip).pipe(dst)
+        
+        let data: string = ''
+        for await (const chunk of dst) {
+            data += chunk
+        }
+        
+        return JSON.parse(data)
+    } catch (e) {
+        console.log(e, e.stack)
+        return {}
+    }
+    return {}
 }
