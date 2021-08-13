@@ -3,7 +3,7 @@ import SpinnerPart from './spinner-part'
 export default function Spinner({message}: {message?: string}) {
     message ||= '計算中'
     const range = (len: number) => Array.from({ length: len }, (_, i) => i)
-    const n = 10;
+    const n = 8;
     return (
         <div className="centered">
             <div className="background">
@@ -14,7 +14,7 @@ export default function Spinner({message}: {message?: string}) {
             <h2>{message}</h2>
             <style jsx>{`
                 .background {
-                    padding: 0 0 10px;
+                    padding: 0 0 8px;
                     background: #124;
                 }
             `}</style>
