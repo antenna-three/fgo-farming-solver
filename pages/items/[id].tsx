@@ -70,11 +70,10 @@ export default function Item(props?: {
     )
     const dropGroups = _.groupBy(dropRates, ({quest_id}) => (quest_id))
     const idToDropRate = (quest_id: string, item_id: string) => (dropGroups[quest_id].find(row => (row.item_id == item_id)) || {[dropRateKey]: 0})
-    const questsBy = {
-        rate: quests.slice().sort((a, b) => (idToDropRate(b.id, id)[dropRateKey] - idToDropRate(a.id, id)[dropRateKey])),
-        ap: quests.slice().sort((a, b) => (a.ap/idToDropRate(a.id, id)[dropRateKey] - b.ap/idToDropRate(b.id, id)[dropRateKey]))
-    }
-    const selectedQuests = questsBy[dropRateStyle]
+    const getDropRate = (quest_id: string, item_id: string, key: DropRateKey) => (idToDropRate(quest_id, item_id)[dropRateKey] || 0)
+    const selectedQuests = dropRateStyle == 'rate'
+        ? quests.slice().sort((a, b) => (getDropRate(b.id, id, dropRateKey) - getDropRate(a.id, id, dropRateKey)))
+        : quests.slice().sort((a, b) => (a.ap/getDropRate(a.id, id, dropRateKey) - b.ap/getDropRate(b.id, id, dropRateKey)))
     const title = itemIndexes[id].name + 'のドロップ一覧'
 
     return (
