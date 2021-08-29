@@ -71,6 +71,10 @@ fieldset label {
     font-weight: normal;
 }
 
+label {
+  font-weight: normal;
+}
+
 input[type=radio] {
   margin: 3px;
   z-index: -1;
@@ -160,6 +164,10 @@ input[type=checkbox] + label::after {
 input[type=checkbox]:checked + label::after {
   border-right: 3px solid var(--color);
   border-bottom: 3px solid var(--color);
+}
+input[type=checkbox]:checked:disabled + label::after {
+  border-right: 3px solid var(--color-text-secondary);
+  border-bottom: 3px solid var(--color-text-secondary);
 }
 
 table {
