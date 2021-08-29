@@ -10,7 +10,7 @@ import QuestTree from './quest-tree'
 import ErrorBoundary from './error-boundary'
 import DropRateSelect from './drop-rate-select'
 import { getLargeCategory } from '../lib/get-large-category'
-import { createTree } from '../lib/create-tree'
+import { createQuestTree } from '../lib/create-tree'
 
 type InputState = {objective: string, items: {[key: string]: string}, quests: string[], halfDailyAp: boolean, dropMergeMethod: string}
 type QueryInputState = {objective: string, items: string, quests: string, ap_coefficients: string, drop_merge_method: string}
@@ -65,7 +65,7 @@ export default function ItemForm({
     items: {category: string, name: string, id: string}[],
     quests: {section: string, area: string, name: string, id: string, samples_1: number, samples_2: number}[]
 }) {
-    const {ids, tree} = createTree(quests)
+    const {ids, tree} = createQuestTree(quests)
     const initialInputState = {
         objective: 'ap',
         items: Object.fromEntries(items.map(item => [item.id, ''])),
