@@ -23,6 +23,7 @@ export type Servant = {
     className: ClassName,
     attribute: string,
     rarity: number,
+    [key: string]: any;
 }
 
 export type Materials = {
