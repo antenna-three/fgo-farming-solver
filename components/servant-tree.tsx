@@ -13,14 +13,17 @@ const CheckboxTree = dynamic(
 const ServantTree = ({
     servants,
     checked,
+    expanded,
     onCheck,
+    onExpand,
 }: {
     servants: Servant[],
     checked: string[],
+    expanded: string[],
     onCheck: (checked: string[]) => void,
+    onExpand: (expanded: string[]) => void,
 }) => {
     const tree = createServantTree(servants)
-    const [expanded, setExpanded] = useState([] as string[])
 
     return (<>
         <h2>サーヴァント選択</h2>
@@ -29,7 +32,7 @@ const ServantTree = ({
             checked={checked}
             expanded={expanded}
             onCheck={onCheck}
-            onExpand={setExpanded}
+            onExpand={onExpand}
             icons={{
                 check: <span className="ch"/>,
                 uncheck: <span className="un"/>,
