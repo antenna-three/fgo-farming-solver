@@ -11,7 +11,7 @@ import ErrorBoundary from './error-boundary'
 import DropRateSelect from './drop-rate-select'
 import { getLargeCategory } from '../lib/get-large-category'
 import { createQuestTree } from '../lib/create-tree'
-import { useLocalStorage } from '../lib/use-local-storage-state'
+import { useLocalStorage } from '../lib/use-local-storage'
 
 type InputState = {objective: string, items: {[key: string]: string}, quests: string[], halfDailyAp: boolean, dropMergeMethod: string}
 type QueryInputState = {objective: string, items: string, quests: string, ap_coefficients: string, drop_merge_method: string}
