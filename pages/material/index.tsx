@@ -1,34 +1,30 @@
 import { GetStaticProps } from "next"
+import { getServants } from "../../lib/get-servants"
 import { SetStateAction, useState } from "react"
-import _ from "underscore"
 import Head from "../../components/head"
 import Pagination from "../../components/material-pagination"
 import PageList from "../../components/material-page-list"
 import ServantLevelSelect, { ServantState } from "../../components/servant-level-select"
 import ServantTree from "../../components/servant-tree"
-import { Servant } from "../../interfaces"
+import { Materials, Servant } from "../../interfaces"
 import { createReinforcementState } from "../../lib/create-reinforcement-state"
-import { useLocalStorage } from "../../lib/use-local-storage-state"
-import { jpClassNames } from "../../constants/jp-class-names"
+import { useLocalStorage } from "../../lib/use-local-storage"
 import CalcButton from "../../components/material-calc-button"
+import { getServantMaterials } from "../../lib/get-materials"
 
-const origin = 'https://api.atlasacademy.io'
-const region = 'JP'
 
 export const getStaticProps: GetStaticProps = async (context) => {
-    const servantsUrl = `${origin}/export/${region}/basic_servant.json`
-    const classNames = Object.keys(jpClassNames)
-    const servants = await fetch(servantsUrl)
-        .then(res => res.json())
-        .then((servants: Servant[]) => servants.filter(({type}) => (type == 'normal' || type == 'heroine')))
-        .then(servants => servants.sort((a, b) => ((classNames.indexOf(a.className) - classNames.indexOf(b.className)) * 10 + b.rarity - a.rarity)))
-    return {props: {servants,}}
+    const servants = await getServants()
+    const materials = await getServantMaterials(servants.map(({id}) => id.toString()))
+    return { props: { servants, materials }, revalidate: 3600 }
 }
 
 const Index = ({
     servants,
+    materials,
 }: {
     servants: Servant[],
+    materials: {[id: string]: {[key: string]: Materials}}
 }) => {
     const initialState = createReinforcementState(['all', ...servants.map(servant => servant.id.toString())])
     const [state, setState] = useLocalStorage('material', initialState)
@@ -37,28 +33,28 @@ const Index = ({
             const nextState = Object.fromEntries(Object.entries(prevState).map(([id, prevServantState]) => (
                 [id, dispatch(prevServantState)]
             )))
-            console.log(nextState[100100])
             return nextState
         })
     }
     const setAllState = (s: SetStateAction<ServantState>) => {
-        typeof(s) == 'function' ? setAllStateFunction(s) : setAllStateFunction(p => s)
+        typeof (s) == 'function' ? setAllStateFunction(s) : setAllStateFunction(p => s)
     }
-    const checked = Object.entries(state).filter(([id, {disabled}]) => !disabled).map(([id, {disabled}]) => (id))
+    const checked = Object.entries(state).filter(([id, { disabled }]) => !disabled).map(([id, { disabled }]) => (id))
     const onCheck = (ids: string[]) => setState(state => (
-        {...state, ...Object.fromEntries(Object.entries(state).map(([id, servantState]) => ([[id], {...servantState, disabled: !ids.includes(id)}])))}
+        { ...state, ...Object.fromEntries(Object.entries(state).map(([id, servantState]) => ([[id], { ...servantState, disabled: !ids.includes(id) }]))) }
     ))
     const [expanded, onExpand] = useState(['all'])
-    
+
     return (<>
-        <Head title="育成素材計算機"/>
-        <h1>育成素材計算機</h1>
+        <Head title="育成素材計算機" />
+        <PageList />
         <ServantLevelSelect
             id={'all'}
-            name="全サーヴァント"
+            name="全サーヴァント共通設定"
             servantState={state.all}
             setServantState={setAllState}
         />
+        <h2>育成サーヴァント選択</h2>
         <ServantTree
             servants={servants}
             checked={checked}
@@ -66,9 +62,8 @@ const Index = ({
             onCheck={onCheck}
             onExpand={onExpand}
         />
-        <Pagination/>
-        <PageList/>
-        <CalcButton state={state}/>
+        <Pagination />
+        <CalcButton state={state} materials={materials}/>
     </>)
 }
 export default Index

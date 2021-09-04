@@ -3,7 +3,7 @@ import { FormEvent, Fragment, useCallback, useState } from "react"
 import _ from "underscore"
 import { Item } from "../../interfaces"
 import { getLargeCategory } from "../../lib/get-large-category"
-import { useLocalStorage } from "../../lib/use-local-storage-state"
+import { useLocalStorage } from "../../lib/use-local-storage"
 import Head from '../../components/head'
 import { useRouter } from "next/router"
 import Link from 'next/link'

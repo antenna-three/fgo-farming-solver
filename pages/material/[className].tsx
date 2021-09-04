@@ -1,24 +1,22 @@
 import { GetStaticPaths, GetStaticProps } from "next";
 import { useCallback } from "react";
-import _  from 'underscore'
 import Head from '../../components/head'
 import ServantLevelSelect, { ServantState } from "../../components/servant-level-select";
 import { createReinforcementState } from "../../lib/create-reinforcement-state";
-import { useLocalStorage } from "../../lib/use-local-storage-state";
+import { useLocalStorage } from "../../lib/use-local-storage";
 import { jpClassNames } from "../../constants/jp-class-names";
 import Pagination from "../../components/material-pagination";
 import PageList from "../../components/material-page-list"
-import { Servant } from "../../interfaces";
+import { Materials, Servant } from "../../interfaces";
 import CalcButton from "../../components/material-calc-button";
-
-const origin = 'https://api.atlasacademy.io'
+import { getServants } from "../../lib/get-servants";
+import { getServantMaterials } from "../../lib/get-materials";
+import { getJpClassName } from "../../lib/get-jp-class-name";
 
 
 export const getStaticPaths: GetStaticPaths = async () => {
-    const servantsUrl = origin + '/export/JP/basic_servant.json'
-    const servants = await fetch(servantsUrl).then(res => res.json())
-    const classNames = servants.filter(({type}: {type: string}) => type == 'normal' || type == 'heroine').map(({className}: {className: string}) => className)
-    const paths = classNames.map((className: string) => ({params: {className}}))
+    const servants = await getServants()
+    const paths = servants.map(({className}) => ({params: {className}}))
     return {paths, fallback: false}
 }
 
@@ -28,25 +26,18 @@ export const getStaticProps: GetStaticProps = async (context) => {
         return {props: {servants: null}}
     }
     const {className} = context.params
-    const servantsUrl = origin + '/export/JP/basic_servant.json'
-    const classNames = Object.keys(jpClassNames)
-    const servants = await fetch(servantsUrl)
-        .then(res => res.json())
-        .then((servants: Servant[]) => servants.filter(({type}: {type: string}) => (type == 'normal' || type == 'heroine')))
-        .then(servants => servants.sort((a, b) => ((classNames.indexOf(a.className) - classNames.indexOf(b.className)) * 10 + b.rarity - a.rarity)))
-    return {props: {servants, className}}
+    const servants = await getServants()
+    const materials = await getServantMaterials(servants.map(({id}) => id.toString()))
+    return {props: {servants, materials, className}, revalidate: 3600}
 }
 
 export default function material({
     servants,
+    materials,
     className,
 }: {
-    servants: {
-        id: number,
-        name: string,
-        className: string,
-        rarity: number
-    }[],
+    servants: Servant[],
+    materials: {[id: string]: {[key: string]: Materials}},
     className: string,
 }) {
     const initialState = createReinforcementState(['all', ...servants.map((servant) => (servant.id.toString()))])
@@ -58,11 +49,12 @@ export default function material({
             setState(state => ({...state, [id]: {...state[id], ...dispatch(state[id])}}))
         }, [id])
     ])))
-    const title = `${jpClassNames[className]} | 育成素材計算機`
+    const jpClassName = getJpClassName(className)
 
     return (<>
-        <Head title={title}/>
-        <h1>{title}</h1>
+        <Head title={`${jpClassName} | 育成素材計算機`}/>
+        <PageList currentClassName={className}/>
+        <h1>{jpClassName}</h1>
         <div className="flex">
             {filteredServants.map(servant => (
                 <div className="servant" key={servant.id}>
@@ -77,8 +69,7 @@ export default function material({
         </div>
         {filteredServants.length == 0 && <p>{jpClassNames[className]}のサーヴァントは選択されていません。</p>}
         <Pagination currentClassName={className}/>
-        <PageList currentClassName={className}/>
-        <CalcButton state={state}/>
+        <CalcButton state={state} materials={materials}/>
         <style jsx>{`
             .flex {
                 display: flex;

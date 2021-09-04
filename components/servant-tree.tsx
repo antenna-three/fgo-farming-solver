@@ -1,13 +1,13 @@
 import dynamic from 'next/dynamic'
 import { useState } from 'react'
 import 'react-checkbox-tree/lib/react-checkbox-tree.css'
-import type {Servant} from '../interfaces'
+import type { Servant } from '../interfaces'
 import { createServantTree } from '../lib/create-tree'
 
 
 const CheckboxTree = dynamic(
     () => import('react-checkbox-tree'),
-    {ssr: false}
+    { ssr: false }
 )
 
 const ServantTree = ({
@@ -26,7 +26,6 @@ const ServantTree = ({
     const tree = createServantTree(servants)
 
     return (<>
-        <h2>サーヴァント選択</h2>
         <CheckboxTree
             nodes={tree}
             checked={checked}
@@ -34,11 +33,11 @@ const ServantTree = ({
             onCheck={onCheck}
             onExpand={onExpand}
             icons={{
-                check: <span className="ch"/>,
-                uncheck: <span className="un"/>,
-                halfCheck: <span className="hf"/>,
-                expandOpen: <span className="op"/>,
-                expandClose: <span className="cl"/>,
+                check: <span className="ch" />,
+                uncheck: <span className="un" />,
+                halfCheck: <span className="hf" />,
+                expandOpen: <span className="op" />,
+                expandClose: <span className="cl" />,
             }}
             showNodeIcon={false}
         />

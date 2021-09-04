@@ -8,40 +8,29 @@ const PageList = ({
     currentClassName?: string,
 }) => {
     return (<>
-        <h2>ページ一覧</h2>
-        <ul>
-            <li>
-                <Link href="/material">
-                    <a>共通設定/サーヴァント選択</a>
-                </Link>
-            </li>
-            <li>
-                個別設定
-                <ul>
-                    {Object.entries(jpClassNames).map(([className, jpClassName]) => (
-                        <Fragment key={className}>
-                            {className == currentClassName
-                            ? <li>{jpClassName}</li>
-                            : <Link href={'/material/' + className}>
-                                <li>
-                                    <a>{jpClassName}</a>
-                                </li>
-                            </Link>}
-                        </Fragment>
-                    ))}
-                </ul>
-            </li>
-        </ul>
+        {currentClassName
+        ? <Link href="/material">
+            <h1><a>育成素材計算機</a></h1>
+        </Link>
+        : <h1>育成素材計算機</h1>
+        }
+        <details>
+            <summary>クラス別設定</summary>
+            <ul>
+                {Object.entries(jpClassNames).map(([className, jpClassName]) => (
+                    <Fragment key={className}>
+                        {className == currentClassName
+                        ? <li>{jpClassName}</li>
+                        : <Link href={'/material/' + className}>
+                            <li>
+                                <a>{jpClassName}</a>
+                            </li>
+                        </Link>}
+                    </Fragment>
+                ))}
+            </ul>
+        </details>
         <style jsx>{`
-            ul {
-                padding-left: 0;
-            }
-            li {
-                list-style: none;
-            }
-            li > ul {
-                padding-left: 1rem;
-            }
             a {
                 cursor: pointer;
             }

@@ -32,9 +32,7 @@ const Pagination = ({
                 }
                 .page {
                     margin: 1rem 0;
-                    padding: 1rem;
-                    color: var(--color-bg);
-                    background-color: var(--color);
+                    padding: .5rem 1rem;
                     border-radius: 5px;
                 }
                 .page.prev {
@@ -42,20 +40,24 @@ const Pagination = ({
                 }
                 .page.next {
                     padding-right: 2rem;
+                    color: var(--color-bg);
+                    background-color: var(--color);
                 }
                 .prev::before, .next::after {
                     position: absolute;
                     content: "";
                     width: 8px;
                     height: 8px;
-                    border-bottom: 3px solid var(--color-bg);
-                    border-left: 3px solid var(--color-bg);
                 }
                 .prev::before {
                     transform: translate(-16px, 7px) rotate(45deg);
+                    border-bottom: 3px solid var(--color);
+                    border-left: 3px solid var(--color);
                 }
                 .next::after {
                     transform: translate(2px, 7px) rotate(225deg);
+                    border-bottom: 3px solid var(--color-bg);
+                    border-left: 3px solid var(--color-bg);
                 }
             `}</style>
         </div>
