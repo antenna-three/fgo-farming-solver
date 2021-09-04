@@ -4,7 +4,7 @@ export default function Spinner({message}: {message?: string}) {
     message ||= '計算中'
     const range = (len: number) => Array.from({ length: len }, (_, i) => i)
     const n = 8;
-    return (
+    return (<>
         <div className="centered">
             <div className="background">
                 {range(n).map((i) => (
@@ -12,12 +12,16 @@ export default function Spinner({message}: {message?: string}) {
                 ))}
             </div>
             <h2>{message}</h2>
-            <style jsx>{`
-                .background {
-                    padding: 0 0 8px;
-                    background: #124;
-                }
-            `}</style>
         </div>
-    )
+        <div className="margin"/>
+        <style jsx>{`
+            .background {
+                padding: 0 0 8px;
+                background: #124;
+            }
+            .margin {
+                height: 70vh;
+            }
+        `}</style>
+    </>)
 }

@@ -10,7 +10,7 @@ const PageList = ({
     return (<>
         {currentClassName
         ? <Link href="/material">
-            <h1><a>育成素材計算機</a></h1>
+            <p><a>育成素材計算機</a></p>
         </Link>
         : <h1>育成素材計算機</h1>
         }

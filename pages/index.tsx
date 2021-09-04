@@ -5,8 +5,8 @@ const Index = () => {
     return (<>
         <section>
             <header>
-                <h1><span className="larger a">サーヴァント育成目標</span>から<span className="larger b">アイテム必要数</span>を</h1>
-                <h1><span className="larger b">アイテム必要数</span>から<span className="larger c">クエスト周回数</span>を求めます</h1>
+                <h1><span className="larger a"><span className="nowrap">サーヴァント</span><span className="nowrap">育成目標</span></span><span className="nowrap">から</span><span className="larger b nowrap">アイテム必要数</span>を</h1>
+                <h1><span className="larger b nowrap">アイテム必要数</span><span className="nowrap">から</span><span className="larger c nowrap">クエスト周回数</span>を<span className="nowrap">求めます</span></h1>
             </header>
             <aside>
                 <Link href="/material">
@@ -56,6 +56,10 @@ const Index = () => {
         <style jsx>{`
             .larger {
                 font-size: larger;
+            }
+            .nowrap {
+                display: inline-block;
+                white-space: nowrap;
             }
             .a {
                 color: #48c;

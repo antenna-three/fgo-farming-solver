@@ -1,5 +1,4 @@
 import Link from "next/link"
-import { Fragment } from "react"
 import { jpClassNames } from "../constants/jp-class-names"
 
 const Pagination = ({
@@ -32,14 +31,14 @@ const Pagination = ({
                 }
                 .page {
                     margin: 1rem 0;
-                    padding: .5rem 1rem;
+                    padding: .8rem 2rem;
                     border-radius: 5px;
                 }
                 .page.prev {
-                    padding-left: 2rem;
+                    padding-left: 3rem;
                 }
                 .page.next {
-                    padding-right: 2rem;
+                    padding-right: 3rem;
                     color: var(--color-bg);
                     background-color: var(--color);
                 }
@@ -50,12 +49,12 @@ const Pagination = ({
                     height: 8px;
                 }
                 .prev::before {
-                    transform: translate(-16px, 7px) rotate(45deg);
+                    transform: translate(-20px, 7px) rotate(45deg);
                     border-bottom: 3px solid var(--color);
                     border-left: 3px solid var(--color);
                 }
                 .next::after {
-                    transform: translate(2px, 7px) rotate(225deg);
+                    transform: translate(6px, 7px) rotate(225deg);
                     border-bottom: 3px solid var(--color-bg);
                     border-left: 3px solid var(--color-bg);
                 }
