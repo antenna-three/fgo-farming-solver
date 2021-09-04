@@ -1,4 +1,5 @@
-import { Dispatch, memo, SetStateAction, useCallback, useState } from 'react'
+import { FormEvent, memo, useCallback } from 'react'
+import Link from 'next/link'
 import DualSliderWithInput from './dual-slider-with-input'
 
 export type ServantState = {
@@ -15,9 +16,9 @@ export type ServantState = {
 }
 
 
-export type State = {[id: string]: ServantState}
+export type State = { [id: string]: ServantState }
 
-const ServantLevelSelect = memo(({
+const ServantLevelSelect = ({
     id,
     name,
     servantState,
@@ -28,78 +29,95 @@ const ServantLevelSelect = memo(({
     servantState: ServantState,
     setServantState: (dispatch: (prevServantState: ServantState) => ServantState) => void,
 }) => {
-    const labels: {[key: string]: string} = {
+    const labels: { [key: string]: string } = {
         ascension: '再臨',
         skill: 'スキル',
         appendSkill: 'アペンドスキル'
     }
-    const minMaxs: {[key: string]: {min: number, max: number}} = {
-        ascension: {min: 0, max: 4},
-        skill: {min: 1, max: 10},
-        appendSkill: {min: 1, max: 10}
+    const mins: { [key: string]: number } = {
+        ascension: 0,
+        skill: 1,
+        appendSkill: 1,
     }
+    const maxs: { [key: string]: number } = {
+        ascension: 4,
+        skill: 10,
+        appendSkill: 10,
+    }
+    const handleChangeDisabled = useCallback((e: FormEvent<HTMLInputElement>) => {
+        const [id, target] = e.currentTarget.name.split('-')
+        const disabled = !e.currentTarget.checked
+        setServantState((state) => ({
+            ...state,
+            targets: {
+                ...state.targets,
+                [target]: {
+                    ...state.targets[target],
+                    disabled
+                }
+            }
+        }))
+    }, [setServantState])
+    const handleLeftChange = useCallback((e: FormEvent<HTMLInputElement>) => {
+        const [id, target, index] = e.currentTarget.name.split('-')
+        const indexAsNumber = parseInt(index)
+        const {valueAsNumber} = e.currentTarget
+        setServantState(state => ({
+            ...state,
+            targets: {
+                ...state.targets,
+                [target]: {
+                    ...state.targets[target],
+                    ranges: state.targets[target].ranges.map((range, i) => (i == indexAsNumber ? { start: valueAsNumber, end: range.end } : range))
+                }
+            }
+        }))
+    }, [setServantState])
+    const handleRightChange = useCallback((e: FormEvent<HTMLInputElement>) => {
+        const [id, target, index] = e.currentTarget.name.split('-')
+        const indexAsNumber = parseInt(index)
+        const {valueAsNumber} = e.currentTarget
+        setServantState(state => ({
+            ...state,
+            targets: {
+                ...state.targets,
+                [target]: {
+                    ...state.targets[target],
+                    ranges: state.targets[target].ranges.map((range, i) => (i == indexAsNumber ? { start: range.start, end: valueAsNumber } : range))
+                }
+            }
+        }))
+    }, [setServantState])
 
     return (<>
-        <h2>{name}</h2>
-        <div style={{marginBottom: '2rem'}}>
-        {Object.entries(servantState.targets).map(([target, {disabled, ranges}]) => (
-            <div className="target" key={`${id}-${target}`}>
-                <input
-                    type="checkbox"
-                    id={`${id}-${target}`}
-                    checked={!disabled}
-                    onChange={(e) => {
-                        const disabled = !e.currentTarget.checked
-                        setServantState((state) => ({
-                            ...state,
-                            targets: {
-                                ...state.targets,
-                                [target]: {
-                                    ...state.targets[target],
-                                    disabled
-                                }
-                            }
-                        }))
-                    }}
-                />
-                <label htmlFor={`${id}-${target}`}>{labels[target]}</label>
-                {ranges.map(({start, end}, index) => (
-                    <DualSliderWithInput
-                        min={minMaxs[target].min}
-                        max={minMaxs[target].max}
-                        step={1}
-                        disabled={disabled}
-                        leftValue={start}
-                        rightValue={end}
-                        setLeftValue={(value: number) => {
-                            setServantState(state => ({
-                                ...state,
-                                targets: {
-                                    ...state.targets,
-                                    [target]: {
-                                        ...state.targets[target],
-                                        ranges: state.targets[target].ranges.map((range, i) => (i == index ? {start: value, end: range.end} : range))
-                                    }
-                                }
-                            }))
-                        }}
-                        setRightValue={(value: number) => {
-                            setServantState(state => ({
-                                ...state,
-                                targets: {
-                                    ...state.targets,
-                                    [target]: {
-                                        ...state.targets[target],
-                                        ranges: state.targets[target].ranges.map((range, i) => (i == index ? {start: range.start, end: value} : range))
-                                    }
-                                }
-                            }))
-                        }}
-                        key={`${id}-${target}-${index}`}
+        <h2><Link href={`/servants/${id == 'all' ? '' : id}`}>{name}</Link></h2>
+        <div style={{ marginBottom: '2rem' }}>
+            {Object.entries(servantState.targets).map(([target, { disabled, ranges }]) => (
+                <div className="target" key={`${id}-${target}`}>
+                    <input
+                        type="checkbox"
+                        id={`${id}-${target}`}
+                        name={`${id}-${target}`}
+                        checked={!disabled}
+                        onChange={handleChangeDisabled}
                     />
-                ))}
-            </div>
-        ))}
+                    <label htmlFor={`${id}-${target}`}>{labels[target]}</label>
+                    {ranges.map(({ start, end }, index) => (
+                        <DualSliderWithInput
+                            min={mins[target]}
+                            max={maxs[target]}
+                            step={1}
+                            disabled={disabled}
+                            name={`${id}-${target}-${index}`}
+                            leftValue={start}
+                            rightValue={end}
+                            handleLeftChange={handleLeftChange}
+                            handleRightChange={handleRightChange}
+                            key={`${id}-${target}-${index}`}
+                        />
+                    ))}
+                </div>
+            ))}
         </div>
         <style jsx>{`
             .target {
@@ -107,6 +125,6 @@ const ServantLevelSelect = memo(({
             }
         `}</style>
     </>)
-})
+}
 
-export default ServantLevelSelect
+export default memo(ServantLevelSelect)

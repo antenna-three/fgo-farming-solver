@@ -1,4 +1,4 @@
-import React, { Dispatch, memo, SetStateAction, useCallback, useContext } from "react"
+import React, { memo, useCallback } from "react"
 import DualSlider from "./dual-slider"
 
 const DualSliderWithInput = ({
@@ -6,51 +6,58 @@ const DualSliderWithInput = ({
     max,
     step,
     disabled,
+    name,
     leftValue,
     rightValue,
-    setLeftValue,
-    setRightValue,
+    handleLeftChange,
+    handleRightChange,
 }: {
     min: number,
     max: number,
     step: number,
     disabled?: boolean,
+    name?: string,
     leftValue: number,
     rightValue: number,
-    setLeftValue: (value: number) => void,//Dispatch<SetStateAction<number>>,
-    setRightValue: (value: number) => void,//Dispatch<SetStateAction<number>>,
+    handleLeftChange: (e: React.ChangeEvent<HTMLInputElement>) => void,//Dispatch<SetStateAction<number>>,
+    handleRightChange: (e: React.ChangeEvent<HTMLInputElement>) => void,//Dispatch<SetStateAction<number>>,
 }) => {
-    const handleLeftChange =  useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleLeftChangeWithClamp =  useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.currentTarget.valueAsNumber
-        const newValue = Math.min(rightValue, value)
-        setLeftValue(newValue)
+        const newValue = Math.max(Math.min(rightValue, value), min)
+        e.currentTarget.value = newValue.toString()
+        handleLeftChange(e)
     }, [rightValue])
-    const handleRightChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleRightChangeWithClamp = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.currentTarget.valueAsNumber
-        const newValue = Math.max(leftValue, value)
-        setRightValue(newValue)
+        const newValue = Math.min(Math.max(leftValue, value), max)
+        e.currentTarget.value = newValue.toString()
+        handleRightChange(e)
     }, [leftValue])
     return (
         <div className="flex dual-slider-with-input">
             <input type="number"
                 min={min} max={max} step={step}
+                name={name}
                 value={leftValue}
-                onChange={handleLeftChange}
+                onChange={handleLeftChangeWithClamp}
                 disabled={disabled}
             />
             <DualSlider
                 min={min} max={max} step={step}
+                name={name}
                 leftValue={leftValue}
                 rightValue={rightValue}
-                handleLeftChange={handleLeftChange}
-                handleRightChange={handleRightChange}
+                handleLeftChange={handleLeftChangeWithClamp}
+                handleRightChange={handleRightChangeWithClamp}
                 disabled={disabled}
             />
             <input type="number"
                 min={min} max={max} step={step}
+                name={name}
                 value={rightValue}
                 disabled={disabled}
-                onChange={handleRightChange}/>
+                onChange={handleRightChangeWithClamp}/>
             <style jsx>{`
                 .flex {
                     display: flex;
@@ -68,4 +75,4 @@ const DualSliderWithInput = ({
     )
 }
 
-export default DualSliderWithInput
+export default memo(DualSliderWithInput)

@@ -5,6 +5,7 @@ const DualSlider = ({
     min,
     max,
     step,
+    name,
     leftValue,
     rightValue,
     handleLeftChange,
@@ -14,6 +15,7 @@ const DualSlider = ({
     min: number,
     max: number,
     step?: number,
+    name?: string,
     leftValue: number,
     rightValue: number,
     handleLeftChange: React.ChangeEventHandler<HTMLInputElement>,
@@ -24,8 +26,8 @@ const DualSlider = ({
     const normalizedRight = (rightValue - min) / (max - min)
     return (
         <div className="dual-slider">
-            <input className="left" type="range" min={min} max={max} step={step} value={leftValue} onChange={handleLeftChange} disabled={disabled}/>
-            <input className="right" type="range" min={min} max={max} step={step} value={rightValue} onChange={handleRightChange} disabled={disabled}/>
+            <input className="left" type="range" min={min} max={max} step={step} name={name} value={leftValue} onChange={handleLeftChange} disabled={disabled}/>
+            <input className="right" type="range" min={min} max={max} step={step} name={name} value={rightValue} onChange={handleRightChange} disabled={disabled}/>
             <div className="slider">
                 <div className="track"/>
                 <div className="range"/>
