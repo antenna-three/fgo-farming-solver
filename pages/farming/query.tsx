@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router'
-import Error from './_error'
+import Error from '../_error'
 import useSWR from 'swr'
-import Spinner from '../components/spinner'
+import Spinner from '../../components/spinner'
 import _ from 'underscore'
 
 function fetcher(params: string) {
@@ -31,6 +31,6 @@ export default function Query() {
 
     if (data.message) return <Error statusCode={400} message={data.message.split('\n')}/>
 
-    router.replace('/results/' + data.id)
+    router.replace('/farming/results/' + data.id)
     return <Spinner/>
 }

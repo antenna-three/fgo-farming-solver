@@ -1,16 +1,16 @@
 import { GetStaticProps, GetStaticPaths } from 'next'
-import Head from '../../components/head'
+import Head from '../../../components/head'
 import Link from 'next/link'
 import _ from 'underscore'
-import { DBError, getResult } from '../../lib/get-result'
-import { getLargeCategory } from '../../lib/get-large-category'
+import { DBError, getDynamoDb } from '../../../lib/dynamodb'
+import { getLargeCategory } from '../../../lib/get-large-category'
 import { useRouter } from 'next/router'
-import Spinner from '../../components/spinner'
-import QuestTable from '../../components/quest-table'
-import SumTable from '../../components/sum-table'
-import TweetIntent from '../../components/tweet-intent'
-import ItemTable from '../../components/item-table'
-import Error from '../_error'
+import Spinner from '../../../components/spinner'
+import QuestTable from '../../../components/quest-table'
+import SumTable from '../../../components/sum-table'
+import TweetIntent from '../../../components/tweet-intent'
+import ItemTable from '../../../components/item-table'
+import Error from '../../_error'
 
 type Params = {objective: string, items: {[key: string]: number}, quests: string[]}
 type Quest = {id: string, section: string, area: string, name: string, lap: number}
@@ -28,7 +28,10 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
         return {props: {statusCode: 404}}
     }
     try {
-        const result = await getResult(params.id)
+        const result = await getDynamoDb({
+            tableName: 'fgo-farming-solver-results',
+            key: {id: params.id},
+        })
         return {props: result}
     } catch (e) {
         if (e instanceof DBError) {
@@ -122,7 +125,7 @@ export default function Result(
                 ))}
             </section>
             <section>
-                <p><Link href="/"><a>トップに戻る</a></Link></p>
+                <p><Link href="/farming"><a>入力画面に戻る</a></Link></p>
             </section>
             <style jsx>{`
                 .sum-details {

@@ -1,13 +1,15 @@
 import { GetStaticPaths, GetStaticProps } from "next";
-import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback } from "react";
 import _  from 'underscore'
+import Head from '../../components/head'
 import ServantLevelSelect, { ServantState } from "../../components/servant-level-select";
 import { createReinforcementState } from "../../lib/create-reinforcement-state";
 import { useLocalStorage } from "../../lib/use-local-storage-state";
 import { jpClassNames } from "../../constants/jp-class-names";
-import Pagination from "../../components/reinforcement-pagination";
+import Pagination from "../../components/material-pagination";
+import PageList from "../../components/material-page-list"
 import { Servant } from "../../interfaces";
+import CalcButton from "../../components/material-calc-button";
 
 const origin = 'https://api.atlasacademy.io'
 
@@ -35,7 +37,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
     return {props: {servants, className}}
 }
 
-export default function Reinforcement({
+export default function material({
     servants,
     className,
 }: {
@@ -48,7 +50,7 @@ export default function Reinforcement({
     className: string,
 }) {
     const initialState = createReinforcementState(['all', ...servants.map((servant) => (servant.id.toString()))])
-    const [state, setState] = useLocalStorage('reinforcement', initialState)
+    const [state, setState] = useLocalStorage('material', initialState)
     const filteredServants = servants.filter(servant => servant.className == className).filter(servant => !state[servant.id].disabled)
     const setServantStates = Object.fromEntries(servants.map(({id}) => ([
         id,
@@ -56,8 +58,11 @@ export default function Reinforcement({
             setState(state => ({...state, [id]: {...state[id], ...dispatch(state[id])}}))
         }, [id])
     ])))
+    const title = `${jpClassNames[className]} | 育成素材計算機`
 
     return (<>
+        <Head title={title}/>
+        <h1>{title}</h1>
         <div className="flex">
             {filteredServants.map(servant => (
                 <div className="servant" key={servant.id}>
@@ -72,18 +77,17 @@ export default function Reinforcement({
         </div>
         {filteredServants.length == 0 && <p>{jpClassNames[className]}のサーヴァントは選択されていません。</p>}
         <Pagination currentClassName={className}/>
+        <PageList currentClassName={className}/>
+        <CalcButton state={state}/>
         <style jsx>{`
             .flex {
                 display: flex;
                 flex-wrap: wrap;
-            }
-            .class-name {
-                margin-right: 1rem;
+                justify-content: space-between;
             }
             .servant {
                 width: 100%;
                 max-width: 450px;
-                margin-right: 50px;
             }
         `}</style>
     </>)
