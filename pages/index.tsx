@@ -5,7 +5,8 @@ const Index = () => {
     return (<>
         <section>
             <header>
-                <h1>育成と周回をお助けします</h1>
+                <h1><span className="larger a">サーヴァント育成目標</span>から<span className="larger b">アイテム必要数</span>を</h1>
+                <h1><span className="larger b">アイテム必要数</span>から<span className="larger c">クエスト周回数</span>を求めます</h1>
             </header>
             <aside>
                 <Link href="/material">
@@ -52,6 +53,20 @@ const Index = () => {
                 <p>Twitterに投稿された計算結果を見られます。</p>
             </aside>
         </section>
+        <style jsx>{`
+            .larger {
+                font-size: larger;
+            }
+            .a {
+                color: #48c;
+            }
+            .b {
+                color: #c8c;
+            }
+            .c {
+                color: #c84;
+            }
+        `}</style>
     </>)
 }
 export default Index

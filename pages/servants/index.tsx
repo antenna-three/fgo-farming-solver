@@ -1,16 +1,16 @@
 import { GetStaticProps } from "next";
 import Link from 'next/link'
-import { Fragment } from "react";
 import _ from 'underscore'
+import { Servant } from "../../interfaces";
+import { getJpClassName } from "../../lib/get-jp-class-name";
+import { getServants } from "../../lib/get-servants";
 
 const origin = 'https://api.atlasacademy.io'
 
 
 export const getStaticProps: GetStaticProps = async () => {
-    const servantsUrl = origin + '/export/JP/basic_servant.json'
-    const servants = await fetch(servantsUrl).then(res => res.json())
-    const filteredServants = servants.filter((servant: {type: string}) => servant.type == 'normal')
-    const servantGroups = _.groupBy(filteredServants, servant => servant.className)
+    const servants = await getServants()
+    const servantGroups = _.groupBy(servants, servant => servant.className)
     return {props: {servantGroups}}
 }
 
@@ -18,23 +18,18 @@ export default function Servants({
     servantGroups
 }: {
     servantGroups: {
-        [key: string]: {
-            id: number,
-            name: string,
-            className: string,
-            rarity: number
-        }[]
+        [key: string]: Servant[]
     }
 }) {
     return (<>
         <div className="flex">
             {Object.entries(servantGroups).map(([className, servants]) => (
                 <div className="flex-child" key={className}>
-                    <h2>{className}</h2>
+                    <h2>{getJpClassName(className)}</h2>
                     <ul>
                         {servants.map(servant => (
                             <li key={servant.id}>
-                                <Link href={'/servants/' + servant.id.toString()}>
+                                <Link href={'/servants/' + servant.id}>
                                     <a>{servant.name}</a>
                                 </Link>
                             </li>
@@ -46,6 +41,7 @@ export default function Servants({
                 .flex {
                     display: flex;
                     flex-wrap: wrap;
+                    justify-content: space-between;
                 }
                 .flex-child {
                     margin-right: 1rem;
