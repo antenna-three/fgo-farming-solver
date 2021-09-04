@@ -24,11 +24,6 @@ export default function Nav() {
                 <div className="nav">
                     <ul>
                         <li>
-                            <Link href='/items'>
-                                <a>Items</a>
-                            </Link>
-                        </li>
-                        <li>
                             <Link href='/news'>
                                 <a>News</a>
                             </Link>
@@ -37,11 +32,6 @@ export default function Nav() {
                             <Link href='/about'>
                                 <a>About</a>
                             </Link>
-                        </li>
-                        <li>
-                            <a href={`https://twitter.com/search?q=${encodeURIComponent('#FGO周回ソルバー')}&f=live`}
-                                target="_blank"
-                                rel="noopener noreferrer">Results↗</a>
                         </li>
                         <li>
                             <a href='#'>GitHub↗</a>
