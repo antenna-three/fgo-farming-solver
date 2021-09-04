@@ -104,7 +104,12 @@ const Result = ({
     const [possession, setPosession] = useLocalStorage('posession', Object.fromEntries(items.map(({item}) => [item.id, 0])))
     const [hideSufficient, setHideSufficient] = useState(false)
     const categories = ['スキル石', '強化素材', 'モニュピ']
-    const [targetCategories, setTargetCategories] = useState(categories)
+    const initialTargetCategories = Object.fromEntries(categories.map(category => [category, category == '強化素材']))
+    const [targetCategories, setTargetCategories] = useState(initialTargetCategories)
+    const handleChangeTargetCategories = (e: FormEvent<HTMLInputElement>) => {
+        const {name, checked} = e.currentTarget
+        setTargetCategories(state => ({...state, [name]: checked}))
+    }
     const showPositive = (value: number) => (value > 0 ? value : '')
     const onChangeSufficient = (event: FormEvent<HTMLInputElement>) => {
         setHideSufficient(event.currentTarget.checked)
@@ -118,22 +123,23 @@ const Result = ({
     }, [])
     const deficiencies = Object.fromEntries(items.map(({item, amount}) => ([item.id, amount - possession[item.id]])))
     const router = useRouter()
-    const goSolver = useCallback(() => {
+    const goSolver = useCallback((event) => {
+        event.preventDefault()
         const queryItems = items
-            .filter(({item}) => (deficiencies[item.id] > 0 && getSolverId(item)))
+            .filter(({item, category}) => (deficiencies[item.id] > 0 && getSolverId(item) && targetCategories[getLargeCategory(category)]))
             .map(({item}) => (getSolverId(item) + ':' + deficiencies[item.id]))
             .join(',')
         router.push({
             pathname: '/farming',
             query: {items: queryItems}
         })
-    }, [items, deficiencies])
+    }, [items, deficiencies, targetCategories])
     const itemGroup = Object.entries(_.groupBy(Object.entries(_.groupBy(items, item => item.category)), ([category, _items]) => getLargeCategory(category)))
 
     return (<>
         <Head title="アイテム必要数"/>
         <h1>アイテム必要数</h1>
-        <form>
+        <form onSubmit={goSolver}>
             <input type="checkbox" id="hide-sufficient" checked={hideSufficient} onChange={onChangeSufficient}/>
             <label htmlFor="hide-sufficient">不足している素材のみ表示</label>
             {itemGroup.map(([largeCategory, subItemGroup]) => (
@@ -170,13 +176,13 @@ const Result = ({
             <fieldset>
                 <legend>周回数を求める対象</legend>
                 {categories.map((category) => (
-                    <Fragment key={category}>
-                        <input type="checkbox" id={category}/>
-                        <label htmlFor={category}>{category}</label>
-                    </Fragment>
+                    <div key={category}>
+                        <input type="checkbox" id={category} name={category} checked={targetCategories[category]} onChange={handleChangeTargetCategories}/>
+                        <label className="label" htmlFor={category}>{category}</label>
+                    </div>
                 ))}
             </fieldset>
-            <button onClick={goSolver}>クエスト周回数を求める</button>
+            <button type="submit">クエスト周回数を求める</button>
             <p><Link href="/material"><a>サーヴァント選択に戻る</a></Link></p>
         </form>
         <style jsx>{`
@@ -192,6 +198,9 @@ const Result = ({
             table{
                 display: block;
                 white-space: normal;
+            }
+            legend {
+                max-width: 30rem;
             }
             .left {
                 text-align: left;
