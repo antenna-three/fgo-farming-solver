@@ -11,6 +11,7 @@ import { createReinforcementState } from "../../lib/create-reinforcement-state"
 import { useLocalStorage } from "../../lib/use-local-storage"
 import CalcButton from "../../components/material-calc-button"
 import { getServantMaterials } from "../../lib/get-materials"
+import MsIeport from "../../components/ms-ieport"
 
 
 export const getStaticProps: GetStaticProps = async (context) => {
@@ -48,6 +49,7 @@ const Index = ({
     return (<>
         <Head title="育成素材計算機" />
         <PageList />
+        <MsIeport servants={servants} state={state} setState={setState}/>
         <ServantLevelSelect
             id={'all'}
             name="全サーヴァント共通設定"
