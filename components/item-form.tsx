@@ -10,7 +10,8 @@ import QuestTree from './quest-tree'
 import ErrorBoundary from './error-boundary'
 import DropRateSelect from './drop-rate-select'
 import { getLargeCategory } from '../lib/get-large-category'
-import { createTree } from '../lib/create-tree'
+import { createQuestTree } from '../lib/create-tree'
+import { useLocalStorage } from '../lib/use-local-storage'
 
 type InputState = {objective: string, items: {[key: string]: string}, quests: string[], halfDailyAp: boolean, dropMergeMethod: string}
 type QueryInputState = {objective: string, items: string, quests: string, ap_coefficients: string, drop_merge_method: string}
@@ -38,24 +39,23 @@ function inputToQuery({
 }
 
 function queryToInput(
-    initialInputState: InputState,
+    baseInputState: InputState,
     {objective, items, quests, ap_coefficients, drop_merge_method}: QueryInputState
 ) {
-    const queryQuests = quests.split(',')
+    const queryQuests = quests ? quests.split(',') : ['0', '1', '2', '3']
     return {
-        ...initialInputState,
-        objective,
+        objective: objective || baseInputState.objective || 'ap',
         items: Object.fromEntries(items.split(',').map((itemCount) => itemCount.split(':'))),
-        quests: initialInputState.quests.filter((quest) => (
+        quests: baseInputState.quests.filter((quest) => (
             queryQuests.includes(quest[0]) || queryQuests.includes(quest.slice(0, 2)) || queryQuests.includes(quest)
         )),
-        halfDailyAp: (ap_coefficients === '0:0.5'),
-        dropMergeMethod: drop_merge_method || 'add'
+        halfDailyAp: (ap_coefficients === '0:0.5') || baseInputState.halfDailyAp || false,
+        dropMergeMethod: drop_merge_method || baseInputState.dropMergeMethod || 'add'
     }
 }
 
 function isInputState(arg: any): arg is QueryInputState {
-    return typeof(arg.objective) == 'string' && typeof(arg.items) == 'string' && typeof(arg.quests) == 'string'
+    return typeof(arg.items) == 'string'
 }
 
 export default function ItemForm({
@@ -65,7 +65,7 @@ export default function ItemForm({
     items: {category: string, name: string, id: string}[],
     quests: {section: string, area: string, name: string, id: string, samples_1: number, samples_2: number}[]
 }) {
-    const {ids, tree} = createTree(quests)
+    const {ids, tree} = createQuestTree(quests)
     const initialInputState = {
         objective: 'ap',
         items: Object.fromEntries(items.map(item => [item.id, ''])),
@@ -73,19 +73,15 @@ export default function ItemForm({
         halfDailyAp: false,
         dropMergeMethod: 'add'
     }
-    const [inputState, setInputState] = useState(initialInputState)
+    const [inputState, setInputState] = useLocalStorage('input', initialInputState)
     const router = useRouter()
     const [isConfirming, setIsConfirming] = useState(false)
 
     useEffect(() => {
-        if (isInputState(router.query)) {
-            setInputState(queryToInput(initialInputState, router.query))
-            router.replace('/', undefined, {'scroll': false, shallow: true})
-        } else {
-            const input = localStorage.getItem('input')
-            if (input) {
-                setInputState({...initialInputState, ...JSON.parse(input)})
-            }
+        const {query} = router
+        if (isInputState(query)) {
+            setInputState(baseInputState => queryToInput(baseInputState, query))
+            router.replace('/farming', undefined, {'scroll': false, shallow: true})
         }
     }, [])
     
@@ -93,18 +89,16 @@ export default function ItemForm({
         event.preventDefault()
         const query = inputToQuery(inputState)
         router.push({
-            pathname: '/query',
+            pathname: '/farming/query',
             query
         })
     }
 
     const handleItemChange = (event: React.FormEvent<HTMLInputElement>) => {
-        const target = event.currentTarget
-        setInputState((state) => {
-            const newState = {...state, items: {...state.items, [target.name]: target.value}}
-            localStorage.setItem('input', JSON.stringify(newState))
-            return newState
-        })
+        const {name, value} = event.currentTarget
+        setInputState((state) => (
+            {...state, items: {...state.items, [name]: value}}
+        ))
     }
 
     const itemGroups = Object.entries(_.groupBy(items, item => item.category))
@@ -113,23 +107,14 @@ export default function ItemForm({
         ([category, _]) => getLargeCategory(category)
     ))
 
-    /*
-    const totalSamples1 = quests.reduce((acc, cur) => (acc + cur.samples_1), 0)
-    const totalSamples2 = quests.reduce((acc, cur) => (acc + cur.samples_2), 0)
-    */
-
     return (
         <>
             <form onSubmit={handleSubmit}>
                 <ObjectiveFieldset
                     objective={inputState.objective}
                     handleChange={(event: React.FormEvent<HTMLInputElement>) => {
-                        const target = event.currentTarget
-                        setInputState((state) => {
-                            const newState = {...state, objective: target.value}
-                            localStorage.setItem('input', JSON.stringify(newState))
-                            return newState
-                        })
+                        const {value} = event.currentTarget
+                        setInputState((state) => ({...state, objective: value}))
                     }}
                 />
                 <ItemFieldset
@@ -139,11 +124,7 @@ export default function ItemForm({
                 />
                 <ErrorBoundary>
                     <QuestTree tree={tree} checked={inputState.quests} setChecked={(quests) => {
-                        setInputState((state) => {
-                            const newState = {...state, quests}
-                            localStorage.setItem('input', JSON.stringify(newState))
-                            return newState
-                        })
+                        setInputState((state) => ({...state, quests}))
                     }}/>
                 </ErrorBoundary>
                 <fieldset>
@@ -154,12 +135,8 @@ export default function ItemForm({
                         id="half-daily-ap"
                         checked={inputState.halfDailyAp}
                         onChange={(event) => {
-                            const target = event.currentTarget
-                            setInputState((state) => {
-                                const newState = {...state, halfDailyAp: target.checked}
-                                localStorage.setItem('input', JSON.stringify(newState))
-                                return newState
-                            })
+                            const {checked} = event.currentTarget
+                            setInputState((state) => ({...state, halfDailyAp: checked}))
                         }}
                     />
                     <label htmlFor="half-daily-ap">
@@ -169,12 +146,8 @@ export default function ItemForm({
                 <DropRateSelect
                     dropMergeMethod={inputState.dropMergeMethod}
                     handleChange={(event: React.FormEvent<HTMLInputElement>) => {
-                        const target = event.currentTarget
-                        setInputState((state) => {
-                            const newState = {...state, dropMergeMethod: target.value}
-                            localStorage.setItem('input', JSON.stringify(newState))
-                            return newState
-                        })
+                        const {value} = event.currentTarget
+                        setInputState((state) => ({...state, dropMergeMethod: value}))
                     }}
                 />
                 {Object.values(inputState.items).every(s => !s) && <p className="error">集めたいアイテムの数を最低1つ入力してください。</p>}
@@ -191,7 +164,7 @@ export default function ItemForm({
                 }}>
                     リセット
                 </button>
-                <Link href={{pathname: '/import-export', query: inputToQuery(inputState)}}>
+                <Link href={{pathname: '/farming/import-export', query: inputToQuery(inputState)}}>
                     <a>入力内容のエクスポート</a>
                 </Link>
                 <style jsx>{`

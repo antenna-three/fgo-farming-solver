@@ -2,14 +2,14 @@ import Link from 'next/link'
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
 import _ from 'underscore'
-import { getS3 } from '../lib/get-s3'
-import { getLargeCategory } from '../lib/get-large-category'
-import Error from './_error'
-import Head from '../components/head'
-import QuestTable from '../components/quest-table'
-import SumTable from '../components/sum-table'
-import ItemTable from '../components/item-table'
-import TweetIntent from '../components/tweet-intent'
+import { getS3 } from '../../lib/get-s3'
+import { getLargeCategory } from '../../lib/get-large-category'
+import Error from '../_error'
+import Head from '../../components/head'
+import QuestTable from '../../components/quest-table'
+import SumTable from '../../components/sum-table'
+import ItemTable from '../../components/item-table'
+import TweetIntent from '../../components/tweet-intent'
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const itemsPromise = getS3('items_2021.csv')
@@ -149,7 +149,7 @@ export default function Result({
                 ))}
             </section>
             <section>
-                <p><Link href="/"><a>トップに戻る</a></Link></p>
+                <p><Link href="/farming"><a>入力画面に戻る</a></Link></p>
             </section>
             <style jsx>{`
                 .sum-details {

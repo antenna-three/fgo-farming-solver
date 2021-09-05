@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import {useRouter} from 'next/router'
 import { useState, useEffect } from 'react'
-import Head from '../components/head'
+import Head from '../../components/head'
 
 export default function ImportExport() {
     const router = useRouter()
@@ -29,7 +29,7 @@ export default function ImportExport() {
             <h2>入力内容のインポート</h2>
             <p>
                 <Link
-                    href={{pathname: "/", query: query}}
+                    href={{pathname: "/farming", query: query}}
                 >
                     <a>こちら</a>
                 </Link>

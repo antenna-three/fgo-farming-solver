@@ -24,8 +24,8 @@ export default function Nav() {
                 <div className="nav">
                     <ul>
                         <li>
-                            <Link href='/items'>
-                                <a>Items</a>
+                            <Link href='/about'>
+                                <a>About</a>
                             </Link>
                         </li>
                         <li>
@@ -34,14 +34,29 @@ export default function Nav() {
                             </Link>
                         </li>
                         <li>
-                            <Link href='/about'>
-                                <a>About</a>
-                            </Link>
-                        </li>
-                        <li>
-                            <a href={`https://twitter.com/search?q=${encodeURIComponent('#FGO周回ソルバー')}&f=live`}
-                                target="_blank"
-                                rel="noopener noreferrer">Results↗</a>
+                            <a href="#">Menu</a>
+                            <ul>
+                                <li>
+                                    <Link href='/material'>
+                                        <a>育成素材計算機</a>
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link href='/farming'>
+                                        <a>周回ソルバー</a>
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link href='/servants'>
+                                        <a>サーヴァント一覧</a>
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link href='/items'>
+                                        <a>アイテム一覧</a>
+                                    </Link>
+                                </li>
+                            </ul>
                         </li>
                         <li>
                             <a href='#'>GitHub↗</a>

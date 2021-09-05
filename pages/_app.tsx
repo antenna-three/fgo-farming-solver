@@ -12,6 +12,9 @@ function MyApp({ Component, pageProps }: AppProps) {
       <main>
         <Component {...pageProps} />
       </main>
+      <footer>
+        <p>Copyright 2021 <a href="https://twitter.com/antenna_games">antenna-three</a> / Data from <a href="https://atlasacademy.io">Atlas Academy</a> and <a href="https://sites.google.com/view/fgo-domus-aurea">FGOアイテム効率劇場</a></p>
+      </footer>
     </>
   )
 }

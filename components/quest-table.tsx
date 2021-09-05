@@ -28,14 +28,16 @@ export default function QuestTable({
                             <tr key={id}>
                                 <td className="left">{name}</td>
                                 <td className="right">{lap}</td>
-                                {questToDrops[id].map((d) => (<>
-                                    <td className="left item-name">
-                                        <ItemLink item={itemIndexes[d.item_id]}/>
-                                    </td>
-                                    <td className="right item-count">
-                                        {Math.round((typeof d.drop_rate == 'string' ? parseFloat(d.drop_rate) : d.drop_rate) * lap)}
-                                    </td>
-                                </>))}
+                                {questToDrops[id].map((d) => (
+                                    <Fragment key={id + d.item_id}>
+                                        <td className="left item-name">
+                                            <ItemLink item={itemIndexes[d.item_id]}/>
+                                        </td>
+                                        <td className="right item-count">
+                                            {Math.round((typeof d.drop_rate == 'string' ? parseFloat(d.drop_rate) : d.drop_rate) * lap)}
+                                        </td>
+                                    </Fragment>
+                                ))}
                             </tr>
                         ))}
                     </Fragment>
