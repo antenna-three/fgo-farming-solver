@@ -27,7 +27,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
     }
     const {className} = context.params
     const servants = await getServants()
-    const materials = await getServantMaterials(servants.map(({id}) => id.toString()))
+    const materials = await getServantMaterials()
     return {props: {servants, materials, className}, revalidate: 3600}
 }
 

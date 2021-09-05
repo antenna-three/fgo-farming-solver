@@ -15,7 +15,7 @@ import { getServantMaterials } from "../../lib/get-materials"
 
 export const getStaticProps: GetStaticProps = async (context) => {
     const servants = await getServants()
-    const materials = await getServantMaterials(servants.map(({id}) => id.toString()))
+    const materials = await getServantMaterials()
     return { props: { servants, materials }, revalidate: 3600 }
 }
 
