@@ -6,25 +6,30 @@ import Pagination from "../../components/material-pagination"
 import PageList from "../../components/material-page-list"
 import ServantLevelSelect, { ServantState } from "../../components/servant-level-select"
 import ServantTree from "../../components/servant-tree"
-import { Materials, Servant } from "../../interfaces"
+import { Item, Materials, Servant } from "../../interfaces"
 import { createReinforcementState } from "../../lib/create-reinforcement-state"
 import { useLocalStorage } from "../../lib/use-local-storage"
 import CalcButton from "../../components/material-calc-button"
 import { getServantMaterials } from "../../lib/get-materials"
+import { getItems } from "../../lib/get-items"
+import MsIo from "../../components/ms-io"
 
 
 export const getStaticProps: GetStaticProps = async (context) => {
     const servants = await getServants()
     const materials = await getServantMaterials()
-    return { props: { servants, materials }, revalidate: 3600 }
+    const items = await getItems()
+    return { props: { servants, materials, items }, revalidate: 3600 }
 }
 
 const Index = ({
     servants,
     materials,
+    items,
 }: {
     servants: Servant[],
-    materials: {[id: string]: {[key: string]: Materials}}
+    materials: {[id: string]: {[key: string]: Materials}},
+    items: Item[],
 }) => {
     const initialState = createReinforcementState(['all', ...servants.map(servant => servant.id.toString())])
     const [state, setState] = useLocalStorage('material', initialState)
@@ -44,6 +49,7 @@ const Index = ({
         { ...state, ...Object.fromEntries(Object.entries(state).map(([id, servantState]) => ([[id], { ...servantState, disabled: !ids.includes(id) }]))) }
     ))
     const [expanded, onExpand] = useState(['all'])
+    const [posession, setPosession] = useLocalStorage('posession', Object.fromEntries(items.map(item => [item.id, 0])))
 
     return (<>
         <Head title="育成素材計算機" />
@@ -62,6 +68,8 @@ const Index = ({
             onCheck={onCheck}
             onExpand={onExpand}
         />
+        <h2><a href="http://fgosimulator.webcrow.jp/Material/" target="_blank" rel="noreferrer noopener">Material Simulator</a> 引継ぎコード</h2>
+        <MsIo servants={servants} state={state} setState={setState} items={items} posession={posession} setPosession={setPosession}/>
         <Pagination />
         <CalcButton state={state} materials={materials}/>
     </>)
