@@ -13,7 +13,12 @@ const nextConfig = {
                 source: '/results/:id',
                 destination: '/farming/results/:id',
                 permanent: true
-            }
+            },
+            {
+                source: '/import-export',
+                destination: '/farming/import-export',
+                permanent: true
+            },
         ]
     }
 }

@@ -37,8 +37,9 @@ const getCategory = (item: Item) => {
 
 export const getItems = async () => {
     const url = `${origin}/export/${region}/nice_item.json`
+    const targetTypes = ['qp', 'skillLvUp', 'tdLvUp']
     return fetch(url).then(res => res.json()).then((items: Item[]) =>
-        items.filter(item => item.uses.includes('ascension') || item.uses.includes('skill'))
+        items.filter(item => (targetTypes.includes(item.type)))
             .map((item) => ({...item, category: getCategory(item)}))
             .sort((a, b) => (a.priority - b.priority))
     )

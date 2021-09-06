@@ -5,13 +5,11 @@ import { Servant } from "../../interfaces";
 import { getJpClassName } from "../../lib/get-jp-class-name";
 import { getServants } from "../../lib/get-servants";
 
-const origin = 'https://api.atlasacademy.io'
-
 
 export const getStaticProps: GetStaticProps = async () => {
     const servants = await getServants()
     const servantGroups = _.groupBy(servants, servant => servant.className)
-    return {props: {servantGroups}}
+    return {props: {servantGroups}, revalidate: 3600}
 }
 
 export default function Servants({

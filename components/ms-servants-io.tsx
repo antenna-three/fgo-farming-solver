@@ -1,11 +1,12 @@
-import { ChangeEvent, ChangeEventHandler, Dispatch, SetStateAction } from "react"
+import { ChangeEventHandler, Dispatch, FocusEventHandler, SetStateAction } from "react"
 import { range } from "underscore"
+import { selectOnFocus } from "../handlers/select-on-focus"
 import { Servant } from "../interfaces"
 import { createReinforcementState } from "../lib/create-reinforcement-state"
-import { getMsIds } from "../lib/get-msids"
+import { getMsServantIdConverter } from "../lib/get-ms-servant-id-converter"
 import { State } from "./servant-level-select"
 
-const MsIeport = ({
+const MsServantsIo = ({
     servants,
     state,
     setState,
@@ -14,9 +15,10 @@ const MsIeport = ({
     state: State
     setState: Dispatch<SetStateAction<State>>,
 }) => {
-    const {getId, getMsId} = getMsIds(servants)
+    const {getId, getMsId} = getMsServantIdConverter(servants)
     const initialState = createReinforcementState(['all', ...servants.map(({id}) => id.toString())])
-    const msServants = Object.entries(state).filter(([id, {disabled}]) => !disabled)
+    const msServants = Object.entries(state)
+        .filter(([id, {disabled}]) => !disabled)
         .map(([id, {targets}]) => (
             [
                 getMsId(parseInt(id)),
@@ -27,15 +29,23 @@ const MsIeport = ({
                 1,
                 0,
             ]
-        ))
-    const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
+        )
+        ).sort((a, b) => (a[0] - b[0]))
+    const handleChange: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement> = (event) => {
         const {value} = event.currentTarget
-        const msServants_ = JSON.parse(value)
+        let msServants_: number[][] = []
+        try {
+            msServants_ = JSON.parse(value)
+        } catch (e) {
+            return
+        }
+        if (!(Array.isArray(msServants_) && msServants_.every(item => Array.isArray(item)))) {
+            return
+        }
         setState(state => ({
             ...initialState,
-            ...state,
             ...Object.fromEntries(msServants_.map((msServant: number[]) => {
-                const id = getId(msServant[0]) || 0
+                const id = getId(msServant[0])
                 const ascentionRanges = {start: msServant[1], end: msServant[2]}
                 const msSkill = msServant.slice(3, 9)
                 const skillRanges = range(3).reduce((acc, i) => (
@@ -48,12 +58,7 @@ const MsIeport = ({
                         targets: {
                             ascension: {
                                 disabled: ascentionRanges.start == ascentionRanges.end,
-                                ranges: [
-                                    {
-                                        start: ascentionRanges.start,
-                                        end: ascentionRanges.end,
-                                    }
-                                ]
+                                ranges: [ ascentionRanges ]
                             },
                             skill: {
                                 disabled: false,
@@ -63,14 +68,13 @@ const MsIeport = ({
                         }
                     }
                 ]
-                console.log(newState)
                 return newState
             }))
         }))
     }
     return (
-        <textarea value={JSON.stringify(msServants)} onChange={handleChange}/>
+        <input type="text" value={JSON.stringify(msServants)} onChange={handleChange} onFocus={selectOnFocus}/>
     )
     
 }
-export default MsIeport
+export default MsServantsIo
