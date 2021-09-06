@@ -19,6 +19,9 @@ const MsItemsIo = ({
         .map(([id, amount]) => ([getMsItemId(id), amount])))
     const handleChange: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement> = (event) => {
         const { value } = event.currentTarget
+        if (!value) {
+            setPosession(posession => Object.fromEntries(Object.entries(posession).map(([id, amount]) => ([id, 0]))))
+        }
         let msItems: { [key: string]: number } = {}
         try {
             msItems = JSON.parse(value)

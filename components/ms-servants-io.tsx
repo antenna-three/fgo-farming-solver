@@ -33,6 +33,9 @@ const MsServantsIo = ({
         ).sort((a, b) => (a[0] - b[0]))
     const handleChange: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement> = (event) => {
         const { value } = event.currentTarget
+        if (!value) {
+            setState(state => Object.fromEntries(Object.entries(state).map(([id, {targets}]) => ([id, {disabled: true, targets}]))))
+        }
         let msServants_: number[][] = []
         try {
             msServants_ = JSON.parse(value)
