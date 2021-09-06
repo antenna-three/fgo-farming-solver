@@ -44,10 +44,27 @@ FGOの集めたい素材の数から、どのクエストを何周するのが�
 
 ## 免責事項
 
-- アイテムのドロップ率は[FGOアイテム効率劇場](https://sites.google.com/view/fgo-domus-aurea)を参照しています。データは自動的に更新されますが、正確・最新である保証はありません。
+- アイテムのドロップ率は[FGOアイテム効率劇場](https://sites.google.com/view/fgo-domus-aurea)を参照しています。
 - サーヴァントの育成データは[Atlas Academy API](https://api.atlasacademy.io)を参照しています。
+- データは自動的に更新されますが、正確・最新である保証はありません。
 - このサイトは「Fate/Grand Order」の開発・運営とは一切関係ありません。
 - このサイトを利用することによって生じた損害について、責任は負いかねます。
+
+## 要望・不具合報告
+
+[Twitter](https://twitter.com/antenna_games)または[Issue](https://github.com/antenna-three/fgo-farming-solver/issues)までお願いします。
+
+## 貢献
+
+以下の手順で`localhost:3000`にローカルサーバーを立てることができます。
+
+```shell
+git clone https://github.com/antenna-three/fgo-farming-solver.git
+npm install
+npm run dev
+```
+
+AWS上のリソースにアクセスできないので一部のページはビルドできません。
 
 ## 連絡先
 
