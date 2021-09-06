@@ -13,10 +13,18 @@ export const sumMaterials = (
     const filtered = Object.entries(state).filter(([id, {disabled}]) => (!disabled && id !== 'all'))
     filtered.forEach(([id, {targets}]) => {
         const servant = servantMaterials[id]
+        if (servant == null) {
+            console.log(`Materials for Id ${id} is undefined`)
+            return
+        }
         Object.entries(targets)
             .filter(([_target, {disabled}]) => !disabled)
             .forEach(([target, {ranges}]) => {
                 const materials: Materials = servant[target + 'Materials']
+                if (materials == null) {
+                    console.log(`${target}Materials for Id ${id} is undefined`)
+                    return
+                }
                 ranges.forEach(({start, end}) => (
                     range(start, end).forEach(i => {
                         if (materials[i] == null) {

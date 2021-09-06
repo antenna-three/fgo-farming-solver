@@ -15,16 +15,16 @@ const MsServantsIo = ({
     state: State
     setState: Dispatch<SetStateAction<State>>,
 }) => {
-    const {getId, getMsId} = getMsServantIdConverter(servants)
-    const initialState = createReinforcementState(['all', ...servants.map(({id}) => id.toString())])
+    const { getId, getMsId } = getMsServantIdConverter(servants)
+    const initialState = createReinforcementState(['all', ...servants.map(({ id }) => id.toString())])
     const msServants = Object.entries(state)
-        .filter(([id, {disabled}]) => !disabled)
-        .map(([id, {targets}]) => (
+        .filter(([id, { disabled }]) => !disabled)
+        .map(([id, { targets }]) => (
             [
                 getMsId(parseInt(id)),
                 targets.ascension.ranges[0].start,
                 targets.ascension.ranges[0].end,
-                ...targets.skill.ranges.flatMap(({start, end}) => [start, end]),
+                ...targets.skill.ranges.flatMap(({ start, end }) => [start, end]),
                 //...targets.appendSkill.ranges.flatMap(({start, end}) => [start, end]),
                 1,
                 0,
@@ -32,7 +32,7 @@ const MsServantsIo = ({
         )
         ).sort((a, b) => (a[0] - b[0]))
     const handleChange: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement> = (event) => {
-        const {value} = event.currentTarget
+        const { value } = event.currentTarget
         let msServants_: number[][] = []
         try {
             msServants_ = JSON.parse(value)
@@ -44,37 +44,39 @@ const MsServantsIo = ({
         }
         setState(state => ({
             ...initialState,
-            ...Object.fromEntries(msServants_.map((msServant: number[]) => {
-                const id = getId(msServant[0])
-                const ascentionRanges = {start: msServant[1], end: msServant[2]}
-                const msSkill = msServant.slice(3, 9)
-                const skillRanges = range(3).reduce((acc, i) => (
-                    [...acc, {start: msSkill[i * 2], end: msSkill[i * 2 + 1]}]
-                ), [] as {start: number, end: number}[])
-                const newState = [
-                    id,
-                    {
-                        disabled: false,
-                        targets: {
-                            ascension: {
-                                disabled: ascentionRanges.start == ascentionRanges.end,
-                                ranges: [ ascentionRanges ]
-                            },
-                            skill: {
-                                disabled: false,
-                                ranges: skillRanges
-                            },
-                            appendSkill: id.toString() in state ? state[id.toString()].targets.appendSkill : range(3).map(() => ({start: 1, end: 10}))
+            ...Object.fromEntries(msServants_
+                .filter((msServant: number[]) => (getId(msServant[0]) != null))
+                .map((msServant: number[]) => {
+                    const id = getId(msServant[0])
+                    const ascentionRanges = { start: msServant[1], end: msServant[2] }
+                    const msSkill = msServant.slice(3, 9)
+                    const skillRanges = range(3).reduce((acc, i) => (
+                        [...acc, { start: msSkill[i * 2], end: msSkill[i * 2 + 1] }]
+                    ), [] as { start: number, end: number }[])
+                    const newState = [
+                        id,
+                        {
+                            disabled: false,
+                            targets: {
+                                ascension: {
+                                    disabled: ascentionRanges.start == ascentionRanges.end,
+                                    ranges: [ascentionRanges]
+                                },
+                                skill: {
+                                    disabled: false,
+                                    ranges: skillRanges
+                                },
+                                appendSkill: id.toString() in state ? state[id.toString()].targets.appendSkill : range(3).map(() => ({ start: 1, end: 10 }))
+                            }
                         }
-                    }
-                ]
-                return newState
-            }))
+                    ]
+                    return newState
+                }))
         }))
     }
     return (
-        <input type="text" value={JSON.stringify(msServants)} onChange={handleChange} onFocus={selectOnFocus}/>
+        <input type="text" value={JSON.stringify(msServants)} onChange={handleChange} onFocus={selectOnFocus} />
     )
-    
+
 }
 export default MsServantsIo
