@@ -1,9 +1,6 @@
 import { Servant } from "../interfaces"
 
 
-const handleMechaElichanII = (collectionNo: number) => (
-    collectionNo == 191 ? 215.5 : collectionNo
-)
 const noToMsId: { [key: number]: number } = {
     1: 1,
     2: 2,
@@ -316,16 +313,18 @@ const noToMsId: { [key: number]: number } = {
     315: 310,
     316: 311,
 }
+
 export const getMsServantIdConverter = (servants: Servant[]) => {
-    const servants_ = [...servants]
-    /*
-    const msIds = servants_
-        .sort((a, b) => (handleMechaElichanII(a.collectionNo) - handleMechaElichanII(b.collectionNo)))
-        .map(({ id }, index) => ({ id, msId: index + 1 }))*/
     const idToNo = Object.fromEntries(servants.map(({id, collectionNo}) => ([id, collectionNo])))
     const noToId = Object.fromEntries(servants.map(({id, collectionNo}) => ([collectionNo, id])))
     const msIdToNo = Object.fromEntries(Object.entries(noToMsId).map(([k, v]) => ([v, k])))
-    const getMsId = (id: number) => noToMsId[idToNo[id]]//msIds.find(pair => pair.id == id)?.msId || 0
-    const getId = (msId: number) => noToId[msIdToNo[msId]]//msIds.find(pair => pair.msId == msId)?.id || 0
+    const getMsId = (id: number) => {
+        const no = idToNo[id]
+        return noToMsId[no] || no - 5
+    }
+    const getId = (msId: number) => {
+        const no = msIdToNo[msId]
+        return noToId[no] || no + 5
+    }
     return { getMsId, getId }
 }
