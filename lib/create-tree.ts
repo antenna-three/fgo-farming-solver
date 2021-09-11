@@ -31,17 +31,21 @@ export function createServantTree(servants: Servant[]): Node[] {
         value: 'all',
         className: 'root',
         children: Object.entries(_.groupBy(servants, ({className}) => (className)))
-            .map(([className, servants]) => ({
-                label: jpClassNames[className],
-                value: className,
-                className: 'inner',
-                children: servants.map(servant => (
-                    {
-                        label: servant.name,
-                        value: servant.id.toString(),
-                        className: 'leaf'
-                    }
-                ))
-            }))
+            .map(([className, servants]) => (createClassTree(className, servants)))
     }]
+}
+
+export function createClassTree(className: string, servants: Servant[]): Node {
+    return {
+        label: jpClassNames[className],
+        value: className,
+        className: 'inner',
+        children: servants.map(servant => (
+            {
+                label: servant.name,
+                value: servant.id.toString(),
+                className: 'leaf'
+            }
+        ))
+    }
 }

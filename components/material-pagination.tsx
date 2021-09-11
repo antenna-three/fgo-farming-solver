@@ -8,19 +8,20 @@ const Pagination = ({
 }) => {
     const classNames = Object.keys(jpClassNames)
     const currentIndex = classNames.indexOf(currentClassName || '')
-    const prevClassName = currentIndex == -1
+    const prevClassName = currentIndex < 1
         ? classNames.slice(-1)[0]
-        : currentIndex == 0
-        ? ''
         : classNames[currentIndex - 1]
-    const nextClassName = classNames[currentIndex + 1] || ''
+    const nextClassName = classNames[currentIndex + 1] || classNames[0]
     return (
         <div className="pagination">
             <Link href={'/material/' + prevClassName}>
-                <a className="page"><span className="page prev">{jpClassNames[prevClassName] || '全サーヴァント'}</span></a>
+                <a className="page"><span className="page prev">{jpClassNames[prevClassName]}</span></a>
+            </Link>
+            <Link href="/material">
+                <a className="page"><span className="page top">サーヴァント選択/共通設定</span></a>
             </Link>
             <Link href={'/material/' + nextClassName}>
-                <a className="page"><span className="page next">{jpClassNames[nextClassName] || '全サーヴァント'}</span></a>
+                <a className="page"><span className="page next">{jpClassNames[nextClassName]}</span></a>
             </Link>
             <style jsx>{`
                 .pagination {
@@ -37,7 +38,7 @@ const Pagination = ({
                 .page.prev {
                     padding-left: 3rem;
                 }
-                .page.next {
+                .page.next, .page.top{
                     padding-right: 3rem;
                     color: var(--color-bg);
                     background-color: var(--color);

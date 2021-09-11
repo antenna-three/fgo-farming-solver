@@ -1,7 +1,6 @@
 import { GetStaticPaths, GetStaticProps } from "next";
-import { useState } from "react";
-import { origin, region } from "../../constants/atlasacademy";
 import MaterialList from "../../components/material-list";
+import { origin, region } from "../../constants/atlasacademy";
 import { Servant } from '../../interfaces'
 import { getServants } from "../../lib/get-servants";
 
@@ -17,8 +16,9 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 export const getStaticProps: GetStaticProps = async (context) => {
     const { id } = context.params as { id: string }
-    const servantUrl = `${origin}/nice/${region}/servant/${id}`
-    const servant = await fetch(servantUrl).then(res => res.json())
+    const url = `${origin}/export/${region}/nice_servant.json`
+    const servants = await fetch(url).then(res => res.json())
+    const servant = servants.find((servant: Servant) => (servant.id.toString() == id))
     return {
         props: servant
     }
@@ -26,17 +26,6 @@ export const getStaticProps: GetStaticProps = async (context) => {
 
 
 const Page = (servant: Servant) => {
-    const levels = {
-        ascension: [0, 4],
-        skill: [1, 10],
-        appendSkill: [1, 10],
-    }
-    const values = Object.entries(levels).map(([target, [min, max]]) => {
-        const [disabled, setDisabled] = useState(true)
-        const [start, setStart] = useState(min)
-        const [end, setEnd] = useState(max)
-        return { target, min, max, disabled, setDisabled, start, end, setStart, setEnd }
-    })
     return (<>
         <h1>{servant.name}</h1>
         <div className="flex">
