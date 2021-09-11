@@ -18,7 +18,7 @@ const MsServantsIo = ({
     const { getId, getMsId } = getMsServantIdConverter(servants)
     const initialState = createReinforcementState(['all', ...servants.map(({ id }) => id.toString())])
     const msServants = Object.entries(state)
-        .filter(([id, { disabled, targets }]) => (!disabled && targets))
+        .filter(([id, { disabled, targets }]) => (!isNaN(Number(id)) && !disabled && targets))
         .map(([id, { targets }]) => (
             [
                 getMsId(parseInt(id)),
@@ -29,12 +29,14 @@ const MsServantsIo = ({
                 1,
                 0,
             ]
-        )
-        ).sort((a, b) => (a[0] - b[0]))
+        ))
+        .sort((a, b) => (a[0] - b[0]))
+    const strMsServants = msServants.length == 0 ? '' : JSON.stringify(msServants)
     const handleChange: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement> = (event) => {
         const { value } = event.currentTarget
         if (!value) {
             setState(state => Object.fromEntries(Object.entries(state).map(([id, {targets}]) => ([id, {disabled: true, targets}]))))
+            return
         }
         let msServants_: number[][] = []
         try {
@@ -78,7 +80,7 @@ const MsServantsIo = ({
         }))
     }
     return (
-        <input type="text" value={JSON.stringify(msServants)} onChange={handleChange} onFocus={selectOnFocus} />
+        <input type="text" value={strMsServants} onChange={handleChange} onFocus={selectOnFocus} />
     )
 
 }
