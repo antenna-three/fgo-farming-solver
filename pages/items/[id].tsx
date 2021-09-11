@@ -7,6 +7,7 @@ import _ from "underscore"
 import Head from '../../components/head'
 import DropTable from "../../components/drop-table"
 import { useState } from "react"
+import { useLocalStorage } from "../../lib/use-local-storage"
 
 
 type Item = {id: string, category: string, name: string}
@@ -34,13 +35,12 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     const id = params.id
     const questIds = drop_rates.filter(({item_id}) => (item_id == id)).map(({quest_id}) => (quest_id))
     const filteredQuests = quests.filter(({id}) => (questIds.includes(id)))
-    //const filteredDropRates = drop_rates.filter(({quest_id}) => (questIds.includes(id)))
     return {
         props: {
             id,
             items,
             quests: filteredQuests,
-            dropRates: drop_rates//filteredDropRates
+            dropRates: drop_rates
         },
         revalidate: 86400
     }
@@ -63,8 +63,8 @@ export default function Item(props?: {
     }
     const {id, items, quests, dropRates} = props
     const itemIndexes = _.indexBy(items, ({id}) => (id))
-    const [dropRateKey, setDropRateKey] = useState<DropRateKey>('drop_rate_1')
-    const [dropRateStyle, setDropRateStyle] = useState<DropRateStyle>('ap')
+    const [dropRateKey, setDropRateKey] = useLocalStorage<DropRateKey>('dropRateKey', 'drop_rate_1')
+    const [dropRateStyle, setDropRateStyle] = useLocalStorage<DropRateStyle>('dropRateStyle', 'ap')
     dropRates.sort(
         (a, b) => (a.item_id == id ? -1 : b.item_id == id ? 1 : parseInt(a.item_id, 36) - parseInt(b.item_id, 36))
     )

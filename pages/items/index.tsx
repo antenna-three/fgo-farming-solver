@@ -29,7 +29,7 @@ export default function Index({items}: {items: Item[]}) {
                     <div className="category" key={category}>
                         <h3>{category}</h3>
                         {group.map((item) => (
-                            <p><ItemLink item={item}/></p>
+                            <p key={item.id}><ItemLink item={item}/></p>
                         ))}
                     </div>
                 ))}

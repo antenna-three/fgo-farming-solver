@@ -6,7 +6,11 @@ export function useLocalStorage<T>(key: string, initialState: T): [T, Dispatch<S
         const json = localStorage.getItem(key)
         if (json) {
             const obj = JSON.parse(json)
-            setState({...initialState, ...obj})
+            if (typeof(obj) == 'object') {
+                setState({...initialState, obj})
+            } else {
+                setState(obj)
+            }
         }
     }, [])
     useEffect(() => (
