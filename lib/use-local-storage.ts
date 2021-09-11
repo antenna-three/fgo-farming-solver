@@ -5,7 +5,7 @@ export function useLocalStorage<T>(key: string, initialState: T): [T, Dispatch<S
     useEffect(() => {
         const json = localStorage.getItem(key)
         if (json) {
-            const obj = JSON.parse(json)
+            const obj: T = JSON.parse(json)
             if (typeof(obj) == 'object') {
                 setState({...initialState, ...obj})
             } else {
