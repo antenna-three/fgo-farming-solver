@@ -66,7 +66,9 @@ const Result = ({
         <form onSubmit={goSolver}>
             <input type="checkbox" id="hide-sufficient" checked={hideSufficient} onChange={onChangeSufficient}/>
             <label htmlFor="hide-sufficient">不足している素材のみ表示</label>
-            {itemGroup.map(([largeCategory, subItemGroup]) => (
+            {itemGroup.length == 0
+            ? <p>表示するアイテムがありません。</p>
+            : itemGroup.map(([largeCategory, subItemGroup]) => (
                 <details key={largeCategory} open={largeCategory=="強化素材"}>
                     <summary>{largeCategory}</summary>
                     <table>
