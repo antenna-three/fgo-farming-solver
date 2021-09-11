@@ -18,7 +18,7 @@ const MsServantsIo = ({
     const { getId, getMsId } = getMsServantIdConverter(servants)
     const initialState = createReinforcementState(['all', ...servants.map(({ id }) => id.toString())])
     const msServants = Object.entries(state)
-        .filter(([id, { disabled }]) => !disabled)
+        .filter(([id, { disabled, targets }]) => (!disabled && targets))
         .map(([id, { targets }]) => (
             [
                 getMsId(parseInt(id)),
