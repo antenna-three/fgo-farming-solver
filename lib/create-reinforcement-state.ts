@@ -14,7 +14,7 @@ export const createServantState = () => {
         targets: Object.fromEntries(Object.entries(levels).map(([target, [min, max]]) => ([
             target,
             {
-                disabled: true,
+                disabled: false,
                 ranges: arrays[target].map(i => (
                     {start: min, end: max}
                 ))
