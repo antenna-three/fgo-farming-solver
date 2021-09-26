@@ -1,7 +1,8 @@
 import { GetStaticPaths, GetStaticProps } from "next";
-import { useCallback } from "react";
+import Link from "next/link";
+import { useCallback, useState } from "react";
 import Head from '../../components/head'
-import ServantLevelSelect, { ServantState } from "../../components/servant-level-select";
+import ServantLevelSelect, { ServantState, State } from "../../components/servant-level-select";
 import { createReinforcementState } from "../../lib/create-reinforcement-state";
 import { useLocalStorage } from "../../lib/use-local-storage";
 import { jpClassNames } from "../../constants/jp-class-names";
@@ -12,6 +13,8 @@ import CalcButton from "../../components/material-calc-button";
 import { getServants } from "../../lib/get-servants";
 import { getServantMaterials } from "../../lib/get-materials";
 import { getJpClassName } from "../../lib/get-jp-class-name";
+import ClassTree from "../../components/class-tree";
+import { createMergeState } from "../../lib/create-merge-state";
 
 
 export const getStaticPaths: GetStaticPaths = async () => {
@@ -41,8 +44,10 @@ export default function material({
     className: string,
 }) {
     const initialState = createReinforcementState(['all', ...servants.map((servant) => (servant.id.toString()))])
-    const [state, setState] = useLocalStorage('material', initialState)
-    const filteredServants = servants.filter(servant => servant.className == className).filter(servant => !state[servant.id].disabled)
+    const mergeState = createMergeState(initialState)
+    const [state, setState] = useLocalStorage('material', initialState, mergeState)
+    const filteredServants = servants.filter(servant => servant.className == className)
+    const enabledServants = filteredServants.filter(servant => !state[servant.id].disabled)
     const setServantStates = Object.fromEntries(servants.map(({id}) => ([
         id,
         useCallback((dispatch: (servantState: ServantState) => ServantState) => {
@@ -50,13 +55,33 @@ export default function material({
         }, [id])
     ])))
     const jpClassName = getJpClassName(className)
+    const checked = Object.entries(state).filter(([id, { disabled }]) => !disabled).map(([id, { disabled }]) => (id))
+    const onCheck = (ids: string[]) => setState(state => (
+        { ...state, ...Object.fromEntries(Object.entries(state).map(([id, servantState]) => ([[id], { ...servantState, disabled: !ids.includes(id) }]))) }
+    ))
+    const [expanded, onExpand] = useState(['all'])
 
     return (<>
         <Head title={`${jpClassName} | 育成素材計算機`}/>
-        <PageList currentClassName={className}/>
-        <h1>{jpClassName}</h1>
+        <Link href="/material">
+            <a>
+                サーヴァント選択/共通設定
+            </a>
+        </Link>
+        <details>
+            <summary>個別設定</summary>
+            <PageList currentClassName={className}/>
+        </details>
+        <ClassTree
+            className={className}
+            servants={filteredServants}
+            checked={checked}
+            expanded={expanded}
+            onCheck={onCheck}
+            onExpand={onExpand}
+        />
         <div className="flex">
-            {filteredServants.map(servant => (
+            {enabledServants.map(servant => (
                 <div className="servant" key={servant.id}>
                     <ServantLevelSelect
                         id={servant.id.toString()}
@@ -67,7 +92,7 @@ export default function material({
                 </div>
             ))}
         </div>
-        {filteredServants.length == 0 && <p>{jpClassNames[className]}のサーヴァントは選択されていません。</p>}
+        {enabledServants.length == 0 && <p>{jpClassNames[className]}のサーヴァントは選択されていません。</p>}
         <Pagination currentClassName={className}/>
         <CalcButton state={state} materials={materials}/>
         <style jsx>{`

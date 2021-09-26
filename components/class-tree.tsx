@@ -2,7 +2,7 @@ import dynamic from 'next/dynamic'
 import 'react-checkbox-tree/lib/react-checkbox-tree.css'
 import styles from '../styles/checkbox-tree.module.css'
 import type { Servant } from '../interfaces'
-import { createServantTree } from '../lib/create-tree'
+import { createClassTree, createServantTree } from '../lib/create-tree'
 
 
 const CheckboxTree = dynamic(
@@ -10,20 +10,22 @@ const CheckboxTree = dynamic(
     { ssr: false }
 )
 
-const ServantTree = ({
+const ClassTree = ({
+    className,
     servants,
     checked,
     expanded,
     onCheck,
     onExpand,
 }: {
+    className: string,
     servants: Servant[],
     checked: string[],
-    expanded: string[],
+    expanded?: string[],
     onCheck: (checked: string[]) => void,
-    onExpand: (expanded: string[]) => void,
+    onExpand?: (expanded: string[]) => void,
 }) => {
-    const tree = createServantTree(servants)
+    const tree = [createClassTree(className, servants)]
 
     return (<>
         <CheckboxTree
@@ -46,4 +48,4 @@ const ServantTree = ({
     </>)
 }
 
-export default ServantTree
+export default ClassTree

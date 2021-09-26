@@ -13,6 +13,7 @@ import CalcButton from "../../components/material-calc-button"
 import { getServantMaterials } from "../../lib/get-materials"
 import { getItems } from "../../lib/get-items"
 import MsIo from "../../components/ms-io"
+import { createMergeState } from "../../lib/create-merge-state"
 
 
 export const getStaticProps: GetStaticProps = async (context) => {
@@ -32,7 +33,8 @@ const Index = ({
     items: Item[],
 }) => {
     const initialState = createReinforcementState(['all', ...servants.map(servant => servant.id.toString())])
-    const [state, setState] = useLocalStorage('material', initialState)
+    const mergeState = createMergeState(initialState)
+    const [state, setState] = useLocalStorage('material', initialState, mergeState)
     const setAllStateFunction = (dispatch: (prevServantState: ServantState) => ServantState) => {
         setState((prevState) => {
             const nextState = Object.fromEntries(Object.entries(prevState).map(([id, prevServantState]) => (
@@ -53,25 +55,43 @@ const Index = ({
 
     return (<>
         <Head title="育成素材計算機" />
-        <PageList />
-        <ServantLevelSelect
-            id={'all'}
-            name="全サーヴァント共通設定"
-            servantState={state.all}
-            setServantState={setAllState}
-        />
-        <h2>育成サーヴァント選択</h2>
-        <ServantTree
-            servants={servants}
-            checked={checked}
-            expanded={expanded}
-            onCheck={onCheck}
-            onExpand={onExpand}
-        />
+        <h1>育成素材計算機</h1>
+        <div className="flex">
+            <div className="servant tree">
+                <h2>育成サーヴァント選択</h2>
+                <ServantTree
+                    servants={servants}
+                    checked={checked}
+                    expanded={expanded}
+                    onCheck={onCheck}
+                    onExpand={onExpand}
+                />
+            </div>
+            <div className="servant level">
+                <ServantLevelSelect
+                    id={'all'}
+                    name="全サーヴァント共通設定"
+                    servantState={state.all}
+                    setServantState={setAllState}
+                />
+            </div>
+        </div>
         <h2><a href="http://fgosimulator.webcrow.jp/Material/" target="_blank" rel="noreferrer noopener">Material Simulator</a> 引継ぎコード</h2>
         <MsIo servants={servants} state={state} setState={setState} items={items} posession={posession} setPosession={setPosession}/>
-        <Pagination />
+        <h2>個別設定</h2>
+        <PageList />
         <CalcButton state={state} materials={materials}/>
+        <style jsx>{`
+            .flex {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-between;
+            }
+            .servant {
+                width: 100%;
+                max-width: 450px;
+            }
+        `}</style>
     </>)
 }
 export default Index

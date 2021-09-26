@@ -1,0 +1,61 @@
+.open {
+    position: relative;
+}
+.open::before {
+    content: "";
+    position: absolute;
+    transform: translate(50%, -150%) rotate(135deg);
+    top: 0;
+    left: 0;
+    width: .4rem;
+    height: .4rem;
+    border-top: 2px solid #777;
+    border-right: 2px solid #777;
+}
+.close {
+    position: relative;
+}
+.close::before {
+    content: "";
+    position: absolute;
+    transform: translate(0, -120%) rotate(45deg);
+    top: 0;
+    left: 0;
+    width: .4rem;
+    height: .4rem;
+    border-top: 2px solid #777;
+    border-right: 2px solid #777;
+}
+.unchecked, .checked, .halfchecked {
+    position: relative;
+}
+.unchecked::before, .checked::before, .halfchecked::before {
+    content: "";
+    position: absolute;
+    top: -.9rem;
+    left: 0;
+    width: .8rem;
+    height: .8rem;
+    border: 2px solid var(--color-bg-secondary);
+    border-radius: 5px;
+}
+.checked::after, .halfchecked::after {
+    content: "";
+    position: absolute;
+    top: -1.2rem;
+    left: .2rem;
+    width: .5rem;
+    height: .8rem;
+    transform: rotate(45deg);
+}
+.checked::after {
+    border-right: 3px solid var(--color);
+    border-bottom: 3px solid var(--color);
+}
+.halfchecked::after {
+    border-right: 3px solid var(--color-bg-secondary);
+    border-bottom: 3px solid var(--color-bg-secondary);
+}
+.root, .inner {
+    font-weight: bold;
+}
