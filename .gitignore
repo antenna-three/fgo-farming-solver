@@ -33,5 +33,10 @@ yarn-error.log*
 # vercel
 .vercel
 
-.vscode
+# Sentry
+.sentryclirc
+
+# project
+/.vscode/
 /dev/
+/cache/

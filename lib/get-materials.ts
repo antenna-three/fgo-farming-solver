@@ -1,7 +1,8 @@
 import { origin, region } from "../constants/atlasacademy"
 import { Materials, Servant } from "../interfaces"
-import fs from "fs"
+import { promises as fs, createWriteStream } from "fs"
 import path from "path"
+import fetch from "node-fetch"
 
 const reduceServant = (servant: { [key: string]: Materials }) => Object.fromEntries(
     Object.entries(servant)
@@ -20,21 +21,19 @@ const reduceServant = (servant: { [key: string]: Materials }) => Object.fromEntr
 )
 
 export const getNiceServants: () => Promise<Servant[]> = async () => {
-    if (process.env.NODE_ENV == 'development') {
-        const servants = JSON.parse(fs.readFileSync(path.resolve('./dev/nice_servant.json'), 'utf-8'))
-        return servants
-    } else {
-        let servants: {[key: string]: Materials}[] = []
-        const cache = path.resolve('./nice_servant.json')
-        try {
-            servants = JSON.parse(fs.readFileSync(cache, 'utf-8'))
-        } catch {
+    const cacheDir = path.resolve('./cache')
+    await fs.mkdir(cacheDir).catch(() => {})
+    const cache = path.resolve(cacheDir, 'nice_servant.json')
+    const servants = fs.readFile(cache, 'utf-8')
+        .then(json => JSON.parse(json))
+        .catch(async err => {
             const url = `${origin}/export/${region}/nice_servant.json`
-            servants = await fetch(url).then(res => res.json())
-            fs.writeFile(cache, JSON.stringify(servants), (err) => {console.log(err)})
-        }
-        return servants
-    }
+            const res = await fetch(url)
+            const cacheFile = createWriteStream(cache, 'utf-8')
+            res.body.pipe(cacheFile)
+            return res.json()
+        })
+    return servants
 }
 
 export const getServantMaterials = async () => {
