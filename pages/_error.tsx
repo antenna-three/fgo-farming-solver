@@ -30,7 +30,7 @@ export default function Error({
             <h1><span className="status-code">{statusCode}</span>{' '}<span className="title">{title}</span></h1>
             {
                 Array.isArray(message)
-                ? message.map(m => <p>{m}</p>)
+                ? message.map((m, i) => <p key={i}>{m}</p>)
                 : <p>{message}</p>
             }
             <p><Link href="/"><a>トップに戻る</a></Link></p>
