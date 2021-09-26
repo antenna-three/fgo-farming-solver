@@ -1,4 +1,5 @@
 import { GetStaticPaths, GetStaticProps } from "next";
+import { useRouter } from "next/router";
 import MaterialList from "../../components/material-list";
 import { origin, region } from "../../constants/atlasacademy";
 import { Servant } from '../../interfaces'
@@ -10,7 +11,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
     const paths = servants.map(({ id }) => ({
         params: { id: id.toString() }
     }))
-    return { paths, fallback: false }
+    return { paths, fallback: true }
 }
 
 
@@ -26,6 +27,11 @@ export const getStaticProps: GetStaticProps = async (context) => {
 
 
 const Page = (servant: Servant) => {
+    const router = useRouter()
+    if (router.isFallback) {
+        return <p>読み込み中...</p>
+    }
+
     return (<>
         <h1>{servant.name}</h1>
         <div className="flex">
