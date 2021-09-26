@@ -1,5 +1,7 @@
 import { origin, region } from "../constants/atlasacademy"
-import { Materials } from "../interfaces"
+import { Materials, Servant } from "../interfaces"
+import fs from "fs"
+import path from "path"
 
 const reduceServant = (servant: { [key: string]: Materials }) => Object.fromEntries(
     Object.entries(servant)
@@ -17,15 +19,25 @@ const reduceServant = (servant: { [key: string]: Materials }) => Object.fromEntr
         )]))
 )
 
-export const getServantMaterials = async () => {
+export const getNiceServants: () => Promise<Servant[]> = async () => {
     if (process.env.NODE_ENV == 'development') {
-        const fs = require('fs')
-        const path = require('path')
-        const servants: {[key: string]: Materials}[] = JSON.parse(fs.readFileSync(path.resolve('./dev/nice_servant.json'), 'utf-8'))
-        return Object.fromEntries(servants.map(servant => [servant.id, reduceServant(servant)]))
+        const servants = JSON.parse(fs.readFileSync(path.resolve('./dev/nice_servant.json'), 'utf-8'))
+        return servants
     } else {
-        const url = `${origin}/export/${region}/nice_servant.json`
-        const servants: {[key: string]: Materials}[] = await fetch(url).then(res => res.json())
-        return Object.fromEntries(servants.map(servant => [servant.id, reduceServant(servant)]))
+        let servants: {[key: string]: Materials}[] = []
+        const cache = path.resolve('./nice_servant.json')
+        try {
+            servants = JSON.parse(fs.readFileSync(cache, 'utf-8'))
+        } catch {
+            const url = `${origin}/export/${region}/nice_servant.json`
+            servants = await fetch(url).then(res => res.json())
+            fs.writeFile(cache, JSON.stringify(servants), (err) => {console.log(err)})
+        }
+        return servants
     }
+}
+
+export const getServantMaterials = async () => {
+    const servants = await getNiceServants()
+    return Object.fromEntries(servants.map(servant => [servant.id, reduceServant(servant)]))
 }

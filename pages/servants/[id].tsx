@@ -1,8 +1,9 @@
 import { GetStaticPaths, GetStaticProps } from "next";
 import { useRouter } from "next/router";
 import MaterialList from "../../components/material-list";
-import { origin, region } from "../../constants/atlasacademy";
-import { Servant } from '../../interfaces'
+import { Materials, Servant } from '../../interfaces'
+import { getJpClassName } from "../../lib/get-jp-class-name";
+import { getNiceServants, getServantMaterials } from "../../lib/get-materials";
 import { getServants } from "../../lib/get-servants";
 
 
@@ -17,23 +18,25 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 export const getStaticProps: GetStaticProps = async (context) => {
     const { id } = context.params as { id: string }
-    const url = `${origin}/export/${region}/nice_servant.json`
-    const servants = await fetch(url).then(res => res.json())
-    const servant = servants.find((servant: Servant) => (servant.id.toString() == id))
+    const servant = await getNiceServants().then(servants => servants.find(servant => servant.id.toString() == id))
     return {
-        props: servant
+        props: {servant}
     }
 }
 
 
-const Page = (servant: Servant) => {
+const Page = ({
+    servant,
+}: {
+    servant: Servant,
+}) => {
     const router = useRouter()
     if (router.isFallback) {
         return <p>読み込み中...</p>
     }
 
     return (<>
-        <h1>{servant.name}</h1>
+        <h1>{servant.name}（{getJpClassName(servant.className)}）</h1>
         <div className="flex">
             <div className="flex-child">
                 <h2>霊基再臨素材</h2>
