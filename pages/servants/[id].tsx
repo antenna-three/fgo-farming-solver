@@ -45,7 +45,7 @@ const Page = ({
     }
 
     return (<>
-        <p><Link href="../index"><a>サーヴァント一覧</a></Link> &gt; {servant.name}</p>
+        <p><Link href="/servants"><a>サーヴァント一覧</a></Link> &gt; {servant.name}</p>
         <h1>{servant.name}（{getJpClassName(servant.className)}）</h1>
         <div className="flex">
             <div className="flex-child">
