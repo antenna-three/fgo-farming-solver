@@ -2,7 +2,6 @@ import { GetStaticProps } from "next"
 import { getServants } from "../../lib/get-servants"
 import { SetStateAction, useState } from "react"
 import Head from "../../components/head"
-import Pagination from "../../components/material-pagination"
 import PageList from "../../components/material-page-list"
 import ServantLevelSelect, { ServantState } from "../../components/servant-level-select"
 import ServantTree from "../../components/servant-tree"
@@ -10,17 +9,18 @@ import { Item, Materials, Servant } from "../../interfaces"
 import { createReinforcementState } from "../../lib/create-reinforcement-state"
 import { useLocalStorage } from "../../lib/use-local-storage"
 import CalcButton from "../../components/material-calc-button"
-import { getServantMaterials } from "../../lib/get-materials"
+import { getMaterialsForServants } from "../../lib/get-materials"
 import { getItems } from "../../lib/get-items"
 import MsIo from "../../components/ms-io"
 import { createMergeState } from "../../lib/create-merge-state"
+import { revalidate } from "../../constants/revalidate"
 
 
 export const getStaticProps: GetStaticProps = async (context) => {
     const servants = await getServants()
-    const materials = await getServantMaterials()
+    const materials = await getMaterialsForServants()
     const items = await getItems()
-    return { props: { servants, materials, items }, revalidate: 3600 }
+    return { props: { servants, materials, items }, revalidate }
 }
 
 const Index = ({
