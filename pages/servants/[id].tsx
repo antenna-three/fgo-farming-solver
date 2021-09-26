@@ -1,9 +1,10 @@
 import { GetStaticPaths, GetStaticProps } from "next";
 import { useRouter } from "next/router";
+import Link from "next/link";
 import MaterialList from "../../components/material-list";
-import { Materials, Servant } from '../../interfaces'
+import { Servant } from '../../interfaces'
 import { getJpClassName } from "../../lib/get-jp-class-name";
-import { getNiceServants, getServantMaterials } from "../../lib/get-materials";
+import { getNiceServants } from "../../lib/get-nice-servants";
 import { getServants } from "../../lib/get-servants";
 
 
@@ -17,10 +18,18 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 
 export const getStaticProps: GetStaticProps = async (context) => {
-    const { id } = context.params as { id: string }
-    const servant = await getNiceServants().then(servants => servants.find(servant => servant.id.toString() == id))
+    const { params } = context
+    if (params == null || typeof(params.id) != 'string' || Number.isNaN(parseInt(params.id))) {
+        return { notFound: true }
+    }
+    const intId = parseInt(params.id)
+    const niceServant = await getNiceServants()
+        .then(servants => servants.find(({id}) => id == intId))
+    if (niceServant == null) {
+        return { notFound: true }
+    }
     return {
-        props: {servant}
+        props: { servant: niceServant }
     }
 }
 
@@ -36,6 +45,7 @@ const Page = ({
     }
 
     return (<>
+        <p><Link href="../index"><a>サーヴァント一覧</a></Link> &gt; {servant.name}</p>
         <h1>{servant.name}（{getJpClassName(servant.className)}）</h1>
         <div className="flex">
             <div className="flex-child">
