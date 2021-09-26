@@ -11,10 +11,11 @@ import PageList from "../../components/material-page-list"
 import { Materials, Servant } from "../../interfaces";
 import CalcButton from "../../components/material-calc-button";
 import { getServants } from "../../lib/get-servants";
-import { getServantMaterials } from "../../lib/get-materials";
+import { getMaterialsForServants } from "../../lib/get-materials";
 import { getJpClassName } from "../../lib/get-jp-class-name";
 import ClassTree from "../../components/class-tree";
 import { createMergeState } from "../../lib/create-merge-state";
+import { revalidate } from "../../constants/revalidate";
 
 
 export const getStaticPaths: GetStaticPaths = async () => {
@@ -30,8 +31,8 @@ export const getStaticProps: GetStaticProps = async (context) => {
     }
     const {className} = context.params
     const servants = await getServants()
-    const materials = await getServantMaterials()
-    return {props: {servants, materials, className}, revalidate: 3600}
+    const materials = await getMaterialsForServants()
+    return {props: {servants, materials, className}, revalidate}
 }
 
 export default function material({

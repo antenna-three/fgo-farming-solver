@@ -1,6 +1,7 @@
 import { GetStaticProps } from "next";
 import Link from 'next/link'
 import _ from 'underscore'
+import { revalidate } from "../../constants/revalidate";
 import { Servant } from "../../interfaces";
 import { getJpClassName } from "../../lib/get-jp-class-name";
 import { getServants } from "../../lib/get-servants";
@@ -9,7 +10,7 @@ import { getServants } from "../../lib/get-servants";
 export const getStaticProps: GetStaticProps = async () => {
     const servants = await getServants()
     const servantGroups = _.groupBy(servants, servant => servant.className)
-    return {props: {servantGroups}, revalidate: 3600}
+    return { props: { servantGroups }, revalidate }
 }
 
 export default function Servants({

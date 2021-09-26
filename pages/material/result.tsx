@@ -9,12 +9,13 @@ import { useRouter } from "next/router"
 import Link from 'next/link'
 import { getItems } from "../../lib/get-items"
 import { getSolverId } from "../../lib/get-solver-id"
+import { revalidate } from "../../constants/revalidate"
 
 
 
 export const getStaticProps: GetStaticProps = async () => {
     const items = await getItems()
-    return {props: {items}, revalidate: 3600}
+    return { props: { items }, revalidate }
 }
 
 const Result = ({

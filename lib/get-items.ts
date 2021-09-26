@@ -1,5 +1,7 @@
 import { origin, region } from "../constants/atlasacademy"
 import { Item } from "../interfaces"
+import { fetchJsonWithCache } from "./cache"
+import { getHash } from "./get-hash"
 
 const getCategory = (item: Item) => {
     switch (Math.floor(item.priority / 100)) {
@@ -37,8 +39,9 @@ const getCategory = (item: Item) => {
 
 export const getItems = async () => {
     const url = `${origin}/export/${region}/nice_item.json`
+    const hash = await getHash()
     const targetTypes = ['qp', 'skillLvUp', 'tdLvUp']
-    return fetch(url).then(res => res.json()).then((items: Item[]) =>
+    return fetchJsonWithCache(url, hash).then((items: Item[]) =>
         items.filter(item => (targetTypes.includes(item.type)))
             .map((item) => ({...item, category: getCategory(item)}))
             .sort((a, b) => (a.priority - b.priority))

@@ -1,8 +1,10 @@
 import { GetStaticPaths, GetStaticProps } from "next";
 import { useRouter } from "next/router";
+import Link from "next/link";
 import MaterialList from "../../components/material-list";
-import { origin, region } from "../../constants/atlasacademy";
 import { Servant } from '../../interfaces'
+import { getJpClassName } from "../../lib/get-jp-class-name";
+import { getNiceServants } from "../../lib/get-nice-servants";
 import { getServants } from "../../lib/get-servants";
 
 
@@ -16,24 +18,35 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 
 export const getStaticProps: GetStaticProps = async (context) => {
-    const { id } = context.params as { id: string }
-    const url = `${origin}/export/${region}/nice_servant.json`
-    const servants = await fetch(url).then(res => res.json())
-    const servant = servants.find((servant: Servant) => (servant.id.toString() == id))
+    const { params } = context
+    if (params == null || typeof(params.id) != 'string' || Number.isNaN(parseInt(params.id))) {
+        return { notFound: true }
+    }
+    const intId = parseInt(params.id)
+    const niceServant = await getNiceServants()
+        .then(servants => servants.find(({id}) => id == intId))
+    if (niceServant == null) {
+        return { notFound: true }
+    }
     return {
-        props: servant
+        props: { servant: niceServant }
     }
 }
 
 
-const Page = (servant: Servant) => {
+const Page = ({
+    servant,
+}: {
+    servant: Servant,
+}) => {
     const router = useRouter()
     if (router.isFallback) {
         return <p>読み込み中...</p>
     }
 
     return (<>
-        <h1>{servant.name}</h1>
+        <p><Link href="/servants"><a>サーヴァント一覧</a></Link> &gt; {servant.name}</p>
+        <h1>{servant.name}（{getJpClassName(servant.className)}）</h1>
         <div className="flex">
             <div className="flex-child">
                 <h2>霊基再臨素材</h2>

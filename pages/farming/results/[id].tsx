@@ -10,7 +10,6 @@ import QuestTable from '../../../components/quest-table'
 import SumTable from '../../../components/sum-table'
 import TweetIntent from '../../../components/tweet-intent'
 import ItemTable from '../../../components/item-table'
-import Error from '../../_error'
 
 type Params = {objective: string, items: {[key: string]: number}, quests: string[]}
 type Quest = {id: string, section: string, area: string, name: string, lap: number}
@@ -24,43 +23,45 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 
 export const getStaticProps: GetStaticProps = async ({params}) => {
+    const notFound: { notFound: true } = { notFound: true }
     if (params == null || typeof params.id !== 'string') {
-        return {props: {statusCode: 404}}
+        return notFound
     }
-    try {
-        const result = await getDynamoDb({
-            tableName: 'fgo-farming-solver-results',
-            key: {id: params.id},
-        })
-        return {props: result}
-    } catch (e) {
-        if (e instanceof DBError) {
-            return {props: {statusCode: 404}}
-        } else {
-            throw e
+    const res = await getDynamoDb({
+        tableName: 'fgo-farming-solver-results',
+        key: {id: params.id},
+    }).then(
+        result => ({ props: result })
+    ).catch(
+        error => {
+            if (!(error instanceof DBError)) console.log(error)
+            return notFound
         }
-    }
+    )
+    return res
 }
 
-export default function Result(
-    result?: {
-        params: Params,
-        quests: Quest[],
-        items: Item[],
-        drop_rates: DropRate[],
-        total_lap: number,
-        total_ap: number
-    } | {
-        statusCode: number
-    }
-) {
-    if (result == null || Object.keys(result).length == 0) {
+const Result = ({
+    params,
+    quests,
+    items,
+    drop_rates,
+    total_ap,
+    total_lap,
+}: {
+    params: Params,
+    quests: Quest[],
+    items: Item[],
+    drop_rates: DropRate[],
+    total_lap: number,
+    total_ap: number
+}) => {
+    const router = useRouter()
+
+    if (router.isFallback) {
         return <Spinner message={'読み込み中'}/>
     }
-    if ('statusCode' in result) {
-        return <Error statusCode={result.statusCode}/>
-    }
-    const {params, quests, items, drop_rates, total_lap, total_ap} = result
+
     if (quests && quests.length == 0) {
         return (
             <>
@@ -71,15 +72,12 @@ export default function Result(
         )
     }
 
-    const router = useRouter()
-
     const itemIndexes = _.indexBy(items, 'id')
     const paramItems = Object.entries(params.items).map(([id, count]) => ({...itemIndexes[id], count}))
     const lapGroups = _.groupBy(quests, quest => quest.area)
     const itemGroups = _.groupBy(items, item => item.category)
     const largeItemGroups = _.groupBy(Object.entries(itemGroups), ([category, _]) => getLargeCategory(category))
     const questToDrops = _.groupBy(drop_rates, row => row.quest_id)
-
 
     return (
         <>
@@ -138,3 +136,5 @@ export default function Result(
         </>
     )
 }
+
+export default Result
