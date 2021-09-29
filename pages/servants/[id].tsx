@@ -2,7 +2,7 @@ import { GetStaticPaths, GetStaticProps } from 'next'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import MaterialList from '../../components/material-list'
-import { Servant } from '../../interfaces'
+import { NiceServant, Servant } from '../../interfaces'
 import { getJpClassName } from '../../lib/get-jp-class-name'
 import { getNiceServants } from '../../lib/get-nice-servants'
 import { getServants } from '../../lib/get-servants'
@@ -36,7 +36,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
   }
 }
 
-const Page = ({ servant }: { servant: Servant }) => {
+const Page = ({ servant }: { servant: NiceServant }) => {
   const router = useRouter()
   if (router.isFallback) {
     return <p>読み込み中...</p>

@@ -1,4 +1,4 @@
-import { FormEvent, memo, SetStateAction, useCallback } from 'react'
+import { FormEvent, memo, SetStateAction, useCallback, useMemo } from 'react'
 import Link from 'next/link'
 import DualSliderWithInput from './dual-slider-with-input'
 
@@ -22,11 +22,13 @@ const ServantLevelSelect = ({
   name,
   servantState,
   setState,
+  setServantState,
 }: {
   id: string
   name: string
   servantState: ServantState
-  setState: (value: SetStateAction<State>) => void
+  setState: (value: SetStateAction<State>) => void,
+  setServantState?: (dispatch: (servantState: ServantState) => ServantState) => void,
 }) => {
   const labels: { [key: string]: string } = {
     ascension: '再臨',
@@ -43,20 +45,17 @@ const ServantLevelSelect = ({
     skill: 10,
     appendSkill: 10,
   }
-  const setServantState = useCallback(
-    (dispatch: (servantState: ServantState) => ServantState) => {
+  const setServantStateSafe = useMemo(() => setServantState || ((dispatch: (servantState: ServantState) => ServantState) => {
       setState((state) => ({
         ...state,
         [id]: { ...state[id], ...dispatch(state[id]) },
       }))
-    },
-    [setState, id]
-  )
+    }), [id, setServantState, setState])
   const handleChangeDisabled = useCallback(
     (e: FormEvent<HTMLInputElement>) => {
       const [id, target] = e.currentTarget.name.split('-')
       const disabled = !e.currentTarget.checked
-      setServantState((state) => ({
+      setServantStateSafe((state) => ({
         ...state,
         targets: {
           ...state.targets,
@@ -67,14 +66,14 @@ const ServantLevelSelect = ({
         },
       }))
     },
-    [setServantState]
+    [setServantStateSafe]
   )
   const handleLeftChange = useCallback(
     (e: FormEvent<HTMLInputElement>) => {
       const [id, target, index] = e.currentTarget.name.split('-')
       const indexAsNumber = parseInt(index)
       const { valueAsNumber } = e.currentTarget
-      setServantState((state) => ({
+      setServantStateSafe((state) => ({
         ...state,
         targets: {
           ...state.targets,
@@ -89,14 +88,14 @@ const ServantLevelSelect = ({
         },
       }))
     },
-    [setServantState]
+    [setServantStateSafe]
   )
   const handleRightChange = useCallback(
     (e: FormEvent<HTMLInputElement>) => {
       const [id, target, index] = e.currentTarget.name.split('-')
       const indexAsNumber = parseInt(index)
       const { valueAsNumber } = e.currentTarget
-      setServantState((state) => ({
+      setServantStateSafe((state) => ({
         ...state,
         targets: {
           ...state.targets,
@@ -111,7 +110,7 @@ const ServantLevelSelect = ({
         },
       }))
     },
-    [setServantState]
+    [setServantStateSafe]
   )
 
   return (

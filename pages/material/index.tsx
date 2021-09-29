@@ -100,6 +100,7 @@ const Index = ({
             id={'all'}
             name="全サーヴァント共通設定"
             servantState={state.all}
+            setState={setState}
             setServantState={setAllState}
           />
         </div>
