@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "lint": "next lint",
+    "format": "prettier --write --ignore-path .gitignore ./**/*.{js,jsx,ts,tsx}"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.24.0",
