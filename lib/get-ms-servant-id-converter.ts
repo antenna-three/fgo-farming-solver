@@ -321,15 +321,15 @@ export const getMsServantIdConverter = (servants: Servant[]) => {
     servants.map(({ id, collectionNo }) => [collectionNo, id])
   )
   const msIdToNo = Object.fromEntries(
-    Object.entries(noToMsId).map(([k, v]) => [v, k])
+    Object.entries(noToMsId).map(([k, v]) => [v, parseInt(k)])
   )
   const getMsId = (id: number) => {
     const no = idToNo[id]
     return noToMsId[no] || no - 5
   }
   const getId = (msId: number) => {
-    const no = msIdToNo[msId]
-    return noToId[no] || no + 5
+    const no = msIdToNo[msId] || msId + 5
+    return noToId[no]
   }
   return { getMsId, getId }
 }
