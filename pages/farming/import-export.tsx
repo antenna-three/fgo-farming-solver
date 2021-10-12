@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useState, useEffect } from 'react'
-import Head from '../../components/head'
+import { Head } from '../../components/common/head'
 
 export default function ImportExport() {
   const router = useRouter()

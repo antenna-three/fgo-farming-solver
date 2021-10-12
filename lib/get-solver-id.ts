@@ -1,4 +1,4 @@
-import { Item } from '../interfaces'
+import { Item } from '../interfaces/atlas-academy'
 
 export const getSolverId = (item: Item) => {
   if (100 <= item.priority && item.priority < 107) {

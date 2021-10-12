@@ -1,10 +1,12 @@
+import { MaterialsRecord } from './../interfaces/atlas-academy'
 import { range } from 'underscore'
-import { State } from '../components/servant-level-select'
-import { Materials } from '../interfaces'
+import { State } from '../components/material/servant-level-select'
+import { Materials } from '../interfaces/atlas-academy'
+import { entries } from './typed-entries'
 
 export const sumMaterials = (
   state: State,
-  servantMaterials: { [id: string]: { [key: string]: Materials } }
+  servantMaterials: { [id: string]: MaterialsRecord }
 ) => {
   const sum = new Proxy(
     {},
@@ -22,10 +24,10 @@ export const sumMaterials = (
       console.log(`Materials for Id ${id} is undefined`)
       return
     }
-    Object.entries(targets)
+    entries(targets)
       .filter(([_target, { disabled }]) => !disabled)
       .forEach(([target, { ranges }]) => {
-        const materials: Materials = servant[target + 'Materials']
+        const materials: Materials = servant[`${target}Materials`]
         if (materials == null) {
           console.log(`${target}Materials for Id ${id} is undefined`)
           return

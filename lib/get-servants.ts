@@ -1,5 +1,6 @@
+import { orderBy } from './order-by'
 import { origin, region } from '../constants/atlasacademy'
-import { Servant } from '../interfaces'
+import { Servant } from '../interfaces/atlas-academy'
 import { fetchJsonWithCache } from './cache'
 import { getHash } from './get-hash'
 
@@ -18,11 +19,11 @@ export const getServants = async () => {
     //sort by class name as a primary key and by rarity as a secondary key
     .then((servants) =>
       servants.sort(
-        (a, b) =>
-          (classNames.indexOf(a.className) - classNames.indexOf(b.className)) *
-            10 +
-          b.rarity -
-          a.rarity
+        orderBy(
+          ({ className, rarity }) =>
+            classNames.indexOf(className) * 10 - rarity,
+          'asc'
+        )
       )
     )
   return servants

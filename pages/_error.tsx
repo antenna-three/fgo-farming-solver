@@ -1,5 +1,7 @@
-import Link from 'next/link'
-import Head from '../components/head'
+import { Heading, HStack, Text, VStack } from '@chakra-ui/react'
+import { Link } from '../components/common/link'
+import React from 'react'
+import { Head } from '../components/common/head'
 
 const statusCodes: { [code: number]: string } = {
   400: 'Bad Request',
@@ -30,28 +32,21 @@ export default function Error({
   return (
     <>
       <Head title={`${statusCode} ${title}`} />
-      <h1>
-        <span className="status-code">{statusCode}</span>{' '}
-        <span className="title">{title}</span>
-      </h1>
-      {Array.isArray(message) ? (
-        message.map((m, i) => <p key={i}>{m}</p>)
-      ) : (
-        <p>{message}</p>
-      )}
-      <p>
-        <Link href="/">
-          <a>トップに戻る</a>
-        </Link>
-      </p>
-      <style jsx>{`
-        .status-code {
-          font-weight: bold;
-        }
-        .title {
-          font-weight: normal;
-        }
-      `}</style>
+      <VStack align="start">
+        <Heading as="h1">
+          <HStack>
+            <Text>{statusCode}</Text>
+            <Text fontWeight="normal">{title}</Text>
+          </HStack>
+        </Heading>
+        {Array.isArray(message) ? (
+          message.map((m, i) => <Text key={i}>{m}</Text>)
+        ) : (
+          <Text>{message}</Text>
+        )}
+
+        <Link href="/">トップに戻る</Link>
+      </VStack>
     </>
   )
 }

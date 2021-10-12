@@ -1,14 +1,14 @@
-import { State } from '../components/servant-level-select'
+import { State } from '../components/material/servant-level-select'
 
-export const createMergeState = (initialState: State) => (s: State) =>
-  s.all
+export const createMergeState = (initialState: State) => (state: State) =>
+  state.all
     ? {
         ...Object.fromEntries(
           Object.entries(initialState).map(([id, { disabled }]) => [
             id,
-            { disabled, targets: s.all.targets },
+            { disabled, targets: state.all.targets },
           ])
         ),
-        ...s,
+        ...state,
       }
-    : { ...initialState, ...s }
+    : { ...initialState, ...state }

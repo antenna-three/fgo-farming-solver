@@ -1,62 +1,45 @@
 import { GetStaticPaths, GetStaticProps } from 'next'
 import ReactMarkdown from 'react-markdown'
+import { Text } from '@chakra-ui/react'
 import { getMd } from '../lib/get-md'
-import Head from '../components/head'
+import { Head } from '../components/common/head'
 import Link from 'next/link'
+import ChakraUIRenderer from 'chakra-ui-markdown-renderer'
 
 export default function Page({ title, md }: { title: string; md: string }) {
   return (
     <>
       <Head title={title} />
-      <ReactMarkdown>{md}</ReactMarkdown>
-      <p>
+      <ReactMarkdown components={ChakraUIRenderer()}>{md}</ReactMarkdown>
+      <Text>
         <Link href="/">
           <a>トップに戻る</a>
         </Link>
-      </p>
+      </Text>
     </>
   )
 }
+const pages = {
+  about: { path: 'docs/readme.md', title: 'About' },
+  news: { path: 'docs/news.md', title: 'News' },
+  LICENSE: { path: 'LICENSE', title: 'LICENSE' },
+  repos: { path: 'docs/repos.md', title: 'Repositories' },
+}
 
 export const getStaticPaths: GetStaticPaths = async () => {
+  const paths = Object.keys(pages).map((page) => ({
+    params: { page },
+  }))
   return {
-    paths: [
-      {
-        params: {
-          page: 'about',
-        },
-      },
-      {
-        params: {
-          page: 'news',
-        },
-      },
-      {
-        params: {
-          page: 'LICENSE',
-        },
-      },
-    ],
+    paths,
     fallback: false,
   }
 }
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   if (params == null) return { props: { md: '' } }
-  const pageToFileTitle = (p: string) => {
-    switch (p) {
-      case 'about':
-        return ['docs/readme.md', 'About']
-      case 'news':
-        return ['docs/news.md', 'News']
-      case 'LICENSE':
-        return ['LICENSE', 'LICENSE']
-      default:
-        return ['', '']
-    }
-  }
-  const [file, title] = pageToFileTitle(params.page as string)
-  const md = getMd(file)
+  const { path, title } = pages[params.page as keyof typeof pages]
+  const md = getMd(path)
   return {
     props: {
       title,

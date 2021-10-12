@@ -1,93 +1,140 @@
-import Link from 'next/link'
+import {
+  Heading,
+  chakra,
+  VStack,
+  Box,
+  ChakraComponent,
+  Flex,
+} from '@chakra-ui/react'
+import React from 'react'
+import { motion, TargetAndTransition, Transition } from 'framer-motion'
+import { Link, A } from '../components/common/link'
+import { theme } from '../theme'
+import { ExternalLinkIcon } from '@chakra-ui/icons'
+
+const Span = chakra.span
+const MotionSpan = motion<any>(Span)
+
+const NoWrap: ChakraComponent<'span', {}> = ({ children, ...props }) => (
+  <chakra.span whiteSpace="nowrap" {...props}>
+    {children}
+  </chakra.span>
+)
+
+const Card: ChakraComponent<'div', {}> = ({ children, ...props }) => (
+  <Box m={2} p={5} maxW="xs" borderWidth="thin" borderRadius="lg" {...props}>
+    <VStack spacing={5}>{children}</VStack>
+  </Box>
+)
+
+const gray = theme.colors.gray[800]
+const blue = theme.colors.blue[500]
+const green = theme.colors.green[500]
+const orange = theme.colors.orange[500]
+
+const blueAnimate: TargetAndTransition = { color: [gray, blue, blue, gray] }
+const greenAnimate: TargetAndTransition = { color: [gray, green, green, gray] }
+const orangeAnimate: TargetAndTransition = {
+  color: [gray, orange, orange, gray],
+}
+const transition: Transition = {
+  ease: 'easeInOut',
+  repeat: Infinity,
+  repeatDelay: 4,
+  repeatType: 'loop',
+  times: [0, 0.2, 0.5, 0.7],
+  duration: 4,
+}
 
 const Index = () => {
   return (
-    <>
-      <section>
-        <header>
-          <h1>
-            <span className="larger a">
-              <span className="nowrap">サーヴァント</span>
-              <span className="nowrap">育成目標</span>
-            </span>
-            <span className="nowrap">から</span>
-            <span className="larger b nowrap">アイテム必要数</span>を
-          </h1>
-          <h1>
-            <span className="larger b nowrap">アイテム必要数</span>
-            <span className="nowrap">から</span>
-            <span className="larger c nowrap">クエスト周回数</span>を
-            <span className="nowrap">求めます</span>
-          </h1>
-        </header>
-        <aside>
+    <VStack>
+      <VStack my={10} size="xl" textAlign="center">
+        <Heading as="h1">
+          <MotionSpan
+            animate={blueAnimate}
+            transition={{
+              ...transition,
+              delay: 0,
+            }}
+          >
+            <NoWrap>サーヴァント</NoWrap>
+            <NoWrap>育成目標</NoWrap>
+          </MotionSpan>
+          <NoWrap fontSize="0.8em">から</NoWrap>
+          <MotionSpan
+            animate={greenAnimate}
+            transition={{ ...transition, delay: 2 }}
+          >
+            <NoWrap>アイテム必要数</NoWrap>
+          </MotionSpan>
+          <Span fontSize="0.8em">を</Span>
+        </Heading>
+        <Heading>
+          <MotionSpan
+            animate={greenAnimate}
+            transition={{
+              ...transition,
+              delay: 4,
+            }}
+          >
+            <NoWrap>アイテム必要数</NoWrap>
+          </MotionSpan>
+          <NoWrap fontSize="0.8em">から</NoWrap>
+          <MotionSpan
+            animate={orangeAnimate}
+            transition={{
+              ...transition,
+              delay: 6,
+            }}
+          >
+            <NoWrap>クエスト周回数</NoWrap>
+          </MotionSpan>
+          <Span fontSize="0.8em">を</Span>
+          <NoWrap>求めます</NoWrap>
+        </Heading>
+      </VStack>
+      <Flex flexWrap="wrap" justifyContent="center">
+        <Card>
           <Link href="/material">
-            <a>
-              <h2>育成素材計算機</h2>
-            </a>
+            <Heading size="lg">育成素材計算機</Heading>
           </Link>
           <p>育成したいサーヴァントから、必要な素材の合計を求めます。</p>
-        </aside>
-        <aside>
+        </Card>
+        <Card>
           <Link href="/farming">
-            <a>
-              <h2>周回ソルバー</h2>
-            </a>
+            <Heading size="lg">周回ソルバー</Heading>
           </Link>
           <p>欲しい素材の数から、最も効率的なクエスト周回数を求めます。</p>
-        </aside>
-      </section>
-      <section>
-        <aside>
+        </Card>
+        <Card>
           <Link href="/servants">
-            <a>
-              <h2>サーヴァント一覧</h2>
-            </a>
+            <Heading size="lg">サーヴァント一覧</Heading>
           </Link>
           <p>サーヴァントの育成に必要な素材を確認できます。</p>
-        </aside>
-        <aside>
+        </Card>
+        <Card>
           <Link href="/items">
-            <a>
-              <h2>アイテム一覧</h2>
-            </a>
+            <Heading size="lg">アイテム一覧</Heading>
           </Link>
           <p>アイテムのクエストごとのドロップ率を確認できます。</p>
-        </aside>
-      </section>
-      <section>
-        <aside>
-          <a
+        </Card>
+        <Card>
+          <A
             href={`https://twitter.com/search?q=${encodeURIComponent(
               '#FGO周回ソルバー'
             )}`}
-            target="_blank"
-            rel="noopener noreferrer"
+            isExternal
           >
-            <h2>みんなの結果</h2>
-          </a>
+            <Heading size="lg">
+              みんなの結果
+              <ExternalLinkIcon mx={2} />
+            </Heading>
+          </A>
           <p>Twitterに投稿された計算結果を見られます。</p>
-        </aside>
-      </section>
-      <style jsx>{`
-        .larger {
-          font-size: larger;
-        }
-        .nowrap {
-          display: inline-block;
-          white-space: nowrap;
-        }
-        .a {
-          color: #48c;
-        }
-        .b {
-          color: #c8c;
-        }
-        .c {
-          color: #c84;
-        }
-      `}</style>
-    </>
+        </Card>
+      </Flex>
+    </VStack>
   )
 }
 export default Index

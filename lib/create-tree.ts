@@ -1,8 +1,8 @@
-import _ from 'underscore'
+import _ from 'lodash'
 import { jpClassNames } from '../constants/jp-class-names'
 
 import type { Node } from 'react-checkbox-tree'
-import type { Servant } from '../interfaces'
+import type { Servant } from '../interfaces/atlas-academy'
 
 export function createQuestTree(
   quests: { section: string; area: string; name: string; id: string }[]

@@ -1,5 +1,5 @@
 import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3'
-import _ from 'underscore'
+import _ from 'lodash'
 import { Readable, PassThrough } from 'stream'
 import { createGunzip } from 'zlib'
 
@@ -54,7 +54,9 @@ export async function getS3(key: string): Promise<{ [key: string]: string }[]> {
     const obj = rows.map((row) => Object.fromEntries(_.zip(en_header, row)))
     return obj
   } catch (e) {
-    console.log(e, e.stack)
+    if (e instanceof Error) {
+      console.log(e, e.stack)
+    }
     return []
   }
 }
@@ -93,7 +95,9 @@ export async function getJSON(
 
     return JSON.parse(data)
   } catch (e) {
-    console.log(e, e.stack)
+    if (e instanceof Error) {
+      console.log(e, e.stack)
+    }
     return {}
   }
 }
@@ -136,7 +140,9 @@ export async function getGzip(
 
     return JSON.parse(data)
   } catch (e) {
-    console.log(e, e.stack)
+    if (e instanceof Error) {
+      console.log(e, e.stack)
+    }
     return {}
   }
   return {}

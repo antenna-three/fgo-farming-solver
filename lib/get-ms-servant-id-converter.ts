@@ -1,4 +1,4 @@
-import { Servant } from '../interfaces'
+import { Servant } from '../interfaces/atlas-academy'
 
 const noToMsId: { [key: number]: number } = {
   1: 1,

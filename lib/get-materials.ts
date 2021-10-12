@@ -1,4 +1,4 @@
-import { MaterialsRecord } from '../interfaces'
+import { MaterialsRecord } from '../interfaces/atlas-academy'
 import { getNiceServants } from './get-nice-servants'
 
 const reduceServant = (servant: MaterialsRecord) =>
