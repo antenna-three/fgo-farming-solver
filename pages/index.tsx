@@ -5,10 +5,15 @@ import {
   Box,
   ChakraComponent,
   Flex,
+  HStack,
+  Text,
+  Link as ChakraLink,
+  LinkProps as ChakraLinkProps,
+  Wrap,
 } from '@chakra-ui/react'
 import React from 'react'
 import { motion, TargetAndTransition, Transition } from 'framer-motion'
-import { Link, A } from '../components/common/link'
+import { Link, LinkProps } from '../components/common/link'
 import { theme } from '../theme'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
 
@@ -22,9 +27,40 @@ const NoWrap: ChakraComponent<'span', {}> = ({ children, ...props }) => (
 )
 
 const Card: ChakraComponent<'div', {}> = ({ children, ...props }) => (
-  <Box m={2} p={5} maxW="xs" borderWidth="thin" borderRadius="lg" {...props}>
-    <VStack spacing={5}>{children}</VStack>
+  <Box p={5} maxW="xs" borderWidth="thin" rounded="lg" {...props}>
+    <VStack spacing={5} align="start">
+      {children}
+    </VStack>
   </Box>
+)
+
+const LinkCard: ChakraComponent<'div', LinkProps> = ({
+  href,
+  children,
+  ...props
+}) => (
+  <Link href={href} color="inherit" _hover={{}}>
+    <Card
+      _hover={{
+        boxShadow: 'lg',
+      }}
+      {...props}
+    >
+      {children}
+    </Card>
+  </Link>
+)
+
+const ExternalLinkCard: ChakraComponent<'div', ChakraLinkProps> = ({
+  href,
+  children,
+  ...props
+}) => (
+  <ChakraLink href={href} color="inherit" _hover={{}} isExternal>
+    <Card _hover={{ boxShadow: 'lg' }} {...props}>
+      {children}
+    </Card>
+  </ChakraLink>
 )
 
 const gray = theme.colors.gray[800]
@@ -94,46 +130,41 @@ const Index = () => {
           <NoWrap>求めます</NoWrap>
         </Heading>
       </VStack>
-      <Flex flexWrap="wrap" justifyContent="center">
-        <Card>
-          <Link href="/material">
-            <Heading size="lg">育成素材計算機</Heading>
-          </Link>
-          <p>育成したいサーヴァントから、必要な素材の合計を求めます。</p>
-        </Card>
-        <Card>
-          <Link href="/farming">
-            <Heading size="lg">周回ソルバー</Heading>
-          </Link>
-          <p>欲しい素材の数から、最も効率的なクエスト周回数を求めます。</p>
-        </Card>
-        <Card>
-          <Link href="/servants">
-            <Heading size="lg">サーヴァント一覧</Heading>
-          </Link>
-          <p>サーヴァントの育成に必要な素材を確認できます。</p>
-        </Card>
-        <Card>
-          <Link href="/items">
-            <Heading size="lg">アイテム一覧</Heading>
-          </Link>
-          <p>アイテムのクエストごとのドロップ率を確認できます。</p>
-        </Card>
-        <Card>
-          <A
-            href={`https://twitter.com/search?q=${encodeURIComponent(
-              '#FGO周回ソルバー'
-            )}`}
-            isExternal
-          >
-            <Heading size="lg">
-              みんなの結果
-              <ExternalLinkIcon mx={2} />
-            </Heading>
-          </A>
-          <p>Twitterに投稿された計算結果を見られます。</p>
-        </Card>
-      </Flex>
+      <Wrap justify="center" spacing={4}>
+        <LinkCard href="/material">
+          <Heading size="lg">育成素材計算機</Heading>
+          <Text>育成したいサーヴァントから、必要な素材の合計を求めます。</Text>
+        </LinkCard>
+
+        <LinkCard href="/farming">
+          <Heading size="lg">周回ソルバー</Heading>
+          <Text>
+            欲しい素材の数から、最も効率的なクエスト周回数を求めます。
+          </Text>
+        </LinkCard>
+
+        <LinkCard href="/servants">
+          <Heading size="lg">サーヴァント一覧</Heading>
+          <Text>サーヴァントの育成に必要な素材を確認できます。</Text>
+        </LinkCard>
+
+        <LinkCard href="/items">
+          <Heading size="lg">アイテム一覧</Heading>
+          <Text>アイテムのクエストごとのドロップ率を確認できます。</Text>
+        </LinkCard>
+
+        <ExternalLinkCard
+          href={`https://twitter.com/search?q=${encodeURIComponent(
+            '#FGO周回ソルバー'
+          )}`}
+        >
+          <Heading size="lg">
+            みんなの結果
+            <ExternalLinkIcon mx={2} />
+          </Heading>
+          <Text>Twitterに投稿された計算結果を見られます。</Text>
+        </ExternalLinkCard>
+      </Wrap>
     </VStack>
   )
 }

@@ -53,26 +53,30 @@ export const Header: React.FC = () => (
             />
             <MenuList>
               <MenuGroup title="Tools">
-                <MenuItem>
-                  <Link href="/material">育成素材計算機</Link>
-                </MenuItem>
-                <MenuItem>
-                  <Link href="/farming">周回ソルバー</Link>
-                </MenuItem>
-                <MenuItem>
-                  <Link href="/servants">サーヴァント一覧</Link>
-                </MenuItem>
-                <MenuItem>
-                  <Link href="/items">アイテム一覧</Link>
-                </MenuItem>
+                <Link href="/material">
+                  <MenuItem>育成素材計算機</MenuItem>
+                </Link>
+
+                <Link href="/farming">
+                  <MenuItem>周回ソルバー</MenuItem>
+                </Link>
+
+                <Link href="/servants">
+                  <MenuItem>サーヴァント一覧</MenuItem>
+                </Link>
+
+                <Link href="/items">
+                  <MenuItem>アイテム一覧</MenuItem>
+                </Link>
               </MenuGroup>
               <MenuGroup title="Docs">
-                <MenuItem>
-                  <Link href="/about">使い方</Link>
-                </MenuItem>
-                <MenuItem>
-                  <Link href="/news">お知らせ</Link>
-                </MenuItem>
+                <Link href="/about">
+                  <MenuItem>使い方</MenuItem>
+                </Link>
+
+                <Link href="/news">
+                  <MenuItem>お知らせ</MenuItem>
+                </Link>
               </MenuGroup>
             </MenuList>
           </Menu>

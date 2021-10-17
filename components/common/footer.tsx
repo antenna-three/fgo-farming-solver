@@ -1,4 +1,4 @@
-import { Link } from './link'
+import { Link, ExternalLink } from './link'
 import { HStack, Icon, Text } from '@chakra-ui/react'
 import React from 'react'
 import { FaGithub } from 'react-icons/fa'
@@ -11,11 +11,19 @@ export const Footer = (): JSX.Element => (
       </Link>
       <Text>
         Copyright 2021{' '}
-        <Link href="https://twitter.com/antenna_games">antenna-three</Link> /
-        Data from <Link href="https://atlasacademy.io">Atlas Academy</Link> and{' '}
-        <Link href="https://sites.google.com/view/fgo-domus-aurea">
+        <ExternalLink href="https://twitter.com/antenna_games">
+          antenna-three
+        </ExternalLink>{' '}
+        / Data from{' '}
+        <ExternalLink href="https://atlasacademy.io">
+          Atlas Academy
+        </ExternalLink>{' '}
+        and{' '}
+        <ExternalLink href="https://sites.google.com/view/fgo-domus-aurea">
           FGOアイテム効率劇場
-        </Link>
+        </ExternalLink>{' '}
+        / Powered by{' '}
+        <ExternalLink href="https://vercel.com/">Vercel</ExternalLink>
       </Text>
     </HStack>
   </footer>

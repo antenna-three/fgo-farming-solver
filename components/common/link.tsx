@@ -1,34 +1,27 @@
-import NextLink from 'next/link'
+// <reference types="node"/>
+import NextLink, { LinkProps as NextLinkProps } from 'next/link'
 import {
   ComponentWithAs,
   Link as ChakraLink,
-  LinkProps,
+  LinkProps as ChakraLinkProps,
 } from '@chakra-ui/react'
 import React from 'react'
+import { UrlObject } from 'url'
+
+type Url = string | UrlObject
+
+export type LinkProps = Omit<ChakraLinkProps, 'href'> & { href: Url }
 
 export const Link: ComponentWithAs<'a', LinkProps> = ({
   href,
   children,
   ...props
-}) =>
-  href == null ? (
-    <ChakraLink color="blue.500" {...props}>
-      {children}
-    </ChakraLink>
-  ) : (
-    <NextLink href={href} passHref>
-      <ChakraLink color="blue.500" {...props}>
-        {children}
-      </ChakraLink>
-    </NextLink>
-  )
-
-export const A: ComponentWithAs<'a', LinkProps> = ({
-  href,
-  children,
-  ...props
 }) => (
-  <ChakraLink href={href} color="blue.500" {...props}>
-    {children}
-  </ChakraLink>
+  <NextLink href={href || ''} passHref>
+    <ChakraLink {...props}>{children}</ChakraLink>
+  </NextLink>
+)
+
+export const ExternalLink: ComponentWithAs<'a', ChakraLinkProps> = (props) => (
+  <ChakraLink isExternal {...props} />
 )
