@@ -21,6 +21,10 @@ import {
   VStack,
 } from '@chakra-ui/react'
 import { ResetAlertDialog } from './reset-alert-dialog'
+import { LeafState, useCheckboxTree } from '../../lib/use-checkbox-tree'
+import { stateToChecked } from '../../lib/state-to-checked'
+import { questsToChecked } from '../../lib/quests-to-checked'
+import { CheckboxTree } from '../common/checkbox-tree'
 
 type InputState = {
   objective: string
@@ -36,6 +40,7 @@ type QueryInputState = {
   ap_coefficients: string
   drop_merge_method: string
 }
+type QuestChecked = { [id: string]: boolean }
 
 const inputToQuery: (inputState: InputState) => QueryInputState = ({
   objective,
@@ -105,16 +110,17 @@ export const ItemForm = ({
     samples_2: number
   }[]
 }) => {
-  const { ids, tree } = useMemo(() => createQuestTree(quests), [quests])
+  const { tree } = useMemo(() => createQuestTree(quests), [quests])
+  const questIds = quests.map(({ id }) => id)
   const initialInputState: InputState = useMemo(
     () => ({
       objective: 'ap',
       items: Object.fromEntries(items.map((item) => [item.id, ''])),
-      quests: ids,
+      quests: questIds,
       halfDailyAp: false,
       dropMergeMethod: 'add',
     }),
-    [ids, items]
+    [items, questIds]
   )
   const [inputState, setInputState] = useLocalStorage(
     'input',
@@ -123,6 +129,12 @@ export const ItemForm = ({
   const router = useRouter()
   const [isConfirming, setIsConfirming] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [checked, setChecked] = questsToChecked(
+    questIds,
+    inputState.quests,
+    setInputState
+  )
+  const { onCheck, checkedTree } = useCheckboxTree(tree, checked, setChecked)
 
   useEffect(() => {
     const { query } = router
@@ -185,15 +197,26 @@ export const ItemForm = ({
           inputItems={inputState.items}
           handleChange={handleItemChange}
         />
-        <ErrorBoundary>
-          <QuestTree
+        {Object.values(inputState.items).every((s) => !s) && (
+          <Alert status="error">
+            <AlertIcon />
+            集めたいアイテムの数を最低1つ入力してください。
+          </Alert>
+        )}
+        <FormControl as="fieldset">
+          <FormLabel as="legend">周回対象に含めるクエスト</FormLabel>
+          <CheckboxTree
             tree={tree}
-            checked={inputState.quests}
-            setChecked={(quests) => {
-              setInputState((state) => ({ ...state, quests }))
-            }}
+            checkedTree={checkedTree}
+            onCheck={onCheck}
           />
-        </ErrorBoundary>
+        </FormControl>
+        {inputState.quests.length == 0 && (
+          <Alert status="error">
+            <AlertIcon />
+            周回対象に含めるクエストを最低1つ選択してください。
+          </Alert>
+        )}
         <FormControl as="fieldset">
           <FormLabel as="legend">キャンペーン</FormLabel>
           <Checkbox
@@ -212,18 +235,6 @@ export const ItemForm = ({
             setInputState((state) => ({ ...state, dropMergeMethod }))
           }
         />
-        {Object.values(inputState.items).every((s) => !s) && (
-          <Alert status="error">
-            <AlertIcon />
-            集めたいアイテムの数を最低1つ入力してください。
-          </Alert>
-        )}
-        {inputState.quests.length == 0 && (
-          <Alert status="error">
-            <AlertIcon />
-            周回対象に含めるクエストを最低1つ選択してください。
-          </Alert>
-        )}
         <ButtonGroup>
           <Button
             type="submit"

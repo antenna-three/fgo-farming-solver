@@ -1,8 +1,10 @@
 import _ from 'lodash'
 import { jpClassNames } from '../constants/jp-class-names'
 
-import type { Node } from 'react-checkbox-tree'
+//import type { Node } from 'react-checkbox-tree'
 import type { Servant } from '../interfaces/atlas-academy'
+
+type Node = { label: string; value: string; children?: Node[] }
 
 export function createQuestTree(
   quests: { section: string; area: string; name: string; id: string }[]
@@ -34,23 +36,20 @@ export function createServantTree(servants: Servant[]): Node[] {
     {
       label: '全サーヴァント',
       value: 'all',
-      className: 'root',
       children: Object.entries(
         _.groupBy(servants, ({ className }) => className)
-      ).map(([className, servants]) => createClassTree(className, servants)),
+      ).map(([className, servants]) => createClassNode(className, servants)),
     },
   ]
 }
 
-export function createClassTree(className: string, servants: Servant[]): Node {
+export function createClassNode(className: string, servants: Servant[]): Node {
   return {
     label: jpClassNames[className],
     value: className,
-    className: 'inner',
     children: servants.map((servant) => ({
       label: servant.name,
       value: servant.id.toString(),
-      className: 'leaf',
     })),
   }
 }

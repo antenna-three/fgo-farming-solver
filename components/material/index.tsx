@@ -1,27 +1,19 @@
-import React, { SetStateAction, useState } from 'react'
-import {
-  Box,
-  Center,
-  Container,
-  Flex,
-  Heading,
-  VStack,
-  Wrap,
-  WrapItem,
-} from '@chakra-ui/react'
+import React, { SetStateAction, useMemo } from 'react'
+import { Center, Heading, VStack, Wrap, WrapItem } from '@chakra-ui/react'
 import { Head } from '../common/head'
-import { PageList } from './material-page-list'
-import { ServantLevelSelect, ServantState } from './servant-level-select'
-import { ServantTree } from './servant-tree'
+import { ServantLevelSelect, ServantState, State } from './servant-level-select'
 import { CalcButton } from './material-calc-button'
 import { MsIo } from './ms-io'
 import { Item, MaterialsRecord, Servant } from '../../interfaces/atlas-academy'
 import { createReinforcementState } from '../../lib/create-reinforcement-state'
 import { useLocalStorage } from '../../lib/use-local-storage'
 import { createMergeState } from '../../lib/create-merge-state'
-import { A } from '../common/link'
 import { createServantTree } from '../../lib/create-tree'
 import { Pagination } from './material-pagination'
+import { useCheckboxTree } from '../../lib/use-checkbox-tree'
+import { CheckboxTree } from '../common/checkbox-tree'
+import { stateToChecked } from '../../lib/state-to-checked'
+import { ExternalLink } from '../common/link'
 
 export const Index = ({
   servants,
@@ -32,10 +24,14 @@ export const Index = ({
   materials: { [id: string]: MaterialsRecord }
   items: Item[]
 }) => {
-  const initialState = createReinforcementState([
-    'all',
-    ...servants.map((servant) => servant.id.toString()),
-  ])
+  const initialState = useMemo(
+    () =>
+      createReinforcementState([
+        'all',
+        ...servants.map((servant) => servant.id.toString()),
+      ]),
+    [servants]
+  )
   const mergeState = createMergeState(initialState)
   const [state, setState] = useLocalStorage(
     'material',
@@ -43,13 +39,13 @@ export const Index = ({
     mergeState
   )
   const setAllStateFunction = (
-    dispatch: (prevServantState: ServantState) => ServantState
+    updateServantState: (prevServantState: ServantState) => ServantState
   ) => {
     setState((prevState) => {
       const nextState = Object.fromEntries(
         Object.entries(prevState).map(([id, prevServantState]) => [
           id,
-          dispatch(prevServantState),
+          updateServantState(prevServantState),
         ])
       )
       return nextState
@@ -58,28 +54,16 @@ export const Index = ({
   const setAllState = (s: SetStateAction<ServantState>) => {
     typeof s == 'function'
       ? setAllStateFunction(s)
-      : setAllStateFunction((p) => s)
+      : setAllStateFunction(() => s)
   }
 
   const tree = createServantTree(servants)
-  const checked = Object.entries(state)
-    .filter(([id, { disabled }]) => !disabled)
-    .map(([id, { disabled }]) => id)
-  const onCheck = (ids: string[]) =>
-    setState((state) => ({
-      ...state,
-      ...Object.fromEntries(
-        Object.entries(state).map(([id, servantState]) => [
-          [id],
-          { ...servantState, disabled: !ids.includes(id) },
-        ])
-      ),
-    }))
-  const [expanded, onExpand] = useState(['all'])
   const [posession, setPosession] = useLocalStorage(
     'posession',
     Object.fromEntries(items.map((item) => [item.id, 0]))
   )
+  const [checked, setChecked] = stateToChecked(state, setState)
+  const { onCheck, checkedTree } = useCheckboxTree(tree, checked, setChecked)
 
   return (
     <VStack spacing={8} alignItems="stretch">
@@ -89,18 +73,15 @@ export const Index = ({
       </Center>
       <Wrap justify="center" spacing={8}>
         <WrapItem w="md" maxW="md" display="block">
-          <VStack align="start">
+          <VStack align="stretch">
             <Heading size="md">育成サーヴァント選択</Heading>
-            <ServantTree
+            <CheckboxTree
               tree={tree}
-              checked={checked}
-              expanded={expanded}
+              checkedTree={checkedTree}
               onCheck={onCheck}
-              onExpand={onExpand}
             />
           </VStack>
         </WrapItem>
-
         <WrapItem w="md" maxW="md" display="block">
           <VStack align="stretch">
             <Heading size="md">全サーヴァント共通設定</Heading>
@@ -124,9 +105,9 @@ export const Index = ({
       </Center>
       <VStack align="stretch">
         <Heading size="md">
-          <A href="http://fgosimulator.webcrow.jp/Material/" isExternal>
+          <ExternalLink href="http://fgosimulator.webcrow.jp/Material/">
             Material Simulator
-          </A>{' '}
+          </ExternalLink>{' '}
           引継ぎコード
         </Heading>
         <MsIo
