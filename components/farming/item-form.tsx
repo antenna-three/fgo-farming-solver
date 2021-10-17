@@ -3,8 +3,6 @@ import { ItemFieldset } from './item-fieldset'
 import _ from 'lodash'
 import { useRouter } from 'next/router'
 import { ObjectiveFieldset } from './objective-fieldset'
-import { QuestTree } from './quest-tree'
-import { ErrorBoundary } from '../common/error-boundary'
 import { DropRateSelect } from './drop-rate-select'
 import { Link } from '../common/link'
 import { getLargeCategory } from '../../lib/get-large-category'
@@ -21,8 +19,7 @@ import {
   VStack,
 } from '@chakra-ui/react'
 import { ResetAlertDialog } from './reset-alert-dialog'
-import { LeafState, useCheckboxTree } from '../../lib/use-checkbox-tree'
-import { stateToChecked } from '../../lib/state-to-checked'
+import { useCheckboxTree } from '../../lib/use-checkbox-tree'
 import { questsToChecked } from '../../lib/quests-to-checked'
 import { CheckboxTree } from '../common/checkbox-tree'
 

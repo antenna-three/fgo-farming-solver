@@ -71,4 +71,4 @@ AWS上のリソースにアクセスできないので一部のページはビ�
 [@antenna_games](https://twitter.com/antenna_games)
 
 ## ライセンス
-MIT License. See [LICENSE](./LICENSE) for more information.
+MIT License. See [LICENSE](/LICENSE) for more information.

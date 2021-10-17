@@ -34,7 +34,7 @@ export const Index = ({ items }: { items: Item[] }) => {
           {largeItemGroups.map(([largeCategory, largeGroup]) => (
             <WrapItem key={largeCategory}>
               <VStack align="start">
-                <Heading size="md">{largeCategory}</Heading>
+                <Heading size="lg">{largeCategory}</Heading>
                 <HStack align="start" spacing={10}>
                   {largeGroup.map(([category, group]) => (
                     <VStack align="start" key={category}>

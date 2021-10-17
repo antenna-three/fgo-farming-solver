@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import React from 'react'
+import React, { FormEventHandler, useState } from 'react'
 import {
   Accordion,
   AccordionButton,
@@ -7,8 +7,16 @@ import {
   AccordionItem,
   AccordionPanel,
   Box,
+  Checkbox,
   Container,
+  Grid,
   Heading,
+  SimpleGrid,
+  Skeleton,
+  Stat,
+  StatGroup,
+  StatLabel,
+  StatNumber,
   Text,
   VStack,
 } from '@chakra-ui/react'
@@ -59,6 +67,7 @@ export const Result = ({
   total_ap: number
 }) => {
   const router = useRouter()
+  const [showSum, setShowSum] = useState(false)
 
   if (router.isFallback) {
     return <Spinner message={'読み込み中'} />
@@ -91,15 +100,20 @@ export const Result = ({
   )
   const questToDrops = _.groupBy(drop_rates, 'quest_id')
 
+  const handleChange: FormEventHandler<HTMLInputElement> = (event) => {
+    const { checked } = event.currentTarget
+    setShowSum(checked)
+  }
+
   return (
     <>
       <Head title="計算結果" />
       <VStack spacing="8">
         <Heading as="h1">計算結果</Heading>
 
-        <Heading fontSize="xl">クエスト周回数</Heading>
+        <Heading size="lg">クエスト周回数</Heading>
 
-        <Container maxW="container.xl">
+        <Container maxW="sm">
           <QuestTable
             questGroups={lapGroups}
             questToDrops={questToDrops}
@@ -107,34 +121,32 @@ export const Result = ({
           />
         </Container>
 
-        <Container maxW="sm">
-          <Accordion allowMultiple>
-            <AccordionItem>
-              <AccordionButton>
-                <AccordionIcon />
-                合計
-              </AccordionButton>
-              <AccordionPanel>
-                <SumTable
-                  rows={[
-                    { key: '周回数', value: total_lap, unit: '周' },
-                    { key: 'AP', value: total_ap, unit: 'AP' },
-                    {
-                      key: '聖晶石',
-                      value: Math.ceil(total_ap / 144),
-                      unit: '個',
-                    },
-                    {
-                      key: '費用',
-                      value: (total_ap / 144 / 168).toFixed(1),
-                      unit: '万円',
-                    },
-                  ]}
-                />
-              </AccordionPanel>
-            </AccordionItem>
-          </Accordion>
-        </Container>
+        <VStack>
+          <Heading as="h3" size="md">
+            合計
+          </Heading>
+          <Checkbox isChecked={showSum} onChange={handleChange}>
+            表示
+          </Checkbox>
+          <StatGroup>
+            {[
+              { label: '周回数', value: total_lap },
+              { label: 'AP', value: total_ap },
+              { label: '聖晶石', value: Math.round(total_ap / 144) },
+              {
+                label: '費用',
+                value: '¥' + Math.round((total_ap / 144 / 168) * 10000),
+              },
+            ].map(({ label, value }) => (
+              <Stat flexWrap="wrap" key={label} m={5}>
+                <StatLabel>{label}</StatLabel>
+                <Skeleton h="32px" isLoaded={showSum} fadeDuration={1}>
+                  <StatNumber>{value}</StatNumber>
+                </Skeleton>
+              </Stat>
+            ))}
+          </StatGroup>
+        </VStack>
 
         <TweetIntent
           itemCounts={paramItems}
@@ -144,19 +156,20 @@ export const Result = ({
           }${router.asPath}`}
         />
 
+        <Heading size="lg" mb={4}>
+          アイテム獲得数
+        </Heading>
         <Container maxW="container.xl">
-          <Heading fontSize="xl" mb={4}>
-            アイテム獲得数
-          </Heading>
-
           <Accordion allowMultiple>
             {Object.entries(largeItemGroups).map(
               ([largeCategory, itemGroups]) => (
                 <AccordionItem className="item-details" key={largeCategory}>
-                  <AccordionButton>
-                    <AccordionIcon />
-                    {largeCategory}
-                  </AccordionButton>
+                  <h3>
+                    <AccordionButton>
+                      <AccordionIcon />
+                      {largeCategory}
+                    </AccordionButton>
+                  </h3>
                   <AccordionPanel>
                     <ItemTable
                       itemGroups={itemGroups}

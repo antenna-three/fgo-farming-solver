@@ -10,14 +10,21 @@ export const theme = extendTheme({
       red: '#e53e3e',
     },
   },
-  styles: {
-    global: {
-      a: {
+  components: {
+    Link: {
+      baseStyle: {
         color: 'blue.500',
       },
+    },
+    Button: {
+      baseStyle: {
+        padding: 8,
+      },
+    },
+  },
+  styles: {
+    global: {
       table: {
-        borderRadius: 10,
-        overflow: 'hidden',
         thead: {
           th: {
             bg: 'gray.200',

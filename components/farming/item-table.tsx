@@ -9,6 +9,7 @@ import {
   HStack,
   Box,
   Wrap,
+  VStack,
 } from '@chakra-ui/react'
 import React from 'react'
 import { ItemLink } from '../common/item-link'
@@ -22,8 +23,8 @@ export const ItemTable = ({
 }) => (
   <Wrap align="start" justify="space-between">
     {itemGroups.map(([category, itemGroup]) => (
-      <Box key={category}>
-        <Heading fontSize="lg">{category}</Heading>
+      <VStack align="start" key={category}>
+        <Heading size="md">{category}</Heading>
         <Table>
           <Thead>
             <Tr>
@@ -44,7 +45,7 @@ export const ItemTable = ({
             ))}
           </Tbody>
         </Table>
-      </Box>
+      </VStack>
     ))}
   </Wrap>
 )
