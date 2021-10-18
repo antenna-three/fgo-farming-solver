@@ -17,3 +17,13 @@ export const indexBy = <K extends PropertyKey, V>(
     obj[key] = cur
     return obj
   }, {} as Record<K, V>)
+
+export const zip = <T>(...arrays: T[][]) => {
+  const length = arrays.reduce(
+    (acc, cur) => (cur.length < acc ? cur.length : acc),
+    Infinity
+  )
+  return Array.from({ length }, (v, k) => k).map((i) =>
+    arrays.map((array) => array[i])
+  )
+}

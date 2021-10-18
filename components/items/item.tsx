@@ -1,8 +1,6 @@
-import Spinner from '../common/spinner'
-import _ from 'lodash'
 import { Head } from '../common/head'
 import { DropTable } from './drop-table'
-import { useLocalStorage } from '../../lib/use-local-storage'
+import { useLocalStorage } from '../../hooks/use-local-storage'
 import {
   Box,
   Breadcrumb,
@@ -13,12 +11,16 @@ import {
   HStack,
   Radio,
   RadioGroup,
+  Skeleton,
+  Text,
   VStack,
 } from '@chakra-ui/react'
 import React from 'react'
 import { DropRate, DropRateKey, Item, Quest } from '../../interfaces/fgodrop'
 import { useRouter } from 'next/router'
 import { BreadcrumbLink } from '../common/breadcrumb-link'
+import { groupBy } from '../../lib/group-by'
+import { orderBy } from '../../lib/order-by'
 
 type DropRateStyle = 'ap' | 'rate'
 
@@ -44,13 +46,16 @@ export const Page = ({
   )
   const router = useRouter()
   if (router.isFallback) {
-    return <Spinner message="読み込み中" />
+    return <Skeleton height="100vh" />
   }
   const itemIndexes = Object.fromEntries(items.map((item) => [item.id, item]))
-  const sortedDropRates = _.sortBy(dropRates, ({ item_id }) =>
-    item_id == id ? -Infinity : parseInt(item_id, 36)
+  const sortedDropRates = dropRates.sort(
+    orderBy(
+      ({ item_id }) => (item_id == id ? -Infinity : parseInt(item_id, 36)),
+      'asc'
+    )
   )
-  const dropGroups = _.groupBy(sortedDropRates, 'quest_id')
+  const dropGroups = groupBy(sortedDropRates, ({ quest_id }) => quest_id)
   const idToDropRate = (quest_id: string) =>
     dropGroups[quest_id].find((row) => row.item_id == id)
   const getDropRate = (quest_id: string) => {
@@ -59,8 +64,8 @@ export const Page = ({
   }
   const selectedQuests =
     dropRateStyle == 'rate'
-      ? _.sortBy(quests, ({ id }) => -getDropRate(id))
-      : _.sortBy(quests, ({ id, ap }) => ap / getDropRate(id))
+      ? quests.sort(orderBy(({ id }) => getDropRate(id), 'desc'))
+      : quests.sort(orderBy(({ id, ap }) => ap / getDropRate(id), 'asc'))
   const title = itemIndexes[id].name + 'のドロップ一覧'
 
   return (
@@ -72,7 +77,7 @@ export const Page = ({
             <BreadcrumbLink href="/items">アイテム一覧</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbItem isCurrentPage>
-            <BreadcrumbLink href="#">{title}</BreadcrumbLink>
+            <Text>{title}</Text>
           </BreadcrumbItem>
         </Breadcrumb>
         <Heading>{title}</Heading>
@@ -113,7 +118,7 @@ export const Page = ({
             </Box>
           </HStack>
         </form>
-        <Box whiteSpace="nowrap" overflowX="scroll">
+        <Box whiteSpace="nowrap" overflowX="scroll" borderRadius="xl">
           <DropTable
             itemIndexes={itemIndexes}
             quests={selectedQuests}

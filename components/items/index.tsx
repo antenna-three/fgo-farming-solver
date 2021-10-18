@@ -1,5 +1,4 @@
 import { Head } from '../../components/common/head'
-import _ from 'lodash'
 import { ItemLink } from '../../components/common/item-link'
 import { getLargeCategory } from '../../lib/get-large-category'
 import React from 'react'
@@ -13,13 +12,12 @@ import {
   Center,
 } from '@chakra-ui/react'
 import { Item } from '../../interfaces/fgodrop'
+import { groupBy } from '../../lib/group-by'
 
 export const Index = ({ items }: { items: Item[] }) => {
-  const itemGroups = Object.entries(
-    _.groupBy(items, ({ category }) => category)
-  )
+  const itemGroups = Object.entries(groupBy(items, ({ category }) => category))
   const largeItemGroups = Object.entries(
-    _.groupBy(itemGroups, ([category, group]) => getLargeCategory(category))
+    groupBy(itemGroups, ([category, group]) => getLargeCategory(category))
   )
   const title = 'アイテム一覧'
 

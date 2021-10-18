@@ -1,12 +1,5 @@
 import React, { FormEvent, useCallback, useState } from 'react'
-import _ from 'lodash'
-import { Item } from '../../interfaces/atlas-academy'
-import { getLargeCategory } from '../../lib/get-large-category'
-import { useLocalStorage } from '../../lib/use-local-storage'
-import { Head } from '../common/head'
-import { Link } from '../common/link'
 import { useRouter } from 'next/router'
-import { getSolverId } from '../../lib/get-solver-id'
 import {
   Box,
   Button,
@@ -17,8 +10,15 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react'
+import { useLocalStorage } from '../../hooks/use-local-storage'
+import { Item } from '../../interfaces/atlas-academy'
+import { getLargeCategory } from '../../lib/get-large-category'
+import { getSolverId } from '../../lib/get-solver-id'
+import { Head } from '../common/head'
+import { Link } from '../common/link'
 import { ResultAccordion } from './result-accordion'
 import { TargetCategorySelect } from './target-category-select'
+import { groupBy } from '../../lib/group-by'
 
 export const Result = ({
   items,
@@ -77,8 +77,8 @@ export const Result = ({
     [filteredItems, router, deficiencies, targetCategories]
   )
   const itemGroup = Object.entries(
-    _.groupBy(
-      Object.entries(_.groupBy(filteredItems, (item) => item.category)),
+    groupBy(
+      Object.entries(groupBy(filteredItems, (item) => item.category)),
       ([category, _items]) => getLargeCategory(category)
     )
   )
