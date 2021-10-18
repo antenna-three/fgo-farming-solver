@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 
 export const useLocalStorage = <T>(
@@ -15,10 +16,7 @@ export const useLocalStorage = <T>(
       }
       setState(obj)
     }
-  }, [key, onGet])
-  useEffect(
-    () => localStorage.setItem(key, JSON.stringify(state)),
-    [key, state]
-  )
+  }, [key])
+  useEffect(() => localStorage.setItem(key, JSON.stringify(state)), [state])
   return [state, setState]
 }
