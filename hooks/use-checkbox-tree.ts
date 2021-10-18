@@ -70,26 +70,26 @@ export const useCheckboxTree = (
 ) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const nodeToLeaves = useMemo(() => getNodeToLeaves(tree), [])
-  const onCheck = useCallback((value: string, checked: boolean) => {
-    setLeafState((state) => {
-      const leaves = nodeToLeaves[value]
-      let state_ = {
-        ...state,
-        ...Object.fromEntries(leaves.map((value) => [value, checked])),
-      }
-      return state_
-    })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  const onCheck = useCallback(
+    (value: string, checked: boolean) => {
+      setLeafState((state) => {
+        const leaves = nodeToLeaves[value]
+        let state_ = {
+          ...state,
+          ...Object.fromEntries(leaves.map((value) => [value, checked])),
+        }
+        return state_
+      })
+    },
+    [nodeToLeaves, setLeafState]
+  )
   const nodeState = useMemo(
     () => getNodeState(tree, leafState),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [leafState]
+    [leafState, tree]
   )
   const checkedTree = useMemo(
     () => createCheckedTree(tree, nodeState),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [nodeState]
+    [nodeState, tree]
   )
   return { checkedTree, onCheck }
 }

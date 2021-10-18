@@ -34,6 +34,5 @@ export const useChecked = (
   setState: Dispatch<SetStateAction<ChaldeaState>>
 ): [LeafState, Dispatch<SetStateAction<LeafState>>] => [
   useMemo(() => _chaldeaStateToChecked(state), [state]),
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useMemo(() => _setChaldeaStateToChecked(setState), []),
+  useMemo(() => _setChaldeaStateToChecked(setState), [setState]),
 ]

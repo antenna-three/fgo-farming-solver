@@ -15,8 +15,7 @@ export const useServantTree = (servants: Servant[]): Node[] =>
         ).map(([className, servants]) => getClassNode(className, servants)),
       },
     ]
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [servants])
 
 export const getClassNode = (className: string, servants: Servant[]): Node => ({
   label: jpClassNames[className],

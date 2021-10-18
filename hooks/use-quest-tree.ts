@@ -26,5 +26,4 @@ export const useQuestTree = (
       }
     )
     return { ids, tree }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [quests])

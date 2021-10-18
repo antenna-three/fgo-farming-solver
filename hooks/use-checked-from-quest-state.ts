@@ -29,12 +29,10 @@ export const useChecked = <T extends { quests: string[] }>(
 ): [LeafState, Dispatch<SetStateAction<LeafState>>] => [
   useMemo(
     () => _questsToChecked(questIds, checkedQuests),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [checkedQuests]
+    [checkedQuests, questIds]
   ),
   useMemo(
     () => _questsToSetChecked(questIds, setInputState),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [questIds, setInputState]
   ),
 ]
