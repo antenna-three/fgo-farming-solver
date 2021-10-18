@@ -1,5 +1,5 @@
-import { functionToAction } from './function-to-action'
-import { Dispatch, SetStateAction } from 'react'
+import { useAction } from './use-action'
+import { Dispatch, SetStateAction, useMemo } from 'react'
 import { LeafState } from './use-checkbox-tree'
 
 const _questsToChecked = (
@@ -19,14 +19,22 @@ const _questsToSetChecked = <T extends { quests: string[] }>(
         .filter(([id, checked]) => checked)
         .map(([id, checked]) => id),
     }))
-  return functionToAction(functional)
+  return useAction(functional)
 }
 
-export const questsToChecked = <T extends { quests: string[] }>(
+export const useChecked = <T extends { quests: string[] }>(
   questIds: string[],
   checkedQuests: string[],
   setInputState: Dispatch<SetStateAction<T>>
 ): [LeafState, Dispatch<SetStateAction<LeafState>>] => [
-  _questsToChecked(questIds, checkedQuests),
-  _questsToSetChecked(questIds, setInputState),
+  useMemo(
+    () => _questsToChecked(questIds, checkedQuests),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [checkedQuests]
+  ),
+  useMemo(
+    () => _questsToSetChecked(questIds, setInputState),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  ),
 ]

@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from 'react'
+import { Dispatch, SetStateAction, useCallback, useMemo } from 'react'
 
 export type Node = { value: string; children?: Node[] }
 export type Checked = true | false | 'intermediate'
@@ -25,7 +25,7 @@ const getNodeToLeaves = (tree: Node[]): { [value: string]: string[] } =>
         }
       }
     })
-    .reduce((acc, cur) => Object.assign(acc, cur), {})
+    .reduce((acc, cur) => ({ ...acc, ...cur }), {})
 
 const getNodeState = (tree: Node[], leafState: LeafState): NodeState =>
   tree
@@ -48,7 +48,7 @@ const getNodeState = (tree: Node[], leafState: LeafState): NodeState =>
         return { ...childrenState, [value]: nodeChecked }
       }
     })
-    .reduce((acc, cur) => Object.assign(acc, cur), {})
+    .reduce((acc, cur) => ({ ...acc, ...cur }), {})
 
 const createCheckedTree = (tree: Node[], nodeState: NodeState): CheckedTree =>
   tree
@@ -68,8 +68,9 @@ export const useCheckboxTree = (
   leafState: LeafState,
   setLeafState: Dispatch<SetStateAction<LeafState>>
 ) => {
-  const nodeToLeaves = getNodeToLeaves(tree)
-  const onCheck = (value: string, checked: boolean) => {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const nodeToLeaves = useMemo(() => getNodeToLeaves(tree), [])
+  const onCheck = useCallback((value: string, checked: boolean) => {
     setLeafState((state) => {
       const leaves = nodeToLeaves[value]
       let state_ = {
@@ -78,8 +79,17 @@ export const useCheckboxTree = (
       }
       return state_
     })
-  }
-  const nodeState = getNodeState(tree, leafState)
-  const checkedTree = createCheckedTree(tree, nodeState)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+  const nodeState = useMemo(
+    () => getNodeState(tree, leafState),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [leafState]
+  )
+  const checkedTree = useMemo(
+    () => createCheckedTree(tree, nodeState),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [nodeState]
+  )
   return { checkedTree, onCheck }
 }

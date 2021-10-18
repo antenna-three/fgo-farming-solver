@@ -1,29 +1,93 @@
 import React, {
+  Dispatch,
   FormEvent,
+  FormEventHandler,
   memo,
   SetStateAction,
   useCallback,
   useMemo,
 } from 'react'
 import { RangeSliderWithInput } from './range-slider-with-input'
-import { Checkbox, Heading, VStack } from '@chakra-ui/react'
+import { Checkbox, VStack } from '@chakra-ui/react'
 import { TargetKey } from '../../interfaces/atlas-academy'
 import { entries } from '../../lib/typed-entries'
+import {
+  ChaldeaState,
+  ServantState,
+  TargetState,
+} from '../../hooks/create-chaldea-state'
 
-export type ServantState = {
-  disabled: boolean
-  targets: {
-    [target in TargetKey]: {
-      disabled: boolean
-      ranges: {
-        start: number
-        end: number
-      }[]
-    }
-  }
+const labels: { [key: string]: string } = {
+  ascension: '再臨',
+  skill: 'スキル',
+  appendSkill: 'アペンドスキル',
+}
+const mins: { [key: string]: number } = {
+  ascension: 0,
+  skill: 1,
+  appendSkill: 1,
+}
+const maxs: { [key: string]: number } = {
+  ascension: 4,
+  skill: 10,
+  appendSkill: 10,
 }
 
-export type State = { [id: string]: ServantState }
+const _TargetLevelSelect = ({
+  id,
+  target,
+  state: { disabled, ranges },
+  handleChangeDisabled,
+  setServantState,
+}: {
+  id: string
+  target: TargetKey
+  state: TargetState
+  handleChangeDisabled: FormEventHandler<HTMLInputElement>
+  setServantState: Dispatch<(state: ServantState) => ServantState>
+}) => (
+  <VStack align="stretch" key={`${id}-${target}`}>
+    <Checkbox
+      name={`${id}-${target}`}
+      isChecked={!disabled}
+      onChange={handleChangeDisabled}
+    >
+      {labels[target]}
+    </Checkbox>
+    {ranges.map(({ start, end }, index) => (
+      <RangeSliderWithInput
+        min={mins[target]}
+        max={maxs[target]}
+        step={1}
+        disabled={disabled}
+        name={`${id}-${target}-${index}`}
+        value={[start, end]}
+        setValue={(value) => {
+          setServantState((state) => ({
+            ...state,
+            targets: {
+              ...state.targets,
+              [target]: {
+                ...state.targets[target],
+                ranges: state.targets[target].ranges.map((range, i) =>
+                  i == index
+                    ? {
+                        start: value[0],
+                        end: value[1],
+                      }
+                    : range
+                ),
+              },
+            },
+          }))
+        }}
+        key={`${id}-${target}-${index}`}
+      />
+    ))}
+  </VStack>
+)
+
+const TargetLevelSelect = memo(_TargetLevelSelect)
 
 const _ServantLevelSelect = ({
   id,
@@ -33,26 +97,11 @@ const _ServantLevelSelect = ({
 }: {
   id: string
   servantState: ServantState
-  setState: (value: SetStateAction<State>) => void
+  setState: Dispatch<SetStateAction<ChaldeaState>>
   setServantState?: (
     dispatch: (servantState: ServantState) => ServantState
   ) => void
 }) => {
-  const labels: { [key: string]: string } = {
-    ascension: '再臨',
-    skill: 'スキル',
-    appendSkill: 'アペンドスキル',
-  }
-  const mins: { [key: string]: number } = {
-    ascension: 0,
-    skill: 1,
-    appendSkill: 1,
-  }
-  const maxs: { [key: string]: number } = {
-    ascension: 4,
-    skill: 10,
-    appendSkill: 10,
-  }
   const setServantStateSafe = useMemo(
     () =>
       setServantState ||
@@ -84,50 +133,16 @@ const _ServantLevelSelect = ({
 
   return (
     <VStack align="stretch" spacing={4}>
-      {entries(servantState.targets).map(([target, { disabled, ranges }]) => {
-        if (ranges == null) console.log([target, { disabled }])
-        return (
-          <VStack align="stretch" key={`${id}-${target}`}>
-            <Checkbox
-              name={`${id}-${target}`}
-              isChecked={!disabled}
-              onChange={handleChangeDisabled}
-            >
-              {labels[target]}
-            </Checkbox>
-            {ranges.map(({ start, end }, index) => (
-              <RangeSliderWithInput
-                min={mins[target]}
-                max={maxs[target]}
-                step={1}
-                disabled={disabled}
-                name={`${id}-${target}-${index}`}
-                value={[start, end]}
-                setValue={(value) => {
-                  setServantStateSafe((state) => ({
-                    ...state,
-                    targets: {
-                      ...state.targets,
-                      [target]: {
-                        ...state.targets[target],
-                        ranges: state.targets[target].ranges.map((range, i) =>
-                          i == index
-                            ? {
-                                start: value[0],
-                                end: value[1],
-                              }
-                            : range
-                        ),
-                      },
-                    },
-                  }))
-                }}
-                key={`${id}-${target}-${index}`}
-              />
-            ))}
-          </VStack>
-        )
-      })}
+      {entries(servantState.targets).map(([target, state]) => (
+        <TargetLevelSelect
+          id={id}
+          target={target}
+          state={state}
+          handleChangeDisabled={handleChangeDisabled}
+          setServantState={setServantStateSafe}
+          key={`${id}-${target}`}
+        />
+      ))}
     </VStack>
   )
 }

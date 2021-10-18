@@ -1,11 +1,13 @@
 import { ChangeEventHandler, Dispatch, SetStateAction } from 'react'
-import { range } from 'underscore'
 import { selectOnFocus } from '../../lib/select-on-focus'
 import { Servant } from '../../interfaces/atlas-academy'
-import { createReinforcementState } from '../../lib/create-reinforcement-state'
 import { getMsServantIdConverter } from '../../lib/get-ms-servant-id-converter'
-import { State } from './servant-level-select'
+import { range } from '../../lib/range'
 import { Input } from '@chakra-ui/input'
+import {
+  ChaldeaState,
+  createChaldeaState,
+} from '../../hooks/create-chaldea-state'
 
 export const MsServantsIo = ({
   servants,
@@ -13,11 +15,11 @@ export const MsServantsIo = ({
   setState,
 }: {
   servants: Servant[]
-  state: State
-  setState: Dispatch<SetStateAction<State>>
+  state: ChaldeaState
+  setState: Dispatch<SetStateAction<ChaldeaState>>
 }) => {
   const { getId, getMsId } = getMsServantIdConverter(servants)
-  const initialState = createReinforcementState([
+  const initialState = createChaldeaState([
     'all',
     ...servants.map(({ id }) => id.toString()),
   ])

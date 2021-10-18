@@ -1,13 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { ItemFieldset } from './item-fieldset'
-import _ from 'lodash'
 import { useRouter } from 'next/router'
-import { ObjectiveFieldset } from './objective-fieldset'
-import { DropRateSelect } from './drop-rate-select'
-import { Link } from '../common/link'
-import { getLargeCategory } from '../../lib/get-large-category'
-import { createQuestTree } from '../../lib/create-tree'
-import { useLocalStorage } from '../../lib/use-local-storage'
 import {
   Alert,
   AlertIcon,
@@ -16,12 +8,21 @@ import {
   Checkbox,
   FormControl,
   FormLabel,
+  useBoolean,
   VStack,
 } from '@chakra-ui/react'
-import { ResetAlertDialog } from './reset-alert-dialog'
-import { useCheckboxTree } from '../../lib/use-checkbox-tree'
-import { questsToChecked } from '../../lib/quests-to-checked'
+import { getLargeCategory } from '../../lib/get-large-category'
+import { useQuestTree } from '../../hooks/use-quest-tree'
+import { useLocalStorage } from '../../hooks/use-local-storage'
+import { useCheckboxTree } from '../../hooks/use-checkbox-tree'
+import { useChecked } from '../../hooks/use-checked-from-quest-state'
+import { Link } from '../common/link'
+import { ObjectiveFieldset } from './objective-fieldset'
+import { ItemFieldset } from './item-fieldset'
 import { CheckboxTree } from '../common/checkbox-tree'
+import { DropRateSelect } from './drop-rate-select'
+import { ResetAlertDialog } from './reset-alert-dialog'
+import { groupBy } from '../../lib/group-by'
 
 type InputState = {
   objective: string
@@ -37,7 +38,6 @@ type QueryInputState = {
   ap_coefficients: string
   drop_merge_method: string
 }
-type QuestChecked = { [id: string]: boolean }
 
 const inputToQuery: (inputState: InputState) => QueryInputState = ({
   objective,
@@ -107,7 +107,7 @@ export const ItemForm = ({
     samples_2: number
   }[]
 }) => {
-  const { tree } = useMemo(() => createQuestTree(quests), [quests])
+  const { tree } = useQuestTree(quests)
   const questIds = quests.map(({ id }) => id)
   const initialInputState: InputState = useMemo(
     () => ({
@@ -124,9 +124,9 @@ export const ItemForm = ({
     initialInputState
   )
   const router = useRouter()
-  const [isConfirming, setIsConfirming] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
-  const [checked, setChecked] = questsToChecked(
+  const [isConfirming, setIsConfirming] = useBoolean()
+  const [isLoading, setIsLoading] = useBoolean(false)
+  const [checked, setChecked] = useChecked(
     questIds,
     inputState.quests,
     setInputState
@@ -141,25 +141,25 @@ export const ItemForm = ({
     }
   }, [router, setInputState])
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    setIsLoading(true)
-    const query = inputToQuery(inputState)
-    const params = new URLSearchParams({ ...query, fields: 'id' })
-    const origin =
-      'https://pgdz683mk2.execute-api.ap-northeast-1.amazonaws.com/fgo-farming-solver'
-    const url = origin + '?' + params
-    const { id } = await fetch(url).then((res) => res.json())
-    if (id == null) {
-      router.push('/500')
-    } else {
-      router.push(`/farming/results/${id}`)
-    }
-  }
+  const handleSubmit = useCallback(
+    async (event: React.FormEvent<HTMLFormElement>) => {
+      event.preventDefault()
+      setIsLoading.on()
+      const query = inputToQuery(inputState)
+      const params = new URLSearchParams({ ...query, fields: 'id' })
+      const origin =
+        'https://pgdz683mk2.execute-api.ap-northeast-1.amazonaws.com/fgo-farming-solver'
+      const url = origin + '?' + params
+      const { id } = await fetch(url).then((res) => res.json())
+      if (id == null) {
+        router.push('/500')
+      } else {
+        router.push(`/farming/results/${id}`)
+      }
+    },
+    [inputState, router, setIsLoading]
+  )
 
-  const onCloseAlert = useCallback(() => {
-    setIsConfirming(false)
-  }, [])
   const onReset = useCallback(() => {
     setInputState(initialInputState)
   }, [initialInputState, setInputState])
@@ -175,9 +175,9 @@ export const ItemForm = ({
     [setInputState]
   )
 
-  const itemGroups = Object.entries(_.groupBy(items, (item) => item.category))
+  const itemGroups = Object.entries(groupBy(items, (item) => item.category))
   const categoryGroups = Object.entries(
-    _.groupBy(itemGroups, ([category, _]) => getLargeCategory(category))
+    groupBy(itemGroups, ([category, _]) => getLargeCategory(category))
   )
 
   return (
@@ -241,21 +241,17 @@ export const ItemForm = ({
             }
             colorScheme="blue"
             isLoading={isLoading}
+            p={8}
           >
             周回数を求める
           </Button>
-          <Button
-            type="button"
-            onClick={() => {
-              setIsConfirming(true)
-            }}
-          >
+          <Button type="button" onClick={setIsConfirming.on} p={8}>
             リセット
           </Button>
         </ButtonGroup>
         <ResetAlertDialog
           isOpen={isConfirming}
-          onClose={onCloseAlert}
+          onClose={setIsConfirming.off}
           onReset={onReset}
         />
 

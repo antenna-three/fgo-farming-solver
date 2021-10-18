@@ -1,17 +1,17 @@
 import { MaterialsRecord } from './../interfaces/atlas-academy'
-import { range } from 'underscore'
-import { State } from '../components/material/servant-level-select'
+import { range } from '../lib/range'
 import { Materials } from '../interfaces/atlas-academy'
 import { entries } from './typed-entries'
+import { ChaldeaState } from '../hooks/create-chaldea-state'
 
 export const sumMaterials = (
-  state: State,
-  servantMaterials: { [id: string]: MaterialsRecord }
+  state: ChaldeaState,
+  servantMaterials: { [servantId: string]: MaterialsRecord }
 ) => {
   const sum = new Proxy(
     {},
     {
-      get: (target: { [key: string]: number }, name: string) =>
+      get: (target: { [itemId: string]: number }, name: string) =>
         name in target ? target[name] : 0,
     }
   )

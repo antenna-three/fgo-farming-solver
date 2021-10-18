@@ -2,10 +2,10 @@ import { FormControl, FormLabel } from '@chakra-ui/form-control'
 import { HStack } from '@chakra-ui/layout'
 import { Wrap, WrapItem } from '@chakra-ui/react'
 import React, { Dispatch, SetStateAction } from 'react'
+import { ChaldeaState } from '../../hooks/create-chaldea-state'
 import { Item, Servant } from '../../interfaces/atlas-academy'
 import { MsItemsIo } from './ms-items-io'
 import { MsServantsIo } from './ms-servants-io'
-import { State } from './servant-level-select'
 
 export const MsIo = ({
   servants,
@@ -16,8 +16,8 @@ export const MsIo = ({
   setPosession,
 }: {
   servants: Servant[]
-  state: State
-  setState: Dispatch<SetStateAction<State>>
+  state: ChaldeaState
+  setState: Dispatch<SetStateAction<ChaldeaState>>
   items: Item[]
   posession: { [key: string]: number }
   setPosession: Dispatch<SetStateAction<{ [key: string]: number }>>

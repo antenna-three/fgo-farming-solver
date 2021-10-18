@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import {
   Box,
   Breadcrumb,
@@ -8,14 +8,12 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react'
+import { useChaldeaState } from '../../hooks/use-chaldea-state'
+import { getClassNode } from '../../hooks/use-servant-tree'
+import { useChecked } from '../../hooks/use-checked-from-chaldea-state'
+import { useCheckboxTree } from '../../hooks/use-checkbox-tree'
 import { MaterialsRecord, Servant } from '../../interfaces/atlas-academy'
-import { createReinforcementState } from '../../lib/create-reinforcement-state'
-import { useLocalStorage } from '../../lib/use-local-storage'
-import { createClassNode } from '../../lib/create-tree'
-import { stateToChecked } from '../../lib/state-to-checked'
-import { useCheckboxTree } from '../../lib/use-checkbox-tree'
 import { getJpClassName } from '../../lib/get-jp-class-name'
-import { createMergeState } from '../../lib/create-merge-state'
 import { Link } from '../common/link'
 import { Head } from '../common/head'
 import { BreadcrumbLink } from '../common/breadcrumb-link'
@@ -33,27 +31,21 @@ export const Material = ({
   materials: { [id: string]: MaterialsRecord }
   className: string
 }) => {
-  const initialState = createReinforcementState([
-    'all',
-    ...servants.map((servant) => servant.id.toString()),
-  ])
-  const mergeState = createMergeState(initialState)
-  const [state, setState] = useLocalStorage(
-    'material',
-    initialState,
-    mergeState
-  )
+  const ids = servants.map(({ id }) => id.toString())
+  const [chaldeaState, setChaldeaState] = useChaldeaState(ids)
   const currentClassServants = servants.filter(
     (servant) => servant.className == className
   )
-  const currentClassIds = currentClassServants.map(({ id }) => id.toString())
   const enabledServants = currentClassServants.filter(
-    (servant) => !state[servant.id].disabled
+    (servant) => !chaldeaState[servant.id].disabled
   )
   const jpClassName = getJpClassName(className)
 
-  const tree = [createClassNode(className, currentClassServants)]
-  const [checked, setChecked] = stateToChecked(state, setState)
+  const tree = useMemo(
+    () => [getClassNode(className, currentClassServants)],
+    [className, currentClassServants]
+  )
+  const [checked, setChecked] = useChecked(chaldeaState, setChaldeaState)
   const { onCheck, checkedTree } = useCheckboxTree(tree, checked, setChecked)
 
   return (
@@ -81,8 +73,8 @@ export const Material = ({
               </Heading>
               <ServantLevelSelect
                 id={id.toString()}
-                servantState={state[id.toString()]}
-                setState={setState}
+                servantState={chaldeaState[id.toString()]}
+                setState={setChaldeaState}
               />
             </VStack>
           ))}
@@ -93,7 +85,12 @@ export const Material = ({
       )}
       <Pagination currentClassName={className} />
       <Box alignSelf="center">
-        <CalcButton state={state} materials={materials} colorScheme="blue" />
+        <CalcButton
+          state={chaldeaState}
+          materials={materials}
+          colorScheme="blue"
+          p={8}
+        />
       </Box>
     </VStack>
   )

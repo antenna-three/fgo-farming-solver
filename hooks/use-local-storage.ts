@@ -15,7 +15,9 @@ export const useLocalStorage = <T>(
       }
       setState(obj)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => localStorage.setItem(key, JSON.stringify(state)), [state])
   return [state, setState]
 }
