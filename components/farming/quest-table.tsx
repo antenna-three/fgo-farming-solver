@@ -3,26 +3,13 @@ import {
   Table,
   Thead,
   Tr,
-  Th,
   Tbody,
+  Th,
   Td,
-  Box,
-  Accordion,
-  AccordionItem,
-  AccordionPanel,
-  AccordionButton,
-  AccordionIcon,
   Collapse,
-  useDisclosure,
   IconButton,
 } from '@chakra-ui/react'
-import React, {
-  EventHandler,
-  FormEventHandler,
-  Fragment,
-  MouseEventHandler,
-  useState,
-} from 'react'
+import React, { FormEventHandler, Fragment, useState } from 'react'
 import { ItemLink } from '../common/item-link'
 
 export const QuestTable = ({
@@ -50,11 +37,6 @@ export const QuestTable = ({
     setIsOpen((isOpen) => ({ ...isOpen, [value]: !isOpen[value] }))
   }
 
-  const colSpan =
-    Object.values(questToDrops).reduce(
-      (acc, cur) => (cur.length > acc ? cur.length : acc),
-      0
-    ) * 2
   return (
     <Table whiteSpace="nowrap">
       <Thead>
@@ -70,7 +52,7 @@ export const QuestTable = ({
       <Tbody>
         {Object.entries(questGroups).map(([area, questGroup]) => (
           <Fragment key={area}>
-            <Tr key={area} bg="gray.100">
+            <Tr key={area}>
               <Th colSpan={3}>{area}</Th>
             </Tr>
             {questGroup.map(({ name, id, lap }) => (
@@ -87,14 +69,14 @@ export const QuestTable = ({
                       onClick={onToggle}
                     />
                   </Td>
-                  <Td>{name}</Td>
+                  <Td px={1}>{name}</Td>
                   <Td isNumeric>{lap}</Td>
                 </Tr>
 
                 <Tr>
                   <Td colSpan={3} py={0}>
                     <Collapse in={isOpen[id]} animateOpacity>
-                      <Table size="sm">
+                      <Table>
                         <Thead>
                           <Tr>
                             <Th>アイテム</Th>

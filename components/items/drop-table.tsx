@@ -1,4 +1,4 @@
-import { Table, Thead, Tr, Th, Tbody, Td } from '@chakra-ui/react'
+import { Table, Thead, Tr, Th, Tbody, Td, TableProps } from '@chakra-ui/react'
 import React from 'react'
 import { DropRate, DropRateKey, Item, Quest } from '../../interfaces/fgodrop'
 import { DropRow } from './drop-row'
@@ -11,20 +11,21 @@ export const DropTable = ({
   dropGroups,
   dropRateKey,
   dropRateStyle,
+  ...rest
 }: {
   itemIndexes: { [key: string]: Item }
   quests: Quest[]
   dropGroups: { [key: string]: DropRate[] }
   dropRateKey: DropRateKey
   dropRateStyle: DropRateStyle
-}) => {
+} & TableProps) => {
   const colSpan =
     Object.values(dropGroups).reduce(
       (acc, cur) => (cur.length > acc ? cur.length : acc),
       0
     ) * 2
   return (
-    <Table>
+    <Table {...rest}>
       <Thead>
         <Tr>
           <Th>エリア</Th>

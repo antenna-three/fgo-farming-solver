@@ -2,8 +2,11 @@ import React from 'react'
 import {
   Breadcrumb,
   BreadcrumbItem,
+  Divider,
   Heading,
   HStack,
+  SimpleGrid,
+  StackDivider,
   Text,
   VStack,
   Wrap,
@@ -36,7 +39,7 @@ export const Page = ({ servant }: { servant: NiceServant }) => {
             <BreadcrumbLink href="/servants">サーヴァント一覧</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbItem isCurrentPage>
-            <BreadcrumbLink href="#">{servant.name}</BreadcrumbLink>
+            <Text>{servant.name}</Text>
           </BreadcrumbItem>
         </Breadcrumb>
         <Heading as="h1">
@@ -47,14 +50,14 @@ export const Page = ({ servant }: { servant: NiceServant }) => {
             </Text>
           </HStack>
         </Heading>
-        <Wrap align="start" justify="space-between">
+        <SimpleGrid minChildWidth="250px" spacing={8}>
           {keys.map(({ key, label }) => (
-            <VStack align="start" key={key}>
+            <VStack align="stretch" key={key} spacing={4}>
               <Heading size="lg">{label}素材</Heading>
               <MaterialList materials={servant[`${key}Materials`]} />
             </VStack>
           ))}
-        </Wrap>
+        </SimpleGrid>
       </VStack>
     </>
   )

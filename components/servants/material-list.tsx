@@ -10,13 +10,13 @@ import React from 'react'
 import type { Materials } from '../../interfaces/atlas-academy'
 
 export const MaterialList = ({ materials }: { materials: Materials }) => (
-  <>
+  <VStack align="stretch" spacing={8}>
     {Object.entries(materials).map(([lv, materials]) => (
       <VStack align="stretch" key={lv}>
         <Heading size="md">Lv. {lv}</Heading>
-        <StatGroup borderWidth="thin" borderRadius="md" p={4} w="xs">
+        <StatGroup borderWidth="thin" borderRadius="md" p={2}>
           {materials.items.map(({ item, amount }) => (
-            <Stat key={item.id}>
+            <Stat key={item.id} mx={2}>
               <StatLabel>{item.name}</StatLabel>
               <StatNumber>{amount}</StatNumber>
             </Stat>
@@ -24,5 +24,5 @@ export const MaterialList = ({ materials }: { materials: Materials }) => (
         </StatGroup>
       </VStack>
     ))}
-  </>
+  </VStack>
 )

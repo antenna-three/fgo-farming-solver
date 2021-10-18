@@ -4,7 +4,9 @@
 
 **2021/10/18**
 
-今までスタイリングに[MVP.css](https://andybrewer.github.io/mvp)を使ってきましたが、機能が限られていることやスタイルが崩れる例が出てきたことから[Chakra UI](https://chakra-ui.com/)を導入しました。
+今までスタイリングに[MVP.css](https://andybrewer.github.io/mvp)を使ってきましたが、プロジェクトが大きくなってきたのでUIフレームワークとして[Chakra UI](https://chakra-ui.com/)を導入しました。
+
+見た目が少し変わりますが、より多くの環境で一貫したスタイルになり、アクセシビリティの向上が期待されます。
 
 ## 素材計算機の追加
 

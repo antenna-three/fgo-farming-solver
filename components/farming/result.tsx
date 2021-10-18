@@ -6,13 +6,11 @@ import {
   AccordionIcon,
   AccordionItem,
   AccordionPanel,
-  Box,
   Checkbox,
   Container,
-  Grid,
   Heading,
-  SimpleGrid,
   Skeleton,
+  SkeletonText,
   Stat,
   StatGroup,
   StatLabel,
@@ -20,15 +18,13 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react'
-import _ from 'lodash'
 import { getLargeCategory } from '../../lib/get-large-category'
 import { Head } from '../common/head'
-import Spinner from '../common/spinner'
 import { QuestTable } from '../farming/quest-table'
-import { SumTable } from './sum-table'
 import { TweetIntent } from './tweet-intent'
 import { ItemTable } from './item-table'
 import { Link } from '../common/link'
+import { groupBy } from '../../lib/group-by'
 
 type Params = {
   objective: string
@@ -70,7 +66,12 @@ export const Result = ({
   const [showSum, setShowSum] = useState(false)
 
   if (router.isFallback) {
-    return <Spinner message={'読み込み中'} />
+    return (
+      <VStack>
+        <Heading>計算結果</Heading>
+        <Skeleton height="100vh" />
+      </VStack>
+    )
   }
 
   if (quests && quests.length == 0) {
@@ -92,13 +93,12 @@ export const Result = ({
     ...itemIndexes[id],
     count,
   }))
-  const lapGroups = _.groupBy(quests, 'area')
-  const itemGroups = _.groupBy(items, 'category')
-  const largeItemGroups = _.groupBy(
-    Object.entries(itemGroups),
-    ([category, _]) => getLargeCategory(category)
+  const lapGroups = groupBy(quests, ({ area }) => area)
+  const itemGroups = groupBy(items, ({ category }) => category)
+  const largeItemGroups = groupBy(Object.entries(itemGroups), ([category, _]) =>
+    getLargeCategory(category)
   )
-  const questToDrops = _.groupBy(drop_rates, 'quest_id')
+  const questToDrops = groupBy(drop_rates, ({ quest_id }) => quest_id)
 
   const handleChange: FormEventHandler<HTMLInputElement> = (event) => {
     const { checked } = event.currentTarget

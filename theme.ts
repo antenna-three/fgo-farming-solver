@@ -16,11 +16,6 @@ export const theme = extendTheme({
         color: 'blue.500',
       },
     },
-    Button: {
-      baseStyle: {
-        padding: 8,
-      },
-    },
   },
   styles: {
     global: {

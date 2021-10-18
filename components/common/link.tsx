@@ -17,7 +17,7 @@ export const Link: ComponentWithAs<'a', LinkProps> = ({
   children,
   ...props
 }) => (
-  <NextLink href={href || ''} passHref>
+  <NextLink href={href} passHref>
     <ChakraLink {...props}>{children}</ChakraLink>
   </NextLink>
 )

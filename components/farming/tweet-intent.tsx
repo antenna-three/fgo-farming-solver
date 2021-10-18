@@ -1,8 +1,9 @@
 import React from 'react'
-import { Box, HStack, Text } from '@chakra-ui/layout'
+import { Box } from '@chakra-ui/layout'
 import { FaTwitter } from 'react-icons/fa'
-import { ExternalLink } from '../common/link'
 import { orderBy } from '../../lib/order-by'
+import { Button } from '@chakra-ui/react'
+import Link from 'next/link'
 
 export const TweetIntent = ({
   itemCounts,
@@ -51,17 +52,18 @@ ${questLaps.length > 1 ? lapSum : ''}
 
   return (
     <Box my={4}>
-      <ExternalLink
-        className="twitter-share-button"
+      <Button
+        as="a"
         href={intentUrl}
-        data-size="large"
-        isExternal
+        target="_blank"
+        rel="noopener noreferrer"
+        leftIcon={<FaTwitter />}
+        colorScheme="twitter"
+        variant="solid"
+        p={2}
       >
-        <HStack justifyContent="center">
-          <FaTwitter />
-          <Text>結果をツイートする</Text>
-        </HStack>
-      </ExternalLink>
+        結果をツイートする
+      </Button>
     </Box>
   )
 }

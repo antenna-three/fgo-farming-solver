@@ -6,6 +6,7 @@ import {
   AlertDialogBody,
   AlertDialogFooter,
   Button,
+  HStack,
 } from '@chakra-ui/react'
 import React, { useRef } from 'react'
 
@@ -32,18 +33,20 @@ export const ResetAlertDialog = ({
             本当にリセットしますか？「入力内容のエクスポート」を使えば入力内容をブックマークに保存することができます。
           </AlertDialogBody>
           <AlertDialogFooter>
-            <Button ref={cancelRef} onClick={onClose}>
-              キャンセル
-            </Button>
-            <Button
-              colorScheme="red"
-              onClick={() => {
-                onReset()
-                onClose()
-              }}
-            >
-              リセット
-            </Button>
+            <HStack>
+              <Button ref={cancelRef} onClick={onClose}>
+                キャンセル
+              </Button>
+              <Button
+                colorScheme="red"
+                onClick={() => {
+                  onReset()
+                  onClose()
+                }}
+              >
+                リセット
+              </Button>
+            </HStack>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialogOverlay>

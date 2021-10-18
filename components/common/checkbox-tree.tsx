@@ -4,26 +4,45 @@ import {
   AccordionButton,
   AccordionIcon,
   AccordionPanel,
+  AccordionProps,
 } from '@chakra-ui/accordion'
 import { Box, Checkbox } from '@chakra-ui/react'
-import React, { FormEventHandler, memo } from 'react'
-import { CheckedTree } from '../../lib/use-checkbox-tree'
+import React, { FormEventHandler, memo, useCallback } from 'react'
+import { CheckedTree } from '../../hooks/use-checkbox-tree'
 
-type Node = { label: string; value: string; children?: Node[] }
+export type Node = { label: string; value: string; children?: Node[] }
 
 const CheckboxTree_ = ({
   tree,
   onCheck,
   checkedTree,
+  ...rest
 }: {
   tree: Node[]
   onCheck: (value: string, checked: boolean) => void
   checkedTree: CheckedTree
-}) => {
-  const onChange: FormEventHandler<HTMLInputElement> = (e) =>
-    onCheck(e.currentTarget.value, e.currentTarget.checked)
-  return (
-    <Accordion allowMultiple>
+} & AccordionProps) => {
+  const onChange: FormEventHandler<HTMLInputElement> = useCallback(
+    (e) => onCheck(e.currentTarget.value, e.currentTarget.checked),
+    [onCheck]
+  )
+  return tree.every(({ children }) => children == null) ? (
+    <Box>
+      {tree.map(({ label, value }) => (
+        <Box ml={8} mb={1} key={value}>
+          <Checkbox
+            value={value}
+            isChecked={checkedTree[value].checked == true}
+            isIndeterminate={checkedTree[value].checked == 'intermediate'}
+            onChange={onChange}
+          >
+            {label}
+          </Checkbox>
+        </Box>
+      ))}
+    </Box>
+  ) : (
+    <Accordion allowMultiple {...rest}>
       {tree.map(({ label, value, children }) =>
         children == null ? (
           <Box ml={10} mb={1} key={value}>

@@ -4,7 +4,7 @@ import React from 'react'
 import { BiWindows } from 'react-icons/bi'
 import { MdDevices, MdDownload, MdImportExport } from 'react-icons/md'
 import { Head } from '../../components/common/head'
-import { useQuery } from '../../lib/use-query'
+import { useQuery } from '../../hooks/use-query'
 
 export const ImportExport = () => {
   const [query, setQuery] = useQuery()
