@@ -4,6 +4,7 @@ import {
   Code,
   Heading,
   Link,
+  LinkProps,
   ListItem,
   ListProps,
   OrderedList,
@@ -28,13 +29,18 @@ const h = (n: 1 | 2 | 3 | 4 | 5) => {
   return H
 }
 
+const replace = (href?: string) => {
+  if (href == null) return undefined
+  return href.replace(/\.md/, '').replace(/\.\.\//, '')
+}
+
 const components = {
   h1: h(1),
   h2: h(2),
   h3: h(3),
   h4: h(4),
-  p: (props: TextProps) => <Text {...props} my={4} />,
-  a: Link,
+  p: (props: TextProps) => <Text {...props} my={2} />,
+  a: ({ href, ...rest }: LinkProps) => <Link href={replace(href)} {...rest} />,
   ul: (props: ListProps) => <UnorderedList {...props} spacing={2} my={4} />,
   ol: (props: ListProps) => <OrderedList {...props} spacing={2} my={4} />,
   li: ListItem,
@@ -44,6 +50,7 @@ const components = {
 const pages = {
   docs: { path: 'docs/readme.md', title: '使い方' },
   news: { path: 'docs/news.md', title: 'お知らせ' },
+  contributing: { path: 'docs/contributing.md', title: 'CONTRIBUTING' },
   LICENSE: { path: 'LICENSE', title: 'LICENSE' },
 }
 

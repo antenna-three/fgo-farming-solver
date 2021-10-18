@@ -54,21 +54,13 @@ FGOの集めたい素材の数から、どのクエストを何周するのが�
 
 [Twitter](https://twitter.com/antenna_games)または[Issue](https://github.com/antenna-three/fgo-farming-solver/issues)までお願いします。
 
-## 貢献
-
-以下の手順で`localhost:3000`にローカルサーバーを立てることができます。
-
-```shell
-git clone https://github.com/antenna-three/fgo-farming-solver.git
-npm install
-npm run dev
-```
-
-AWS上のリソースにアクセスできないので一部のページはビルドできません。
-
 ## 連絡先
 
 [@antenna_games](https://twitter.com/antenna_games)
 
+## 貢献
+
+[CONTRIBUTING](contributing.md)をご覧ください。
+
 ## ライセンス
-MIT License. See [LICENSE](/LICENSE) for more information.
+MIT License. See [LICENSE](../LICENSE) for more information.
