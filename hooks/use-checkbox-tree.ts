@@ -68,8 +68,7 @@ export const useCheckboxTree = (
   leafState: LeafState,
   setLeafState: Dispatch<SetStateAction<LeafState>>
 ) => {
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const nodeToLeaves = useMemo(() => getNodeToLeaves(tree), [])
+  const nodeToLeaves = useMemo(() => getNodeToLeaves(tree), [tree])
   const onCheck = useCallback(
     (value: string, checked: boolean) => {
       setLeafState((state) => {
