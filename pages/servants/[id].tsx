@@ -1,11 +1,7 @@
 import { GetStaticPaths, GetStaticProps } from 'next'
-import { useRouter } from 'next/router'
-import Link from 'next/link'
-import MaterialList from '../../components/material-list'
-import { NiceServant, Servant } from '../../interfaces'
-import { getJpClassName } from '../../lib/get-jp-class-name'
 import { getNiceServants } from '../../lib/get-nice-servants'
 import { getServants } from '../../lib/get-servants'
+import { Page } from '../../components/servants/servant'
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const servants = await getServants()
@@ -34,51 +30,6 @@ export const getStaticProps: GetStaticProps = async (context) => {
   return {
     props: { servant: niceServant },
   }
-}
-
-const Page = ({ servant }: { servant: NiceServant }) => {
-  const router = useRouter()
-  if (router.isFallback) {
-    return <p>読み込み中...</p>
-  }
-
-  return (
-    <>
-      <p>
-        <Link href="/servants">
-          <a>サーヴァント一覧</a>
-        </Link>{' '}
-        &gt; {servant.name}
-      </p>
-      <h1>
-        {servant.name}（{getJpClassName(servant.className)}）
-      </h1>
-      <div className="flex">
-        <div className="flex-child">
-          <h2>霊基再臨素材</h2>
-          <MaterialList materials={servant.ascensionMaterials} />
-        </div>
-        <div className="flex-child">
-          <h2>スキル強化素材</h2>
-          <MaterialList materials={servant.skillMaterials} />
-        </div>
-        <div className="flex-child">
-          <h2>アペンドスキル強化素材</h2>
-          <MaterialList materials={servant.appendSkillMaterials} />
-        </div>
-      </div>
-      <style jsx>{`
-        .flex {
-          display: flex;
-          flex-wrap: wrap;
-          justify-content: space-between;
-        }
-        .flex-child {
-          margin-right: 1rem;
-        }
-      `}</style>
-    </>
-  )
 }
 
 export default Page

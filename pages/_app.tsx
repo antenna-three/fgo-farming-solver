@@ -1,27 +1,35 @@
-import '../styles/mvp.css'
-import '../styles/globals.css'
 import type { AppProps } from 'next/app'
-import Head from '../components/head'
-import Nav from '../components/nav'
+import {
+  Box,
+  ChakraProvider,
+  Container,
+  Spacer,
+  VStack,
+} from '@chakra-ui/react'
+import React from 'react'
+import { theme } from '../theme'
+import { Head } from '../components/common/head'
+import { Header } from '../components/common/header'
+import { Footer } from '../components/common/footer'
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head />
-      <Nav />
-      <main>
-        <Component {...pageProps} />
-      </main>
-      <footer>
-        <p>
-          Copyright 2021{' '}
-          <a href="https://twitter.com/antenna_games">antenna-three</a> / Data
-          from <a href="https://atlasacademy.io">Atlas Academy</a> and{' '}
-          <a href="https://sites.google.com/view/fgo-domus-aurea">
-            FGOアイテム効率劇場
-          </a>
-        </p>
-      </footer>
+      <ChakraProvider theme={theme}>
+        <Box>
+          <Container bg="white" maxW="container.lg" px={['5vw', 6, 12]}>
+            <VStack py={8} spacing={16} alignItems="stretch" minH="100vh">
+              <Header />
+              <main>
+                <Component {...pageProps} />
+              </main>
+              <Spacer />
+              <Footer />
+            </VStack>
+          </Container>
+        </Box>
+      </ChakraProvider>
     </>
   )
 }

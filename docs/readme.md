@@ -22,13 +22,13 @@ FGOの集めたい素材の数から、どのクエストを何周するのが�
 4.  計算ボタンを押すと計算が始まります。計算には数秒ほどかかります。
 5.  計算が完了すると結果が表示されます。結果は次の2つの表からなります。
 
-   - クエスト周回数
+    - クエスト周回数
 
-     最も効率的なクエストの組み合わせと必要な周回数。
+        最も効率的なクエストの組み合わせと必要な周回数。
 
-   - アイテム獲得数
+    - アイテム獲得数
 
-     獲得できるアイテムの個数の期待値。他の素材との兼ね合いで、必要数以上に獲得している素材がある場合があります。
+        獲得できるアイテムの個数の期待値。他の素材との兼ね合いで、必要数以上に獲得している素材がある場合があります。
 
 ## 機能
 
@@ -54,21 +54,13 @@ FGOの集めたい素材の数から、どのクエストを何周するのが�
 
 [Twitter](https://twitter.com/antenna_games)または[Issue](https://github.com/antenna-three/fgo-farming-solver/issues)までお願いします。
 
-## 貢献
-
-以下の手順で`localhost:3000`にローカルサーバーを立てることができます。
-
-```shell
-git clone https://github.com/antenna-three/fgo-farming-solver.git
-npm install
-npm run dev
-```
-
-AWS上のリソースにアクセスできないので一部のページはビルドできません。
-
 ## 連絡先
 
 [@antenna_games](https://twitter.com/antenna_games)
 
+## 貢献
+
+[CONTRIBUTING](contributing.md)をご覧ください。
+
 ## ライセンス
-MIT License. See [LICENSE](./LICENSE) for more information.
+MIT License. See [LICENSE](../LICENSE) for more information.

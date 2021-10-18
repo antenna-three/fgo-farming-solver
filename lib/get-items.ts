@@ -1,5 +1,5 @@
 import { origin, region } from '../constants/atlasacademy'
-import { Item } from '../interfaces'
+import { Item } from '../interfaces/atlas-academy'
 import { fetchJsonWithCache } from './cache'
 import { getHash } from './get-hash'
 

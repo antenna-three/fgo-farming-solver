@@ -1,15 +1,17 @@
-import { range } from 'underscore'
-import { State } from '../components/servant-level-select'
-import { Materials } from '../interfaces'
+import { MaterialsRecord } from './../interfaces/atlas-academy'
+import { range } from '../lib/range'
+import { Materials } from '../interfaces/atlas-academy'
+import { entries } from './typed-entries'
+import { ChaldeaState } from '../hooks/create-chaldea-state'
 
 export const sumMaterials = (
-  state: State,
-  servantMaterials: { [id: string]: { [key: string]: Materials } }
+  state: ChaldeaState,
+  servantMaterials: { [servantId: string]: MaterialsRecord }
 ) => {
   const sum = new Proxy(
     {},
     {
-      get: (target: { [key: string]: number }, name: string) =>
+      get: (target: { [itemId: string]: number }, name: string) =>
         name in target ? target[name] : 0,
     }
   )
@@ -22,10 +24,10 @@ export const sumMaterials = (
       console.log(`Materials for Id ${id} is undefined`)
       return
     }
-    Object.entries(targets)
+    entries(targets)
       .filter(([_target, { disabled }]) => !disabled)
       .forEach(([target, { ranges }]) => {
-        const materials: Materials = servant[target + 'Materials']
+        const materials: Materials = servant[`${target}Materials`]
         if (materials == null) {
           console.log(`${target}Materials for Id ${id} is undefined`)
           return

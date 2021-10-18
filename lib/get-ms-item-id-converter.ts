@@ -1,4 +1,4 @@
-import { Item } from '../interfaces'
+import { Item } from '../interfaces/atlas-academy'
 
 export const getMsItemIdConverter = (items: Item[]) => {
   const itemToMsItemId = (item: Item) => {
