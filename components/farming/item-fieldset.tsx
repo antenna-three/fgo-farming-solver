@@ -21,7 +21,7 @@ export const ItemFieldset = ({
 }) => (
   <FormControl as="fieldset">
     <FormLabel as="legend">集めたいアイテムの数</FormLabel>
-    <Accordion defaultIndex={0}>
+    <Accordion defaultIndex={[0]} allowMultiple>
       {categoryGroups.map(([largeCategory, categoryGroup]) => (
         <AccordionItem key={largeCategory}>
           <AccordionButton>

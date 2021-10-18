@@ -17,9 +17,9 @@ function MyApp({ Component, pageProps }: AppProps) {
     <>
       <Head />
       <ChakraProvider theme={theme}>
-        <Box bg="gray.50">
+        <Box>
           <Container bg="white" maxW="container.lg" px={['5vw', 6, 12]}>
-            <VStack py={8} spacing={8} alignItems="stretch" minH="100vh">
+            <VStack py={8} spacing={16} alignItems="stretch" minH="100vh">
               <Header />
               <main>
                 <Component {...pageProps} />

@@ -21,7 +21,12 @@ export const GithubMenu = (
     <MenuButton as={IconButton} {...props} />
     <MenuList>
       {repos.map(({ repo, label }) => (
-        <a href={`https://github.com/antenna-three/${repo}`} key={repo}>
+        <a
+          href={`https://github.com/antenna-three/${repo}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          key={repo}
+        >
           <MenuItem>{label}</MenuItem>
         </a>
       ))}

@@ -28,7 +28,6 @@ const Index = ({
       <Head>
         <meta name="description" content={description} />
       </Head>
-      <Text my={4}>{description}</Text>
       <ItemForm items={items} quests={quests} />
     </>
   )

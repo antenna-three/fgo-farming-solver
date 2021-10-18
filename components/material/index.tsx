@@ -11,7 +11,7 @@ import { useCheckboxTree } from '../../hooks/use-checkbox-tree'
 import { CheckboxTree } from '../common/checkbox-tree'
 import { useChecked } from '../../hooks/use-checked-from-chaldea-state'
 import { ExternalLink } from '../common/link'
-import { useAction } from '../../hooks/use-action'
+import { functionToAction } from '../../hooks/function-to-action'
 import { useChaldeaState } from '../../hooks/use-chaldea-state'
 import { ServantLevelSelect } from './servant-level-select'
 import { ServantState } from '../../hooks/create-chaldea-state'
@@ -39,7 +39,7 @@ export const Index = ({
       )
     )
   }
-  const setAllState = useAction(setAllStateFunction)
+  const setAllState = functionToAction(setAllStateFunction)
 
   const tree = useServantTree(servants)
   const [posession, setPosession] = useLocalStorage(

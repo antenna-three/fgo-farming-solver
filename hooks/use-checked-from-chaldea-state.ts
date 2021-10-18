@@ -1,4 +1,4 @@
-import { useAction } from './use-action'
+import { functionToAction } from './function-to-action'
 import { Dispatch, SetStateAction, useMemo } from 'react'
 import { LeafState } from './use-checkbox-tree'
 import { ChaldeaState } from './create-chaldea-state'
@@ -26,7 +26,7 @@ const _setChaldeaStateToChecked = (
         ])
       ),
     }))
-  return useAction(functional)
+  return functionToAction(functional)
 }
 
 export const useChecked = (
