@@ -2,21 +2,23 @@ import { GetServerSideProps } from 'next'
 import { getDrops } from '../../lib/get-drops'
 import { Page } from '../../components/farming/result'
 
-export const getServerSideProps: GetServerSideProps = async ({ params }) => {
-  if (params == null) return { notFound: true }
-  const _params = params as { items: string; quests: string; queries: string }
+export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+  if (query == null) return { notFound: true }
+  const _query = query as { items: string; quests: string; queries: string }
   const { items, quests, drop_rates } = await getDrops()
   const props = {
-    params: _params.queries
-      .split(',')
-      .map((p) => p.split(':'))
-      .map(([id, count]) => {
-        const { category, name } = items.find((i) => i.id == id) as {
-          [k: string]: string
-        }
-        return { id, category, name, count: parseInt(count) }
-      }),
-    items: _params.items
+    params: {
+      items: _query.queries
+        .split(',')
+        .map((p) => p.split(':'))
+        .map(([id, count]) => {
+          const { category, name } = items.find((i) => i.id == id) as {
+            [k: string]: string
+          }
+          return { id, category, name, count: parseInt(count) }
+        }),
+    },
+    items: _query.items
       .split(',')
       .map((i) => i.split(':'))
       .map(([id, count]) => {
@@ -25,7 +27,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
         }
         return { id, category, name, count: parseInt(count) }
       }),
-    quests: _params.quests
+    quests: _query.quests
       .split(',')
       .map((q) => q.split(':'))
       .map(([id, lap]) => {
