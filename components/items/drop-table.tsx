@@ -41,7 +41,7 @@ export const DropTable = ({
           <Tr key={quest.id}>
             <Td>{quest.area}</Td>
             <Td>{quest.name}</Td>
-            <Td isNumeric>{quest[`samples_${dropRateKey}`]}</Td>
+            <Td isNumeric>{quest[`samples_${dropRateKey}`] ?? 0}</Td>
             {dropGroups[quest.id].map((row) => (
               <DropRow
                 key={row.item_id}

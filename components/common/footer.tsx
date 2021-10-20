@@ -20,7 +20,6 @@ export const Footer = (): JSX.Element => (
           aria-label="Github Repositories"
           icon={<Icon as={FaGithub} boxSize={6} />}
           variant="ghost"
-          size="sm"
           isRound
         />
         <IconButton
@@ -32,7 +31,6 @@ export const Footer = (): JSX.Element => (
           icon={<Icon as={FaTwitter} boxSize={6} />}
           colorScheme="twitter"
           variant="ghost"
-          size="sm"
           isRound
         />
       </HStack>
