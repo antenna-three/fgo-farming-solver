@@ -5,6 +5,7 @@ import {
   Box,
   Breadcrumb,
   BreadcrumbItem,
+  Center,
   FormControl,
   FormLabel,
   Heading,
@@ -14,15 +15,20 @@ import {
   Skeleton,
   Text,
   VStack,
+  Wrap,
+  WrapItem,
 } from '@chakra-ui/react'
 import React from 'react'
 import { DropRate, DropRateKey, Item, Quest } from '../../interfaces/fgodrop'
 import { useRouter } from 'next/router'
 import { BreadcrumbLink } from '../common/breadcrumb-link'
-import { groupBy } from '../../lib/group-by'
-import { orderBy } from '../../lib/order-by'
+import { groupBy } from '../../utils/group-by'
+import { orderBy } from '../../utils/order-by'
+import { Title } from '../common/title'
+import { DropRateKeyRadio } from './drop-rate-key-radio'
+import { DropRateStyleRadio } from './drop-rate-style-radio'
 
-type DropRateStyle = 'ap' | 'rate'
+export type DropRateStyle = 'ap' | 'rate'
 
 export const Page = ({
   id,
@@ -69,65 +75,45 @@ export const Page = ({
   const title = itemIndexes[id].name + 'のドロップ一覧'
 
   return (
-    <>
-      <Head title={title} />
-      <VStack display="block" spacing={8}>
-        <Breadcrumb>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/items">アイテム一覧</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbItem isCurrentPage>
-            <Text>{title}</Text>
-          </BreadcrumbItem>
-        </Breadcrumb>
-        <Heading>{title}</Heading>
-        <form>
-          <HStack spacing={8} flexWrap="wrap">
-            <Box>
-              <FormControl as="fieldset">
-                <FormLabel as="legend">ドロップ率</FormLabel>
-                <RadioGroup
-                  value={dropRateKey}
-                  onChange={(value) => {
-                    setDropRateKey(value as DropRateKey)
-                  }}
-                >
-                  <HStack>
-                    <Radio value="1">旧データ</Radio>
-                    <Radio value="2">新データ</Radio>
-                  </HStack>
-                </RadioGroup>
-              </FormControl>
-            </Box>
-
-            <Box>
-              <FormControl as="fieldset">
-                <FormLabel as="legend">表示形式</FormLabel>
-                <RadioGroup
-                  value={dropRateStyle}
-                  onChange={(value) => {
-                    setDropRateStyle(value as DropRateStyle)
-                  }}
-                >
-                  <HStack>
-                    <Radio value="ap">AP効率</Radio>
-                    <Radio value="rate">ドロップ率</Radio>
-                  </HStack>
-                </RadioGroup>
-              </FormControl>
-            </Box>
-          </HStack>
-        </form>
-        <Box whiteSpace="nowrap" overflowX="scroll" borderRadius="xl">
-          <DropTable
-            itemIndexes={itemIndexes}
-            quests={selectedQuests}
-            dropGroups={dropGroups}
-            dropRateKey={dropRateKey}
-            dropRateStyle={dropRateStyle}
-          />
-        </Box>
-      </VStack>
-    </>
+    <VStack display="block" spacing={8}>
+      <Breadcrumb>
+        <BreadcrumbItem>
+          <BreadcrumbLink href="/items">アイテム一覧</BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbItem isCurrentPage>
+          <Text>{title}</Text>
+        </BreadcrumbItem>
+      </Breadcrumb>
+      <Center>
+        <Title>{title}</Title>
+      </Center>
+      <form>
+        <Center>
+          <Wrap spacing={8}>
+            <WrapItem>
+              <DropRateKeyRadio
+                dropRateKey={dropRateKey}
+                setDropRateKey={setDropRateKey}
+              />
+            </WrapItem>
+            <WrapItem>
+              <DropRateStyleRadio
+                dropRateStyle={dropRateStyle}
+                setDropRateStyle={setDropRateStyle}
+              />
+            </WrapItem>
+          </Wrap>
+        </Center>
+      </form>
+      <Box whiteSpace="nowrap" overflowX="scroll" borderRadius="xl">
+        <DropTable
+          itemIndexes={itemIndexes}
+          quests={selectedQuests}
+          dropGroups={dropGroups}
+          dropRateKey={dropRateKey}
+          dropRateStyle={dropRateStyle}
+        />
+      </Box>
+    </VStack>
   )
 }

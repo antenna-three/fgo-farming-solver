@@ -33,7 +33,7 @@ export const Page = ({ servant }: { servant: NiceServant }) => {
   return (
     <>
       <Head title={`${servant.name}の強化素材`} />
-      <VStack align="stretch" spacing={5}>
+      <VStack align="stretch" spacing={16}>
         <Breadcrumb>
           <BreadcrumbItem>
             <BreadcrumbLink href="/servants">サーヴァント一覧</BreadcrumbLink>
@@ -42,14 +42,13 @@ export const Page = ({ servant }: { servant: NiceServant }) => {
             <Text>{servant.name}</Text>
           </BreadcrumbItem>
         </Breadcrumb>
-        <Heading as="h1">
+        <VStack>
           <HStack>
-            <Text>{servant.name}</Text>
-            <Text fontWeight="normal">
-              （{getJpClassName(servant.className)}）
-            </Text>
+            <Text color="yellow.500">{'★'.repeat(servant.rarity)}</Text>
+            <Text>{getJpClassName(servant.className)}</Text>
           </HStack>
-        </Heading>
+          <Heading as="h1">{servant.name}</Heading>
+        </VStack>
         <SimpleGrid minChildWidth="250px" spacing={8}>
           {keys.map(({ key, label }) => (
             <VStack align="stretch" key={key} spacing={4}>

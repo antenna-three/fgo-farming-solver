@@ -33,11 +33,16 @@ export const Material = ({
 }) => {
   const ids = servants.map(({ id }) => id.toString())
   const [chaldeaState, setChaldeaState] = useChaldeaState(ids)
-  const currentClassServants = servants.filter(
-    (servant) => servant.className == className
+  const currentClassServants = useMemo(
+    () => servants.filter((servant) => servant.className == className),
+    [className, servants]
   )
-  const enabledServants = currentClassServants.filter(
-    (servant) => !chaldeaState[servant.id].disabled
+  const enabledServants = useMemo(
+    () =>
+      currentClassServants.filter(
+        (servant) => !chaldeaState[servant.id].disabled
+      ),
+    [chaldeaState, currentClassServants]
   )
   const jpClassName = getJpClassName(className)
 

@@ -5,6 +5,7 @@ import { sumMaterials } from '../../lib/sum-materials'
 import { Button, ButtonProps } from '@chakra-ui/button'
 import { ComponentWithAs } from '@chakra-ui/system'
 import { ChaldeaState } from '../../hooks/create-chaldea-state'
+import { useBoolean } from '@chakra-ui/hooks'
 
 export const CalcButton: ComponentWithAs<
   'button',
@@ -20,10 +21,10 @@ export const CalcButton: ComponentWithAs<
   state: ChaldeaState
   materials: { [id: string]: MaterialsRecord }
 }) => {
-  const [calculating, setCalculating] = useState(false)
+  const [calculating, setCalculating] = useBoolean()
   const router = useRouter()
   const calc = () => {
-    setCalculating(true)
+    setCalculating.on()
     const query = sumMaterials(state, materials)
     router.push({
       pathname: '/material/result',

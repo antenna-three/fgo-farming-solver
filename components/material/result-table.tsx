@@ -2,6 +2,9 @@ import { Input, Table, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react'
 import React, { FormEventHandler, Fragment } from 'react'
 import { Item } from '../../interfaces/atlas-academy'
 
+const showPositive = (value: number) => (value > 0 ? value : '')
+const px = [2, 4, 6]
+
 export const ResultTable = ({
   itemGroup,
   hideSufficient,
@@ -19,8 +22,6 @@ export const ResultTable = ({
   onChange: FormEventHandler
   onFocus: FormEventHandler
 }) => {
-  const showPositive = (value: number) => (value > 0 ? value : '')
-  const px = [2, 4, 6]
   return (
     <Table>
       <Thead>

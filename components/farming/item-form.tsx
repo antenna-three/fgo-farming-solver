@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react'
 import { useRouter } from 'next/router'
 import {
   Alert,
@@ -11,7 +11,7 @@ import {
   useBoolean,
   VStack,
 } from '@chakra-ui/react'
-import { getLargeCategory } from '../../lib/get-large-category'
+import { getLargeCategory } from '../../hooks/get-large-category'
 import { useQuestTree } from '../../hooks/use-quest-tree'
 import { useLocalStorage } from '../../hooks/use-local-storage'
 import { useCheckboxTree } from '../../hooks/use-checkbox-tree'
@@ -22,7 +22,7 @@ import { ItemFieldset } from './item-fieldset'
 import { CheckboxTree } from '../common/checkbox-tree'
 import { DropRateSelect } from './drop-rate-select'
 import { ResetAlertDialog } from './reset-alert-dialog'
-import { groupBy } from '../../lib/group-by'
+import { groupBy } from '../../utils/group-by'
 
 type InputState = {
   objective: string
@@ -48,7 +48,7 @@ const inputToQuery: (inputState: InputState) => QueryInputState = ({
 }) => ({
   objective,
   items: Object.entries(items)
-    .filter(([item, count]) => count != '')
+    .filter(([, count]) => count != '')
     .map(([item, count]) => item + ':' + count)
     .join(','),
   quests: quests

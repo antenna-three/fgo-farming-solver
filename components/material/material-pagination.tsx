@@ -3,7 +3,7 @@ import { jpClassNames } from '../../constants/jp-class-names'
 import { HStack, Stack } from '@chakra-ui/layout'
 import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons'
 import React from 'react'
-import { Box, Center, Flex, Grid, GridItem, Text } from '@chakra-ui/react'
+import { Box, Text } from '@chakra-ui/react'
 import { PageSelect } from './material-page-select'
 
 export const Pagination = ({

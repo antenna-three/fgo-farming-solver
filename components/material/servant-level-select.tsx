@@ -10,7 +10,7 @@ import React, {
 import { RangeSliderWithInput } from './range-slider-with-input'
 import { Checkbox, VStack } from '@chakra-ui/react'
 import { TargetKey } from '../../interfaces/atlas-academy'
-import { entries } from '../../lib/typed-entries'
+import { entries } from '../../utils/typed-entries'
 import {
   ChaldeaState,
   ServantState,

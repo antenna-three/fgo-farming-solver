@@ -1,11 +1,10 @@
+import NextLink from 'next/link'
 import {
   Heading,
   chakra,
   VStack,
   Box,
   ChakraComponent,
-  Flex,
-  HStack,
   Text,
   Link as ChakraLink,
   LinkProps as ChakraLinkProps,
@@ -17,8 +16,7 @@ import { Link, LinkProps } from '../components/common/link'
 import { theme } from '../theme'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
 
-const Span = chakra.span
-const MotionSpan = motion<any>(Span)
+const MotionSpan = motion<any>(chakra.span)
 
 const NoWrap: ChakraComponent<'span', {}> = ({ children, ...props }) => (
   <chakra.span whiteSpace="nowrap" {...props}>
@@ -39,16 +37,13 @@ const LinkCard: ChakraComponent<'div', LinkProps> = ({
   children,
   ...props
 }) => (
-  <Link href={href} color="inherit" _hover={{}}>
-    <Card
-      _hover={{
-        boxShadow: 'lg',
-      }}
-      {...props}
-    >
-      {children}
-    </Card>
-  </Link>
+  <NextLink href={href}>
+    <a>
+      <Card _hover={{ boxShadow: 'lg' }} {...props}>
+        {children}
+      </Card>
+    </a>
+  </NextLink>
 )
 
 const ExternalLinkCard: ChakraComponent<'div', ChakraLinkProps> = ({
@@ -73,6 +68,7 @@ const greenAnimate: TargetAndTransition = { color: [gray, green, green, gray] }
 const orangeAnimate: TargetAndTransition = {
   color: [gray, orange, orange, gray],
 }
+
 const transition: Transition = {
   ease: 'easeInOut',
   repeat: Infinity,
@@ -84,8 +80,8 @@ const transition: Transition = {
 
 const Index = () => {
   return (
-    <VStack>
-      <VStack my={10} size="xl" textAlign="center">
+    <VStack spacing={12} mt={12}>
+      <VStack size="xl" textAlign="center">
         <Heading as="h1">
           <MotionSpan
             animate={blueAnimate}
@@ -104,7 +100,7 @@ const Index = () => {
           >
             <NoWrap>アイテム必要数</NoWrap>
           </MotionSpan>
-          <Span fontSize="0.8em">を</Span>
+          <chakra.span fontSize="0.8em">を</chakra.span>
         </Heading>
         <Heading>
           <MotionSpan
@@ -126,7 +122,7 @@ const Index = () => {
           >
             <NoWrap>クエスト周回数</NoWrap>
           </MotionSpan>
-          <Span fontSize="0.8em">を</Span>
+          <chakra.span fontSize="0.8em">を</chakra.span>
           <NoWrap>求めます</NoWrap>
         </Heading>
       </VStack>

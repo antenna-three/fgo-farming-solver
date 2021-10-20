@@ -1,5 +1,5 @@
 // <reference types="node"/>
-import NextLink, { LinkProps as NextLinkProps } from 'next/link'
+import NextLink from 'next/link'
 import {
   ComponentWithAs,
   Link as ChakraLink,
