@@ -1,5 +1,5 @@
 import { TargetKey } from '../interfaces/atlas-academy'
-import { entries, fromEntries } from '../lib/typed-entries'
+import { entries, fromEntries } from '../utils/typed-entries'
 
 export type RangeState = {
   start: number

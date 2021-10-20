@@ -1,7 +1,7 @@
 import { MaterialsRecord } from './../interfaces/atlas-academy'
-import { range } from '../lib/range'
+import { range } from '../utils/range'
 import { Materials } from '../interfaces/atlas-academy'
-import { entries } from './typed-entries'
+import { entries } from '../utils/typed-entries'
 import { ChaldeaState } from '../hooks/create-chaldea-state'
 
 export const sumMaterials = (
@@ -25,7 +25,7 @@ export const sumMaterials = (
       return
     }
     entries(targets)
-      .filter(([_target, { disabled }]) => !disabled)
+      .filter(([, { disabled }]) => !disabled)
       .forEach(([target, { ranges }]) => {
         const materials: Materials = servant[`${target}Materials`]
         if (materials == null) {
@@ -38,17 +38,9 @@ export const sumMaterials = (
               return
             }
             const { items, qp } = materials[i]
-            items.forEach(
-              ({
-                item,
-                amount,
-              }: {
-                item: { id: number; name: string }
-                amount: number
-              }) => {
-                sum[item.id] += amount
-              }
-            )
+            items.forEach(({ item, amount }) => {
+              sum[item.id] += amount
+            })
             sum[1] += qp
           })
         )

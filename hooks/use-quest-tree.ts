@@ -1,4 +1,4 @@
-import { groupBy } from '../lib/group-by'
+import { groupBy } from '../utils/group-by'
 import { useMemo } from 'react'
 import { Node } from '../components/common/checkbox-tree'
 

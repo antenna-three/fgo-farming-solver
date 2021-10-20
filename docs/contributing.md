@@ -23,7 +23,7 @@ Thank you for considering contributing. This project is my personal project but 
 
 ## Technologies
 
-This project uses Next.js with TypeScript and Chakra UI and is deployed to Vercel.
+This project uses [Next.js](https://nextjs.org) with [TypeScript](https://www.typescriptlang.org) and [Chakra UI](https://chakra-ui.com/), and is deployed to [Vercel](https://vercel.com).
 
 ## Directory structure
 
@@ -58,3 +58,7 @@ This project uses Next.js with TypeScript and Chakra UI and is deployed to Verce
 - `public`
 
   Static resources.
+
+- `utils`
+
+  Miscellaneous utilities.

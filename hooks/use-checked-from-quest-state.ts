@@ -16,8 +16,8 @@ const _questsToSetChecked = <T extends { quests: string[] }>(
     setInputState((state) => ({
       ...state,
       quests: Object.entries(action(_questsToChecked(questIds, state.quests)))
-        .filter(([id, checked]) => checked)
-        .map(([id, checked]) => id),
+        .filter(([, checked]) => checked)
+        .map(([id]) => id),
     }))
   return functionToAction(functional)
 }

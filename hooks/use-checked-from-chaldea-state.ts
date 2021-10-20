@@ -6,7 +6,7 @@ import { ChaldeaState } from './create-chaldea-state'
 const _chaldeaStateToChecked = (state: ChaldeaState): LeafState =>
   Object.fromEntries(
     Object.entries(state)
-      .filter(([id, _]) => id != 'all')
+      .filter(([id]) => id != 'all')
       .map(([id, { disabled }]) => [id, !disabled])
   )
 
