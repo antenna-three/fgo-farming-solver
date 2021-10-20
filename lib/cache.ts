@@ -29,6 +29,8 @@ export const fetchJsonWithCache = async (url: string, hash: string) => {
         ? readJson(cachePath)
         : fetchAndWriteJson(url, hash, hashPath, cachePath)
     )
-    .catch(async (err) => fetchAndWriteJson(url, hash, hashPath, cachePath))
+    .catch(async () =>
+      fetchAndWriteJson(url, hash, hashPath, cachePath).catch(() => {})
+    )
   return obj
 }
