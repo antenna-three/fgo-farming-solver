@@ -1,3 +1,4 @@
+import { useCallback, useMemo } from 'react'
 import { Servant } from '../interfaces/atlas-academy'
 
 const noToMsId: { [key: number]: number } = {
@@ -313,23 +314,38 @@ const noToMsId: { [key: number]: number } = {
   316: 311,
 }
 
-export const getMsServantIdConverter = (servants: Servant[]) => {
-  const idToNo = Object.fromEntries(
-    servants.map(({ id, collectionNo }) => [id, collectionNo])
+const msIdToNo = Object.fromEntries(
+  Object.entries(noToMsId).map(([k, v]) => [v, parseInt(k)])
+)
+
+export const useMsServantId = (servants: Servant[]) => {
+  const idToNo = useMemo(
+    () =>
+      Object.fromEntries(
+        servants.map(({ id, collectionNo }) => [id, collectionNo])
+      ),
+    [servants]
   )
-  const noToId = Object.fromEntries(
-    servants.map(({ id, collectionNo }) => [collectionNo, id])
+  const noToId = useMemo(
+    () =>
+      Object.fromEntries(
+        servants.map(({ id, collectionNo }) => [collectionNo, id])
+      ),
+    [servants]
   )
-  const msIdToNo = Object.fromEntries(
-    Object.entries(noToMsId).map(([k, v]) => [v, parseInt(k)])
+  const getMsId = useCallback(
+    (id: number): number => {
+      const no = idToNo[id]
+      return noToMsId[no] || no - 5
+    },
+    [idToNo]
   )
-  const getMsId = (id: number) => {
-    const no = idToNo[id]
-    return noToMsId[no] || no - 5
-  }
-  const getId = (msId: number) => {
-    const no = msIdToNo[msId] || msId + 5
-    return noToId[no]
-  }
+  const getId = useCallback(
+    (msId: number): number => {
+      const no = msIdToNo[msId] || msId + 5
+      return noToId[no]
+    },
+    [noToId]
+  )
   return { getMsId, getId }
 }

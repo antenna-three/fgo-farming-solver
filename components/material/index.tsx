@@ -11,10 +11,10 @@ import { useCheckboxTree } from '../../hooks/use-checkbox-tree'
 import { CheckboxTree } from '../common/checkbox-tree'
 import { useChecked } from '../../hooks/use-checked-from-chaldea-state'
 import { ExternalLink } from '../common/link'
-import { functionToAction } from '../../hooks/function-to-action'
 import { useChaldeaState } from '../../hooks/use-chaldea-state'
 import { ServantLevelSelect } from './servant-level-select'
-import { ServantState } from '../../hooks/create-chaldea-state'
+import { useAllChaldeaState } from '../../hooks/use-all-chaldea-state'
+import { Title } from '../common/title'
 
 export const Index = ({
   servants,
@@ -27,19 +27,7 @@ export const Index = ({
 }) => {
   const ids = servants.map(({ id }) => id.toString())
   const [chaldeaState, setChaldeaState] = useChaldeaState(ids)
-  const setAllStateFunction = (
-    updateServantState: (prevServantState: ServantState) => ServantState
-  ) => {
-    setChaldeaState((prevState) =>
-      Object.fromEntries(
-        Object.entries(prevState).map(([id, prevServantState]) => [
-          id,
-          updateServantState(prevServantState),
-        ])
-      )
-    )
-  }
-  const setAllState = functionToAction(setAllStateFunction)
+  const setAllChaldeaState = useAllChaldeaState(setChaldeaState)
 
   const tree = useServantTree(servants)
   const [posession, setPosession] = useLocalStorage(
@@ -51,9 +39,8 @@ export const Index = ({
 
   return (
     <VStack spacing={8} alignItems="stretch">
-      <Head title="育成素材計算機" />
       <Center>
-        <Heading as="h1">育成素材計算機</Heading>
+        <Title>育成素材計算機</Title>
       </Center>
       <Wrap justify="center" spacing={8}>
         <WrapItem w="md" maxW="md" display="block">
@@ -74,7 +61,7 @@ export const Index = ({
               id={'all'}
               servantState={chaldeaState.all}
               setState={setChaldeaState}
-              setServantState={setAllState}
+              setServantState={setAllChaldeaState}
             />
           </VStack>
         </WrapItem>

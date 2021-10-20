@@ -1,7 +1,7 @@
 import { ChangeEventHandler, Dispatch, SetStateAction, useMemo } from 'react'
-import { selectOnFocus } from '../../lib/select-on-focus'
+import { useSelectOnFocus } from '../../hooks/use-select-on-focus'
 import { Item } from '../../interfaces/atlas-academy'
-import { getMsItemIdConverter } from '../../lib/get-ms-item-id-converter'
+import { useMsItemId } from '../../hooks/use-ms-item-id'
 import { Input } from '@chakra-ui/input'
 
 export const MsItemsIo = ({
@@ -10,17 +10,18 @@ export const MsItemsIo = ({
   setPosession,
 }: {
   items: Item[]
-  posession: { [id: string]: number }
-  setPosession: Dispatch<SetStateAction<{ [id: string]: number }>>
+  posession: { [id: number]: number }
+  setPosession: Dispatch<SetStateAction<{ [id: number]: number }>>
 }) => {
-  const { getItemId, getMsItemId } = useMemo(
-    () => getMsItemIdConverter(items),
-    [items]
-  )
-  const msItems = Object.fromEntries(
-    Object.entries(posession)
-      .filter(([id, amount]) => getMsItemId(id) != null)
-      .map(([id, amount]) => [getMsItemId(id), amount])
+  const { getItemId, getMsItemId } = useMsItemId(items)
+  const msItems = useMemo(
+    () =>
+      Object.fromEntries(
+        Object.entries(posession)
+          .filter(([id]) => getMsItemId(id) != null)
+          .map(([id, amount]) => [getMsItemId(id), amount])
+      ),
+    [getMsItemId, posession]
   )
   const strMsItems = Object.values(msItems).every((value) => value == 0)
     ? ''
@@ -59,6 +60,7 @@ export const MsItemsIo = ({
       )
     )
   }
+  const selectOnFocus = useSelectOnFocus()
   return (
     <Input
       type="text"
