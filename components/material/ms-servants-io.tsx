@@ -20,14 +20,12 @@ export const MsServantsIo = ({
   servants,
   state,
   setState,
-  noToMsId,
 }: {
   servants: Servant[]
   state: ChaldeaState
   setState: Dispatch<SetStateAction<ChaldeaState>>
-  noToMsId: { [id: number]: number }
 }) => {
-  const { getId, getMsId } = useMsServantId(servants, noToMsId)
+  const { getId, getMsId } = useMsServantId(servants)
   const initialState = createChaldeaState([
     'all',
     ...servants.map(({ id }) => id.toString()),
