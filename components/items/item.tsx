@@ -1,4 +1,3 @@
-import { Head } from '../common/head'
 import { DropTable } from './drop-table'
 import { useLocalStorage } from '../../hooks/use-local-storage'
 import {
@@ -6,13 +5,8 @@ import {
   Breadcrumb,
   BreadcrumbItem,
   Center,
-  FormControl,
-  FormLabel,
-  Heading,
-  HStack,
-  Radio,
-  RadioGroup,
   Skeleton,
+  TableContainer,
   Text,
   VStack,
   Wrap,
@@ -20,6 +14,7 @@ import {
 } from '@chakra-ui/react'
 import React from 'react'
 import { DropRate, DropRateKey, Item, Quest } from '../../interfaces/fgodrop'
+import { Item as AtlasItem } from '../../interfaces/atlas-academy'
 import { useRouter } from 'next/router'
 import { BreadcrumbLink } from '../common/breadcrumb-link'
 import { groupBy } from '../../utils/group-by'
@@ -27,6 +22,7 @@ import { orderBy } from '../../utils/order-by'
 import { Title } from '../common/title'
 import { DropRateKeyRadio } from './drop-rate-key-radio'
 import { DropRateStyleRadio } from './drop-rate-style-radio'
+import { priorityToApiId } from '../../lib/priority-to-api-id'
 
 export type DropRateStyle = 'ap' | 'rate'
 
@@ -35,11 +31,13 @@ export const Page = ({
   items,
   quests,
   dropRates,
+  atlasItems,
 }: {
   id: string
   items: Item[]
   quests: Quest[]
   dropRates: DropRate[]
+  atlasItems: AtlasItem[]
 }) => {
   const [dropRateKey, setDropRateKey] = useLocalStorage<DropRateKey>(
     'dropRateKey',
@@ -55,6 +53,9 @@ export const Page = ({
     return <Skeleton height="100vh" />
   }
   const itemIndexes = Object.fromEntries(items.map((item) => [item.id, item]))
+  const atlasItem = atlasItems.find(
+    ({ priority }) => priorityToApiId(priority) == id
+  )
   const sortedDropRates = dropRates.sort(
     orderBy(
       ({ item_id }) => (item_id == id ? -Infinity : parseInt(item_id, 36)),
@@ -66,13 +67,16 @@ export const Page = ({
     dropGroups[quest_id].find((row) => row.item_id == id)
   const getDropRate = (quest_id: string) => {
     const dropRate = idToDropRate(quest_id)
-    return dropRate == null ? 0 : dropRate[`drop_rate_${dropRateKey}`]
+    return dropRate == null ? -1 : dropRate[`drop_rate_${dropRateKey}`]
   }
+  const filteredQuests = quests.filter(({ id }) => getDropRate(id) != -1)
   const selectedQuests =
     dropRateStyle == 'rate'
-      ? quests.sort(orderBy(({ id }) => getDropRate(id), 'desc'))
-      : quests.sort(orderBy(({ id, ap }) => ap / getDropRate(id), 'asc'))
-  const title = itemIndexes[id].name + 'のドロップ一覧'
+      ? filteredQuests.sort(orderBy(({ id }) => getDropRate(id), 'desc'))
+      : filteredQuests.sort(
+          orderBy(({ id, ap }) => ap / getDropRate(id), 'asc')
+        )
+  const title = atlasItem?.name + 'のドロップ一覧'
 
   return (
     <VStack display="block" spacing={8}>
@@ -88,22 +92,20 @@ export const Page = ({
         <Title>{title}</Title>
       </Center>
       <form>
-        <Center>
-          <Wrap spacing={8}>
-            <WrapItem>
-              <DropRateKeyRadio
-                dropRateKey={dropRateKey}
-                setDropRateKey={setDropRateKey}
-              />
-            </WrapItem>
-            <WrapItem>
-              <DropRateStyleRadio
-                dropRateStyle={dropRateStyle}
-                setDropRateStyle={setDropRateStyle}
-              />
-            </WrapItem>
-          </Wrap>
-        </Center>
+        <Wrap justify="space-evenly" spacing={8}>
+          <WrapItem>
+            <DropRateKeyRadio
+              dropRateKey={dropRateKey}
+              setDropRateKey={setDropRateKey}
+            />
+          </WrapItem>
+          <WrapItem>
+            <DropRateStyleRadio
+              dropRateStyle={dropRateStyle}
+              setDropRateStyle={setDropRateStyle}
+            />
+          </WrapItem>
+        </Wrap>
       </form>
       <Box whiteSpace="nowrap" overflowX="scroll" borderRadius="xl">
         <DropTable

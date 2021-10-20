@@ -1,4 +1,4 @@
-export const getSolverId = (priority: number) => {
+export const priorityToApiId = (priority: number) => {
   if (100 <= priority && priority < 107) {
     //輝石
     return '3' + (priority - 100).toString(36)
@@ -26,4 +26,5 @@ export const getSolverId = (priority: number) => {
     //モニュメント
     return '7' + (priority - 307).toString(36)
   }
+  return ''
 }

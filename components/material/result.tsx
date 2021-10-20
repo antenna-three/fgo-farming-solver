@@ -4,14 +4,13 @@ import { Box, Button, Checkbox, Heading, Text, VStack } from '@chakra-ui/react'
 import { useLocalStorage } from '../../hooks/use-local-storage'
 import { Item } from '../../interfaces/atlas-academy'
 import { getLargeCategory } from '../../hooks/get-large-category'
-import { getSolverId } from '../../lib/get-solver-id'
-import { Head } from '../common/head'
 import { Link } from '../common/link'
 import { ResultAccordion } from './result-accordion'
 import { TargetCategorySelect } from './target-category-select'
 import { groupBy } from '../../utils/group-by'
 import { useSelectOnFocus } from '../../hooks/use-select-on-focus'
 import { Title } from '../common/title'
+import { priorityToApiId } from '../../lib/priority-to-api-id'
 
 export const Result = ({
   items,
@@ -64,10 +63,12 @@ export const Result = ({
         .filter(
           (item) =>
             deficiencies[item.id] > 0 &&
-            getSolverId(item.priority) &&
+            priorityToApiId(item.priority) &&
             targetCategories.includes(getLargeCategory(item.category))
         )
-        .map((item) => getSolverId(item.priority) + ':' + deficiencies[item.id])
+        .map(
+          (item) => priorityToApiId(item.priority) + ':' + deficiencies[item.id]
+        )
         .join(',')
       router.push({
         pathname: '/farming',
