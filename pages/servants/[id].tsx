@@ -11,25 +11,11 @@ export const getStaticPaths: GetStaticPaths = async () => {
   return { paths, fallback: true }
 }
 
-export const getStaticProps: GetStaticProps = async (context) => {
-  const { params } = context
-  if (
-    params == null ||
-    typeof params.id != 'string' ||
-    Number.isNaN(parseInt(params.id))
-  ) {
-    return { notFound: true }
-  }
-  const intId = parseInt(params.id)
-  const niceServant = await getNiceServants().then((servants) =>
-    servants.find(({ id }) => id == intId)
+export const getStaticProps: GetStaticProps = async ({ params }) => {
+  const servant = await getNiceServants().then((servants) =>
+    servants.find(({ id }) => id.toString() == params?.id)
   )
-  if (niceServant == null) {
-    return { notFound: true }
-  }
-  return {
-    props: { servant: niceServant },
-  }
+  return servant == null ? { notFound: true } : { props: { servant } }
 }
 
 export default Page

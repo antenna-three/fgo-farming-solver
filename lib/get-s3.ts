@@ -2,11 +2,7 @@ import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3'
 import { Readable, PassThrough } from 'stream'
 import { createGunzip } from 'zlib'
 
-export async function getGzip(
-  key: string
-): Promise<{ [key: string]: { [key: string]: string | number }[] }> {
-  const bucket = 'fgodrop'
-
+export const getGzip = async (region: string, bucket: string, key: string) => {
   const accessKeyId = process.env.MY_AWS_ACCESS_KEY_ID
   const secretAccessKey = process.env.MY_AWS_SECRET_ACCESS_KEY
   if (accessKeyId == null || secretAccessKey == null) {
@@ -16,7 +12,7 @@ export async function getGzip(
 
   const client = new S3Client({
     credentials: { accessKeyId, secretAccessKey },
-    region: 'ap-northeast-1',
+    region,
   })
   const command = new GetObjectCommand({ Bucket: bucket, Key: key })
 

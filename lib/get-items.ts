@@ -2,6 +2,7 @@ import { origin, region } from '../constants/atlasacademy'
 import { Item } from '../interfaces/atlas-academy'
 import { fetchJsonWithCache } from './cache'
 import { getHash } from './get-hash'
+import { orderBy } from '../utils/order-by'
 
 const getCategory = (item: Item) => {
   switch (Math.floor(item.priority / 100)) {
@@ -45,6 +46,6 @@ export const getItems = async () => {
     items
       .filter((item) => targetTypes.includes(item.type))
       .map((item) => ({ ...item, category: getCategory(item) }))
-      .sort((a, b) => a.priority - b.priority)
+      .sort(orderBy(({ priority }) => priority, 'asc'))
   )
 }

@@ -1,12 +1,11 @@
 import { GetStaticProps } from 'next'
 import { Head } from '../../components/common/head'
 import { ItemForm } from '../../components/farming/item-form'
-import { Text } from '@chakra-ui/layout'
-import { getGzip } from '../../lib/get-s3'
+import { getDrops } from '../../lib/get-drops'
 import { Quest } from '../../interfaces/fgodrop'
 
 export const getStaticProps: GetStaticProps = async (context) => {
-  const props = await getGzip('all.json.gz')
+  const props = await getDrops()
 
   return {
     props,

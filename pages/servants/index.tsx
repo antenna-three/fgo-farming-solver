@@ -2,7 +2,7 @@ import { GetStaticProps } from 'next'
 import { revalidate } from '../../constants/revalidate'
 import { getServants } from '../../lib/get-servants'
 import { Index } from '../../components/servants'
-import { groupBy } from '../../lib/group-by'
+import { groupBy } from '../../utils/group-by'
 
 export const getStaticProps: GetStaticProps = async () => {
   const servants = await getServants()

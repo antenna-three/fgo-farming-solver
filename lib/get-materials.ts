@@ -4,7 +4,7 @@ import { getNiceServants } from './get-nice-servants'
 const reduceServant = (servant: MaterialsRecord) =>
   Object.fromEntries(
     Object.entries(servant)
-      .filter(([key, value]) => key.endsWith('Materials'))
+      .filter(([key]) => key.endsWith('Materials'))
       .map(([key, value]) => [
         key,
         Object.fromEntries(

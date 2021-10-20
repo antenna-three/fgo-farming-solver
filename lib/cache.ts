@@ -1,6 +1,7 @@
 import { promises as fs, createWriteStream } from 'fs'
 import path from 'path'
 import fetch from 'node-fetch'
+import { readJson } from './read-json'
 
 const fetchAndWriteJson = async (
   url: string,
@@ -16,7 +17,7 @@ const fetchAndWriteJson = async (
 }
 
 export const fetchJsonWithCache = async (url: string, hash: string) => {
-  const cacheDir = path.resolve(process.cwd(), 'cache')
+  const cacheDir = path.resolve('cache')
   await fs.mkdir(cacheDir).catch(() => {})
   const stem = path.basename(url, '.json')
   const hashPath = path.resolve(cacheDir, `${stem}.hash.txt`)
@@ -25,7 +26,7 @@ export const fetchJsonWithCache = async (url: string, hash: string) => {
     .readFile(hashPath, 'utf-8')
     .then((localHash) =>
       localHash == hash
-        ? fs.readFile(cachePath, 'utf-8').then((json) => JSON.parse(json))
+        ? readJson(cachePath)
         : fetchAndWriteJson(url, hash, hashPath, cachePath)
     )
     .catch(async (err) => fetchAndWriteJson(url, hash, hashPath, cachePath))

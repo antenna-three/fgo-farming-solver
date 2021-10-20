@@ -6,10 +6,15 @@ import { revalidate } from '../../constants/revalidate'
 import { Index } from '../../components/material'
 
 export const getStaticProps: GetStaticProps = async (context) => {
-  const servants = await getServants()
-  const materials = await getMaterialsForServants()
-  const items = await getItems()
-  return { props: { servants, materials, items }, revalidate }
+  const [servants, materials, items] = await Promise.all([
+    getServants(),
+    getMaterialsForServants(),
+    getItems(),
+  ])
+  return {
+    props: { servants, materials, items },
+    revalidate,
+  }
 }
 
 export default Index

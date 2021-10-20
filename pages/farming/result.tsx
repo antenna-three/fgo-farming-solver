@@ -1,11 +1,11 @@
 import { GetServerSideProps } from 'next'
-import { getGzip } from '../../lib/get-s3'
+import { getDrops } from '../../lib/get-drops'
 import { Result } from '../../components/farming/result'
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   if (params == null) return { notFound: true }
   const _params = params as { items: string; quests: string; queries: string }
-  const { items, quests, drop_rates } = await getGzip('all.json.gz')
+  const { items, quests, drop_rates } = await getDrops()
   const props = {
     params: _params.queries
       .split(',')

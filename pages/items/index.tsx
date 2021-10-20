@@ -1,9 +1,9 @@
 import { GetStaticProps } from 'next'
-import { getGzip } from '../../lib/get-s3'
+import { getDrops } from '../../lib/get-drops'
 import { Index } from '../../components/items'
 
 export const getStaticProps: GetStaticProps = async () => {
-  const { items } = await getGzip('all.json.gz')
+  const { items } = await getDrops()
   return { props: { items } }
 }
 

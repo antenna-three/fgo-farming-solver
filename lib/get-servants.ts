@@ -1,4 +1,4 @@
-import { orderBy } from './order-by'
+import { orderBy } from '../utils/order-by'
 import { origin, region } from '../constants/atlasacademy'
 import { Servant } from '../interfaces/atlas-academy'
 import { fetchJsonWithCache } from './cache'
