@@ -1,6 +1,6 @@
 import { GetServerSideProps } from 'next'
 import { getDrops } from '../../lib/get-drops'
-import { Result } from '../../components/farming/result'
+import { Page } from '../../components/farming/result'
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   if (params == null) return { notFound: true }
@@ -47,4 +47,4 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   return { props: { ...props, ..._props } }
 }
 
-export default Result
+export default Page
