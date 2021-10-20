@@ -30,7 +30,7 @@ export const DropTable = ({
         <Tr>
           <Th>エリア</Th>
           <Th>クエスト</Th>
-          <Th>サンプル数</Th>
+          <Th isNumeric>サンプル数</Th>
           <Th colSpan={colSpan}>
             ドロップ ({dropRateStyle == 'rate' ? '%' : 'AP/個'})
           </Th>
@@ -41,7 +41,7 @@ export const DropTable = ({
           <Tr key={quest.id}>
             <Td>{quest.area}</Td>
             <Td>{quest.name}</Td>
-            <Td>{quest[`samples_${dropRateKey}` as keyof Quest]}</Td>
+            <Td isNumeric>{quest[`samples_${dropRateKey}`]}</Td>
             {dropGroups[quest.id].map((row) => (
               <DropRow
                 key={row.item_id}

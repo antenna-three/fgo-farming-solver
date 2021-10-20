@@ -23,7 +23,7 @@ export const DropRateStyleRadio = ({
         setDropRateStyle(value as DropRateStyle)
       }}
     >
-      <HStack>
+      <HStack spacing={8}>
         <Radio value="ap">AP効率</Radio>
         <Radio value="rate">ドロップ率</Radio>
       </HStack>

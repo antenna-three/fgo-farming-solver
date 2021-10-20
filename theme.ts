@@ -20,9 +20,11 @@ export const theme = extendTheme({
   styles: {
     global: {
       table: {
+        borderRadius: 'xl',
+        overflow: 'hidden',
         thead: {
           th: {
-            bg: 'gray.200',
+            bg: 'blue.200',
           },
         },
         tbody: {

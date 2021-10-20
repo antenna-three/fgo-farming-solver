@@ -23,7 +23,7 @@ export const DropRateKeyRadio = ({
         setDropRateKey(value as DropRateKey)
       }}
     >
-      <HStack>
+      <HStack spacing={8}>
         <Radio value="1">旧データ</Radio>
         <Radio value="2">新データ</Radio>
       </HStack>

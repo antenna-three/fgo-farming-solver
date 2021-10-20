@@ -11,6 +11,11 @@ export const BreadcrumbLink: ComponentWithAs<'a', BreadcrumbLinkProps> = ({
   ...props
 }) => (
   <Link href={href || '#'} passHref>
-    <ChakraBreadcrumbLink {...props}>{children}</ChakraBreadcrumbLink>
+    <ChakraBreadcrumbLink
+      {...props}
+      color={props.isCurrentPage ? 'inherit' : 'blue.500'}
+    >
+      {children}
+    </ChakraBreadcrumbLink>
   </Link>
 )

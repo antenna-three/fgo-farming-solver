@@ -16,10 +16,10 @@ export const DropRow = ({
   ap: number
 }) => (
   <>
-    <Td className="item-name">
+    <Td pr={0}>
       <ItemLink item={itemIndexes[item_id]} />
     </Td>
-    <Td className="drop-rate">
+    <Td isNumeric>
       {!drop_rate
         ? '-'
         : dropRateStyle == 'rate'
