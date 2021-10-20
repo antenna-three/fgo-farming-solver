@@ -1,7 +1,7 @@
 import React from 'react'
 import { Box } from '@chakra-ui/layout'
 import { FaTwitter } from 'react-icons/fa'
-import { orderBy } from '../../lib/order-by'
+import { orderBy } from '../../utils/order-by'
 import { Button } from '@chakra-ui/react'
 import Link from 'next/link'
 
