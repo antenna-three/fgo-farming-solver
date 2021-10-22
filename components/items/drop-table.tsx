@@ -1,7 +1,8 @@
 import { Table, Thead, Tr, Th, Tbody, Td, TableProps } from '@chakra-ui/react'
-import React from 'react'
+import React, { Fragment } from 'react'
 import { DropRate, DropRateKey, Item, Quest } from '../../interfaces/fgodrop'
-import { DropRow } from './drop-row'
+import { ItemLink } from '../common/item-link'
+import { DropTd } from './drop-td'
 
 type DropRateStyle = 'ap' | 'rate'
 
@@ -23,7 +24,8 @@ export const DropTable = ({
     Object.values(dropGroups).reduce(
       (acc, cur) => (cur.length > acc ? cur.length : acc),
       0
-    ) * 2
+    ) * 3
+
   return (
     <Table {...rest}>
       <Thead>
@@ -37,23 +39,29 @@ export const DropTable = ({
         </Tr>
       </Thead>
       <Tbody>
-        {quests.map((quest) => (
-          <Tr key={quest.id}>
-            <Td>{quest.area}</Td>
-            <Td>{quest.name}</Td>
-            <Td isNumeric>{quest[`samples_${dropRateKey}`] ?? 0}</Td>
-            {dropGroups[quest.id].map((row) => (
-              <DropRow
-                key={row.item_id}
-                itemIndexes={itemIndexes}
-                item_id={row.item_id}
-                drop_rate={row[`drop_rate_${dropRateKey}`]}
-                dropRateStyle={dropRateStyle}
-                ap={quest.ap}
-              />
-            ))}
-          </Tr>
-        ))}
+        {quests.map((quest) => {
+          const samples = quest[`samples_${dropRateKey}`]
+          return (
+            <Tr key={quest.id}>
+              <Td>{quest.area}</Td>
+              <Td>{quest.name}</Td>
+              <Td isNumeric>{samples}</Td>
+              {dropGroups[quest.id].map((row) => (
+                <Fragment key={row.item_id}>
+                  <Td pr={0}>
+                    <ItemLink item={itemIndexes[row.item_id]} />
+                  </Td>
+                  <DropTd
+                    dropRate={row[`drop_rate_${dropRateKey}`]}
+                    dropRateStyle={dropRateStyle}
+                    ap={quest.ap}
+                    samples={samples}
+                  />
+                </Fragment>
+              ))}
+            </Tr>
+          )
+        })}
       </Tbody>
     </Table>
   )
