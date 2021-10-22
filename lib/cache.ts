@@ -10,6 +10,7 @@ const fetchAndWriteJson = async (
   cachePath: string
 ) => {
   const res = await fetch(url)
+  await fs.mkdir(path.dirname(hashPath), { recursive: true })
   fs.writeFile(hashPath, hash, 'utf-8')
   const cacheFile = createWriteStream(cachePath, 'utf-8')
   res.body.pipe(cacheFile)
@@ -18,7 +19,6 @@ const fetchAndWriteJson = async (
 
 export const fetchJsonWithCache = async (url: string, hash: string) => {
   const cacheDir = path.resolve('cache')
-  await fs.mkdir(cacheDir).catch(() => {})
   const stem = path.basename(url, '.json')
   const hashPath = path.resolve(cacheDir, `${stem}.hash.txt`)
   const cachePath = path.resolve(cacheDir, `${stem}.json`)
