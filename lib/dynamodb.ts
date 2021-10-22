@@ -6,9 +6,11 @@ import {
 import { marshall, unmarshall } from '@aws-sdk/util-dynamodb'
 
 export async function getDynamoDb({
+  region,
   tableName,
   key,
 }: {
+  region: string
   tableName: string
   key: object
 }) {
@@ -24,7 +26,7 @@ export async function getDynamoDb({
   })
   const client = new DynamoDBClient({
     credentials: { accessKeyId, secretAccessKey },
-    region: 'ap-northeast-1',
+    region,
   })
   const { Item } = await client.send(command)
   if (Item == null) {
@@ -34,9 +36,11 @@ export async function getDynamoDb({
 }
 
 export async function putDynamoDb({
+  region,
   tableName,
   item,
 }: {
+  region: string
   tableName: string
   item: object
 }) {
@@ -51,7 +55,7 @@ export async function putDynamoDb({
   })
   const client = new DynamoDBClient({
     credentials: { accessKeyId, secretAccessKey },
-    region: 'ap-northeast-1',
+    region,
   })
   client.send(command)
 }
