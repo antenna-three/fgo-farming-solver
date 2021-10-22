@@ -1,50 +1,41 @@
-import { MaterialsRecord } from './../interfaces/atlas-academy'
 import { range } from '../utils/range'
-import { Materials } from '../interfaces/atlas-academy'
 import { entries } from '../utils/typed-entries'
 import { ChaldeaState } from '../hooks/create-chaldea-state'
+import { MaterialsForServants } from './get-materials'
 
 export const sumMaterials = (
   state: ChaldeaState,
-  servantMaterials: { [servantId: string]: MaterialsRecord }
+  servantMaterials: MaterialsForServants
 ) => {
-  const sum = new Proxy(
+  const sum = new Proxy<{ [itemId: string | symbol]: number }>(
     {},
     {
-      get: (target: { [itemId: string]: number }, name: string) =>
-        name in target ? target[name] : 0,
+      get: (target, name) => (name in target ? target[name] : 0),
     }
   )
-  const filtered = Object.entries(state).filter(
-    ([id, { disabled }]) => !disabled && id !== 'all'
-  )
-  filtered.forEach(([id, { targets }]) => {
-    const servant = servantMaterials[id]
-    if (servant == null) {
-      console.log(`Materials for Id ${id} is undefined`)
-      return
-    }
-    entries(targets)
-      .filter(([, { disabled }]) => !disabled)
-      .forEach(([target, { ranges }]) => {
-        const materials: Materials = servant[`${target}Materials`]
-        if (materials == null) {
-          console.log(`${target}Materials for Id ${id} is undefined`)
-          return
-        }
-        ranges.forEach(({ start, end }) =>
-          range(start, end).forEach((i) => {
-            if (materials[i] == null) {
-              return
-            }
-            const { items, qp } = materials[i]
-            items.forEach(({ item, amount }) => {
-              sum[item.id] += amount
-            })
-            sum[1] += qp
-          })
+  Object.entries(state)
+    .filter(([id, { disabled }]) => !disabled && id in servantMaterials)
+    .forEach(([id, { targets }]) => {
+      const servant = servantMaterials[id]
+      entries(targets)
+        .filter(
+          ([target, { disabled }]) =>
+            !disabled && `${target}Materials` in servant
         )
-      })
-  })
+        .forEach(([target, { ranges }]) => {
+          const materials = servant[`${target}Materials`]
+          ranges.forEach(({ start, end }) =>
+            range(start, end)
+              .filter((i) => i in materials)
+              .forEach((i) => {
+                const { items, qp } = materials[i]
+                items.forEach(({ item, amount }) => {
+                  sum[item.id] += amount
+                })
+                sum[1] += qp
+              })
+          )
+        })
+    })
   return sum
 }

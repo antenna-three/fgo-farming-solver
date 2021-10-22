@@ -12,7 +12,7 @@ import { Head } from '../components/common/head'
 import { Header } from '../components/common/header'
 import { Footer } from '../components/common/footer'
 
-function MyApp({ Component, pageProps }: AppProps) {
+const MyApp = ({ Component, pageProps }: AppProps) => {
   return (
     <>
       <Head />

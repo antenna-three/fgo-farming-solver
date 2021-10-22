@@ -1,14 +1,29 @@
-import { MaterialsRecord } from '../interfaces/atlas-academy'
+import { MaterialsKey, MaterialsRecord } from '../interfaces/atlas-academy'
 import { getNiceServants } from './get-nice-servants'
+import { entries, fromEntries } from '../utils/typed-entries'
 
-const reduceServant = (servant: MaterialsRecord) =>
-  Object.fromEntries(
-    Object.entries(servant)
+export type ReducedMaterials = {
+  [key: string]: {
+    items: {
+      item: { id: number }
+      amount: number
+    }[]
+    qp: number
+  }
+}
+export type ReducedMaterialsRecord = Record<MaterialsKey, ReducedMaterials>
+export type MaterialsForServants = {
+  [servantId: string]: ReducedMaterialsRecord
+}
+
+const reduceServant = (servant: MaterialsRecord): ReducedMaterialsRecord =>
+  fromEntries(
+    entries(servant)
       .filter(([key]) => key.endsWith('Materials'))
       .map(([key, value]) => [
         key,
-        Object.fromEntries(
-          Object.entries(value).map(([level, { items, qp }]) => [
+        fromEntries(
+          entries(value).map(([level, { items, qp }]) => [
             level,
             {
               items: items.map(({ item, amount }) => ({
@@ -22,9 +37,10 @@ const reduceServant = (servant: MaterialsRecord) =>
       ])
   )
 
-export const getMaterialsForServants = async () => {
-  const servants = await getNiceServants()
-  return Object.fromEntries(
-    servants.map((servant) => [servant.id, reduceServant(servant)])
-  )
-}
+export const getMaterialsForServants =
+  async (): Promise<MaterialsForServants> => {
+    const servants = await getNiceServants()
+    return Object.fromEntries(
+      servants.map((servant) => [servant.id, reduceServant(servant)])
+    )
+  }

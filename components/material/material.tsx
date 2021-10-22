@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import { NextPage } from 'next'
 import {
   Box,
   Breadcrumb,
@@ -8,12 +8,13 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react'
+import React, { useMemo } from 'react'
 import { useChaldeaState } from '../../hooks/use-chaldea-state'
 import { getClassNode } from '../../hooks/use-servant-tree'
 import { useChecked } from '../../hooks/use-checked-from-chaldea-state'
 import { useCheckboxTree } from '../../hooks/use-checkbox-tree'
-import { MaterialsRecord, Servant } from '../../interfaces/atlas-academy'
 import { getJpClassName } from '../../lib/get-jp-class-name'
+import { MaterialProps } from '../../pages/material/[className]'
 import { Link } from '../common/link'
 import { Head } from '../common/head'
 import { BreadcrumbLink } from '../common/breadcrumb-link'
@@ -22,14 +23,10 @@ import { CalcButton } from './material-calc-button'
 import { Pagination } from './material-pagination'
 import { ServantLevelSelect } from './servant-level-select'
 
-export const Material = ({
+export const Material: NextPage<MaterialProps> = ({
   servants,
   materials,
   className,
-}: {
-  servants: Servant[]
-  materials: { [id: string]: MaterialsRecord }
-  className: string
 }) => {
   const ids = servants.map(({ id }) => id.toString())
   const [chaldeaState, setChaldeaState] = useChaldeaState(ids)

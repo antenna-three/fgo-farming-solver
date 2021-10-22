@@ -9,15 +9,16 @@ import { ResultStat } from './result-stat'
 import { Result } from '../../interfaces/api'
 import { ResultAccordion } from './result-accordion'
 import { Title } from '../common/title'
+import { NextPage } from 'next'
 
-export const Page = ({
+export const Page: NextPage<Result> = ({
   params,
   quests,
   items,
   drop_rates,
   total_ap,
   total_lap,
-}: Result) => {
+}) => {
   const router = useRouter()
 
   if (router.isFallback) {

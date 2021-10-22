@@ -1,8 +1,7 @@
 import React, { FormEvent, useCallback, useMemo, useState } from 'react'
 import { useRouter } from 'next/router'
-import { Box, Button, Checkbox, Heading, Text, VStack } from '@chakra-ui/react'
+import { Box, Button, Checkbox, Text, VStack } from '@chakra-ui/react'
 import { useLocalStorage } from '../../hooks/use-local-storage'
-import { Item } from '../../interfaces/atlas-academy'
 import { getLargeCategory } from '../../hooks/get-large-category'
 import { Link } from '../common/link'
 import { ResultAccordion } from './result-accordion'
@@ -11,12 +10,10 @@ import { groupBy } from '../../utils/group-by'
 import { useSelectOnFocus } from '../../hooks/use-select-on-focus'
 import { Title } from '../common/title'
 import { priorityToApiId } from '../../lib/priority-to-api-id'
+import { NextPage } from 'next'
+import { MaterialResultProps } from '../../pages/material/result'
 
-export const Result = ({
-  items,
-}: {
-  items: (Item & { category: string })[]
-}) => {
+export const Result: NextPage<MaterialResultProps> = ({ items }) => {
   const router = useRouter()
   const amounts = useMemo(
     () =>

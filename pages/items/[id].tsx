@@ -2,6 +2,16 @@ import { GetStaticPaths, GetStaticProps } from 'next'
 import { getDrops } from '../../lib/get-drops'
 import { Page } from '../../components/items/item'
 import { getItems } from '../../lib/get-items'
+import { DropRate, Item, Quest } from '../../interfaces/fgodrop'
+import { Item as AtlasItem } from '../../interfaces/atlas-academy'
+
+export type ItemProps = {
+  id: string
+  items: Item[]
+  quests: Quest[]
+  dropRates: DropRate[]
+  atlasItems: AtlasItem[]
+}
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const { items } = await getDrops()
@@ -12,7 +22,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   }
 }
 
-export const getStaticProps: GetStaticProps = async ({ params }) => {
+export const getStaticProps: GetStaticProps<ItemProps> = async ({ params }) => {
   if (typeof params?.id !== 'string') {
     return { notFound: true }
   }

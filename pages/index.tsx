@@ -6,13 +6,12 @@ import {
   Box,
   ChakraComponent,
   Text,
-  Link as ChakraLink,
   LinkProps as ChakraLinkProps,
   Wrap,
 } from '@chakra-ui/react'
 import React from 'react'
 import { motion, TargetAndTransition, Transition } from 'framer-motion'
-import { Link, LinkProps } from '../components/common/link'
+import { LinkProps } from '../components/common/link'
 import { theme } from '../theme'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
 
@@ -51,11 +50,11 @@ const ExternalLinkCard: ChakraComponent<'div', ChakraLinkProps> = ({
   children,
   ...props
 }) => (
-  <ChakraLink href={href} color="inherit" _hover={{}} isExternal>
+  <a href={href} target="_blank" rel="noopenner noreferrer">
     <Card _hover={{ boxShadow: 'lg' }} {...props}>
       {children}
     </Card>
-  </ChakraLink>
+  </a>
 )
 
 const gray = theme.colors.gray[800]

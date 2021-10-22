@@ -1,6 +1,4 @@
-import { Head } from '../../components/common/head'
-import { ItemLink } from '../../components/common/item-link'
-import { getLargeCategory } from '../../hooks/get-large-category'
+import { NextPage } from 'next'
 import React from 'react'
 import {
   Heading,
@@ -11,14 +9,16 @@ import {
   WrapItem,
   Center,
 } from '@chakra-ui/react'
-import { Item } from '../../interfaces/fgodrop'
+import { getLargeCategory } from '../../hooks/get-large-category'
+import { ItemProps } from '../../pages/items/[id]'
 import { groupBy } from '../../utils/group-by'
 import { Title } from '../common/title'
+import { ItemLink } from '../common/item-link'
 
-export const Index = ({ items }: { items: Item[] }) => {
+export const Index: NextPage<ItemProps> = ({ items }) => {
   const itemGroups = Object.entries(groupBy(items, ({ category }) => category))
   const largeItemGroups = Object.entries(
-    groupBy(itemGroups, ([category, group]) => getLargeCategory(category))
+    groupBy(itemGroups, ([category]) => getLargeCategory(category))
   )
 
   return (

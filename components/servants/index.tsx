@@ -1,18 +1,12 @@
 import React from 'react'
 import { Heading, List, ListItem, SimpleGrid, VStack } from '@chakra-ui/react'
-import { Head } from '../common/head'
 import { Link } from '../common/link'
-import { Servant } from '../../interfaces/atlas-academy'
 import { getJpClassName } from '../../lib/get-jp-class-name'
 import { Title } from '../common/title'
+import { NextPage } from 'next'
+import { ServantIndexProps } from '../../pages/servants'
 
-export const Index = ({
-  servantGroups,
-}: {
-  servantGroups: {
-    [className: string]: Servant[]
-  }
-}) => (
+export const Index: NextPage<ServantIndexProps> = ({ servantGroups }) => (
   <VStack spacing={8} align="stretch">
     <Title>サーヴァント一覧</Title>
     <SimpleGrid minChildWidth="300px" spacingX={3} spacingY={8}>

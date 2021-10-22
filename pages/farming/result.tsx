@@ -1,8 +1,10 @@
-import { GetServerSideProps } from 'next'
+import { GetServerSidePropsContext } from 'next'
 import { getDrops } from '../../lib/get-drops'
 import { Page } from '../../components/farming/result'
 
-export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+export const getServerSideProps = async ({
+  query,
+}: GetServerSidePropsContext) => {
   if (query == null) return { notFound: true }
   const _query = query as { items: string; quests: string; queries: string }
   const { items, quests, drop_rates } = await getDrops()

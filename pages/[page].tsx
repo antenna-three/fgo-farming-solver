@@ -1,4 +1,4 @@
-import { GetStaticPaths, GetStaticProps } from 'next'
+import { GetStaticPaths, GetStaticProps, NextPage } from 'next'
 import ReactMarkdown from 'react-markdown'
 import {
   Code,
@@ -64,8 +64,11 @@ export const getStaticPaths: GetStaticPaths = async () => {
   }
 }
 
-export const getStaticProps: GetStaticProps = async ({ params }) => {
-  if (params == null) return { props: { md: '' } }
+type PageProps = { title: string; md: string }
+
+export const getStaticProps: GetStaticProps<PageProps> = async ({ params }) => {
+  if (params?.page != 'string' || !(params.page in pages))
+    return { notFound: true }
   const { path, title } = pages[params.page as keyof typeof pages]
   const md = getMd(path)
   return {
@@ -76,7 +79,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   }
 }
 
-const Page = ({ title, md }: { title: string; md: string }) => (
+const Page: NextPage<PageProps> = ({ title, md }) => (
   <>
     <Head title={title} />
 

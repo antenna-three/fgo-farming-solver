@@ -4,7 +4,7 @@ import { DropRate, Item, Quest } from '../interfaces/fgodrop'
 import { getGzip } from './get-s3'
 import { readJson } from './read-json'
 
-type Drops = {
+export type Drops = {
   items: Item[]
   quests: Quest[]
   drop_rates: DropRate[]

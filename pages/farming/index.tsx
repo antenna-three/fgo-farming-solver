@@ -1,10 +1,9 @@
-import { GetStaticProps } from 'next'
 import { Head } from '../../components/common/head'
 import { ItemForm } from '../../components/farming/item-form'
-import { getDrops } from '../../lib/get-drops'
-import { Quest } from '../../interfaces/fgodrop'
+import { Drops, getDrops } from '../../lib/get-drops'
+import { GetStaticProps, NextPage } from 'next'
 
-export const getStaticProps: GetStaticProps = async (context) => {
+export const getStaticProps: GetStaticProps<Drops> = async () => {
   const props = await getDrops()
 
   return {
@@ -13,13 +12,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
   }
 }
 
-const Index = ({
-  items,
-  quests,
-}: {
-  items: { category: string; name: string; id: string }[]
-  quests: Quest[]
-}) => {
+const Index: NextPage<Drops> = ({ items, quests }) => {
   const description =
     '欲しい素材の数を入力すると、どのフリクエを何周するのが最も効率的かを求めます。'
   return (

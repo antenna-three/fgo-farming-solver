@@ -1,43 +1,37 @@
-import { DropTable } from './drop-table'
-import { useLocalStorage } from '../../hooks/use-local-storage'
+import { NextPage } from 'next'
+import { useRouter } from 'next/router'
 import {
   Box,
   Breadcrumb,
   BreadcrumbItem,
   Center,
   Skeleton,
-  TableContainer,
   Text,
   VStack,
   Wrap,
   WrapItem,
 } from '@chakra-ui/react'
 import React from 'react'
-import { DropRate, DropRateKey, Item, Quest } from '../../interfaces/fgodrop'
-import { Item as AtlasItem } from '../../interfaces/atlas-academy'
-import { useRouter } from 'next/router'
-import { BreadcrumbLink } from '../common/breadcrumb-link'
+import { useLocalStorage } from '../../hooks/use-local-storage'
+import { DropRateKey } from '../../interfaces/fgodrop'
+import { priorityToApiId } from '../../lib/priority-to-api-id'
+import { ItemProps } from '../../pages/items/[id]'
 import { groupBy } from '../../utils/group-by'
 import { orderBy } from '../../utils/order-by'
 import { Title } from '../common/title'
+import { BreadcrumbLink } from '../common/breadcrumb-link'
 import { DropRateKeyRadio } from './drop-rate-key-radio'
 import { DropRateStyleRadio } from './drop-rate-style-radio'
-import { priorityToApiId } from '../../lib/priority-to-api-id'
+import { DropTable } from './drop-table'
 
 export type DropRateStyle = 'ap' | 'rate'
 
-export const Page = ({
+export const Page: NextPage<ItemProps> = ({
   id,
   items,
   quests,
   dropRates,
   atlasItems,
-}: {
-  id: string
-  items: Item[]
-  quests: Quest[]
-  dropRates: DropRate[]
-  atlasItems: AtlasItem[]
 }) => {
   const [dropRateKey, setDropRateKey] = useLocalStorage<DropRateKey>(
     'dropRateKey',

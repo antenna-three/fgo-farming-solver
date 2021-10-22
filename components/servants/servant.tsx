@@ -2,21 +2,20 @@ import React from 'react'
 import {
   Breadcrumb,
   BreadcrumbItem,
-  Divider,
   Heading,
   HStack,
   SimpleGrid,
-  StackDivider,
   Text,
   VStack,
-  Wrap,
 } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { BreadcrumbLink } from '../common/breadcrumb-link'
 import { MaterialList } from './material-list'
-import { NiceServant, TargetKey } from '../../interfaces/atlas-academy'
+import { TargetKey } from '../../interfaces/atlas-academy'
 import { getJpClassName } from '../../lib/get-jp-class-name'
 import { Title } from '../common/title'
+import { NextPage } from 'next'
+import { ServantProps } from '../../pages/servants/[id]'
 
 const keys: { key: TargetKey; label: string }[] = [
   { key: 'ascension', label: '霊基再臨' },
@@ -24,7 +23,7 @@ const keys: { key: TargetKey; label: string }[] = [
   { key: 'appendSkill', label: 'アペンドスキル強化' },
 ]
 
-export const Page = ({ servant }: { servant: NiceServant }) => {
+export const Page: NextPage<ServantProps> = ({ servant }) => {
   const router = useRouter()
   if (router.isFallback) {
     return <Text>読み込み中...</Text>

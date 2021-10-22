@@ -18,7 +18,7 @@ const messages: { [code: number]: string | string[] } = {
   500: ['サーバーに問題があります。', 'サイト管理者にお問い合わせください。'],
 }
 
-export default function Error({
+const Error = ({
   statusCode,
   title,
   message,
@@ -26,7 +26,7 @@ export default function Error({
   statusCode: number
   title?: string
   message?: string | string[]
-}) {
+}) => {
   title = title || statusCodes[statusCode] || 'An unexpected error has occured'
   message = message || messages[statusCode]
   return (
@@ -50,3 +50,5 @@ export default function Error({
     </>
   )
 }
+
+export default Error

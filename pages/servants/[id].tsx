@@ -2,6 +2,9 @@ import { GetStaticPaths, GetStaticProps } from 'next'
 import { getNiceServants } from '../../lib/get-nice-servants'
 import { getServants } from '../../lib/get-servants'
 import { Page } from '../../components/servants/servant'
+import { NiceServant } from '../../interfaces/atlas-academy'
+
+export type ServantProps = { servant: NiceServant }
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const servants = await getServants()
@@ -11,7 +14,9 @@ export const getStaticPaths: GetStaticPaths = async () => {
   return { paths, fallback: true }
 }
 
-export const getStaticProps: GetStaticProps = async ({ params }) => {
+export const getStaticProps: GetStaticProps<ServantProps> = async ({
+  params,
+}) => {
   const servant = await getNiceServants().then((servants) =>
     servants.find(({ id }) => id.toString() == params?.id)
   )

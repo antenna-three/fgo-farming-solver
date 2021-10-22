@@ -1,9 +1,7 @@
 import React from 'react'
 import { Center, Heading, VStack, Wrap, WrapItem } from '@chakra-ui/react'
-import { Head } from '../common/head'
 import { CalcButton } from './material-calc-button'
 import { MsIo } from './ms-io'
-import { Item, MaterialsRecord, Servant } from '../../interfaces/atlas-academy'
 import { useLocalStorage } from '../../hooks/use-local-storage'
 import { useServantTree } from '../../hooks/use-servant-tree'
 import { Pagination } from './material-pagination'
@@ -15,15 +13,13 @@ import { useChaldeaState } from '../../hooks/use-chaldea-state'
 import { ServantLevelSelect } from './servant-level-select'
 import { useAllChaldeaState } from '../../hooks/use-all-chaldea-state'
 import { Title } from '../common/title'
+import { NextPage } from 'next'
+import { MaterialIndexProps } from '../../pages/material'
 
-export const Index = ({
+export const Index: NextPage<MaterialIndexProps> = ({
   servants,
   materials,
   items,
-}: {
-  servants: Servant[]
-  materials: { [id: string]: MaterialsRecord }
-  items: Item[]
 }) => {
   const ids = servants.map(({ id }) => id.toString())
   const [chaldeaState, setChaldeaState] = useChaldeaState(ids)
