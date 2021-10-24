@@ -4,8 +4,8 @@ module.exports = {
   i18n: {
     defaultLocale: 'ja',
     locales: ['en', 'ja'],
+    localePath: path.resolve('./public/locales'),
   },
   localeExtension: 'yml',
-  localePath: path.resolve('./public/locales'),
   ns: ['common', 'farming', 'items', 'material', 'servants'],
 }
