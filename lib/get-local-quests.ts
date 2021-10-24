@@ -18,8 +18,8 @@ export const getLocalQuests = async <Q extends Quest>(
       section == '修練場'
         ? 'Training Ground'
         : section.replace(/第(.+)部/, 'Section $1')
-    const enArea = getArea(wars, id) || area
-    const enName = translation[name]
+    const enArea = getArea(wars, id) ?? area
+    const enName = translation[name] ?? name
     return { id, section: enSection, area: enArea, name: enName, ...rest } as Q
   })
 }
