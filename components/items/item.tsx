@@ -27,7 +27,6 @@ import { useTranslation } from 'react-i18next'
 export type DropRateStyle = 'ap' | 'rate'
 
 export const Page: NextPage<ItemProps> = ({ id, items, quests, dropRates }) => {
-  const itemIndexes = Object.fromEntries(items.map((item) => [item.id, item]))
   const [dropRateKey, setDropRateKey] = useLocalStorage<DropRateKey>(
     'dropRateKey',
     '1',
@@ -62,6 +61,7 @@ export const Page: NextPage<ItemProps> = ({ id, items, quests, dropRates }) => {
       : filteredQuests.sort(
           orderBy(({ id, ap }) => ap / getDropRate(id), 'asc')
         )
+  const itemIndexes = Object.fromEntries(items.map((item) => [item.id, item]))
   const title = t('title', { name: itemIndexes[id].name })
 
   return (

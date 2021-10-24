@@ -13,9 +13,11 @@ export type ItemProps = {
   dropRates: DropRate[]
 }
 
-export const getStaticPaths: GetStaticPaths = async ({}) => {
+export const getStaticPaths: GetStaticPaths = async ({ locales = ['ja'] }) => {
   const { items } = await getDrops()
-  const paths = items.map(({ id }) => ({ params: { id: id as string } }))
+  const paths = items.flatMap(({ id }) =>
+    locales.map((locale) => ({ params: { id }, locale }))
+  )
   return {
     paths,
     fallback: true,
