@@ -1,0 +1,8 @@
+module.exports = {
+    i18n: {
+        defaultLocale: 'ja',
+        locales: ['en', 'ja'],
+    },
+    localeExtension: 'yml',
+    reloadOnPrerender: true
+}

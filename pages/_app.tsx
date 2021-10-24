@@ -1,12 +1,5 @@
 import type { AppProps } from 'next/app'
-import {
-  Box,
-  ChakraProvider,
-  Container,
-  Spacer,
-  VStack,
-} from '@chakra-ui/react'
-import React from 'react'
+import { appWithTranslation } from 'next-i18next'
 import { theme } from '../theme'
 import { Head } from '../components/common/head'
 import { Header } from '../components/common/header'
@@ -33,4 +26,4 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
     </>
   )
 }
-export default MyApp
+export default appWithTranslation(MyApp)
