@@ -5,7 +5,8 @@ import fetch from 'node-fetch'
 export const getQuestTranslation = async (): Promise<{
   [jpQuestName: string]: string
 }> => {
-  const cachePath = path.resolve('cache', 'quests.json')
+  const cacheDir = path.resolve('cache')
+  const cachePath = path.resolve(cacheDir, 'quests.json')
   return fs
     .readFile(cachePath, 'utf-8')
     .then((value) => JSON.parse(value))
@@ -23,7 +24,9 @@ export const getQuestTranslation = async (): Promise<{
           .slice(1)
           .map(([enName, jpName]) => [jpName, enName])
       )
-      fs.writeFile(cachePath, JSON.stringify(map), 'utf-8')
+      fs.mkdir(cacheDir)
+        .then(() => fs.writeFile(cachePath, JSON.stringify(map), 'utf-8'))
+        .catch((e) => console.error(e))
       return map
     })
 }
