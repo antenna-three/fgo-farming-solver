@@ -7,8 +7,10 @@ import {
   AlertDialogFooter,
   Button,
   HStack,
+  Text,
 } from '@chakra-ui/react'
 import React, { useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 
 export const ResetAlertDialog = ({
   isOpen,
@@ -20,6 +22,7 @@ export const ResetAlertDialog = ({
   onReset: () => void
 }) => {
   const cancelRef = useRef(null)
+  const { t } = useTranslation('farming')
   return (
     <AlertDialog
       isOpen={isOpen}
@@ -28,14 +31,15 @@ export const ResetAlertDialog = ({
     >
       <AlertDialogOverlay>
         <AlertDialogContent>
-          <AlertDialogHeader>入力内容のリセット</AlertDialogHeader>
+          <AlertDialogHeader>{t('reset-form-values')}</AlertDialogHeader>
           <AlertDialogBody>
-            本当にリセットしますか？「入力内容のエクスポート」を使えば入力内容をブックマークに保存することができます。
+            <Text>{t('do-you-reset')}</Text>
+            <Text>{t('you-can-use-export')}</Text>
           </AlertDialogBody>
           <AlertDialogFooter>
             <HStack>
               <Button ref={cancelRef} onClick={onClose}>
-                キャンセル
+                {t('キャンセル')}
               </Button>
               <Button
                 colorScheme="red"
@@ -44,7 +48,7 @@ export const ResetAlertDialog = ({
                   onClose()
                 }}
               >
-                リセット
+                {t('リセット')}
               </Button>
             </HStack>
           </AlertDialogFooter>

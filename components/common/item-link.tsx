@@ -12,10 +12,10 @@ const itemColors: { [key: string]: string } = {
   7: 'item.gold',
 }
 
-export const ItemLink = ({ item }: { item: Item }) => (
+export const ItemLink = ({ id, name }: { id: string; name: string }) => (
   <>
-    <Link href={`/items/${item.id}`} color={itemColors[item.id[0]]}>
-      {item.name}
+    <Link href={`/items/${id}`} color={itemColors[id[0]]}>
+      {name}
     </Link>
   </>
 )

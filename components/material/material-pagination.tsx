@@ -1,21 +1,24 @@
 import { Link } from '../common/link'
-import { jpClassNames } from '../../constants/jp-class-names'
 import { HStack, Stack } from '@chakra-ui/layout'
 import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons'
 import React from 'react'
 import { Box, Text } from '@chakra-ui/react'
 import { PageSelect } from './material-page-select'
+import { classNames } from '../../lib/class-names'
+import { useRouter } from 'next/router'
 
 export const Pagination = ({
   currentClassName,
 }: {
   currentClassName?: string
 }) => {
-  const classNames = Object.keys(jpClassNames)
-  const currentIndex = classNames.indexOf(currentClassName || '')
+  const { locale } = useRouter()
+  const localClassNames = classNames[locale ?? 'ja']
+  const keys = Object.keys(localClassNames)
+  const currentIndex = keys.indexOf(currentClassName || '')
   const prevClassName =
-    currentIndex < 1 ? classNames.slice(-1)[0] : classNames[currentIndex - 1]
-  const nextClassName = classNames[currentIndex + 1] || classNames[0]
+    currentIndex < 1 ? keys.slice(-1)[0] : keys[currentIndex - 1]
+  const nextClassName = keys[currentIndex + 1] ?? localClassNames[0]
   return (
     <Stack
       as="nav"
@@ -27,7 +30,7 @@ export const Pagination = ({
       <Link href={'/material/' + prevClassName}>
         <HStack>
           <ChevronLeftIcon />
-          <Text pr={5}>{jpClassNames[prevClassName]}</Text>
+          <Text pr={5}>{localClassNames[prevClassName]}</Text>
         </HStack>
       </Link>
 
@@ -37,7 +40,7 @@ export const Pagination = ({
 
       <Link href={'/material/' + nextClassName}>
         <HStack>
-          <Text pl={5}>{jpClassNames[nextClassName]}</Text>
+          <Text pl={5}>{localClassNames[nextClassName]}</Text>
           <ChevronRightIcon />
         </HStack>
       </Link>

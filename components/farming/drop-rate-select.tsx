@@ -6,28 +6,10 @@ import {
   RadioGroup,
   VStack,
 } from '@chakra-ui/react'
-import React, { Fragment } from 'react'
+import React from 'react'
+import { useTranslation } from 'react-i18next'
 
-const options = [
-  {
-    value: 'add',
-    label: '旧データ＋新データ',
-    description:
-      'ドロップ率が上がる前と上がった後のデータを合算します。旧データと新データの中間の結果になります。',
-  },
-  {
-    value: '1',
-    label: '旧データを優先',
-    description:
-      'ドロップ率が上がる前のデータを優先します。サンプル数が大きく信頼度が高いですが、ドロップ率が現在より低くなります。',
-  },
-  {
-    value: '2',
-    label: '新データを優先',
-    description:
-      'ドロップ率が上がった後のデータを優先します。最新のドロップ率を反映しますが、サンプル数が小さく信頼度が低い場合があります。',
-  },
-]
+const options = ['add', '1', '2']
 
 export const DropRateSelect = ({
   dropMergeMethod,
@@ -36,15 +18,15 @@ export const DropRateSelect = ({
   dropMergeMethod: string
   setDropMergeMethod: (dropMergeMethod: string) => void
 }) => {
+  const { t } = useTranslation('farming')
   return (
     <FormControl as="fieldset">
-      <FormLabel as="legend">ドロップ率</FormLabel>
+      <FormLabel as="legend">{t('ドロップ率')}</FormLabel>
       <RadioGroup value={dropMergeMethod} onChange={setDropMergeMethod}>
         <VStack alignItems="start" spacing={4}>
-          {options.map(({ value, label, description }) => (
+          {options.map((value) => (
             <VStack key={value} align="start">
-              <Radio value={value}>{label}</Radio>
-              <FormHelperText pl={6}>{description}</FormHelperText>
+              <Radio value={value}>{t(value)}</Radio>
             </VStack>
           ))}
         </VStack>

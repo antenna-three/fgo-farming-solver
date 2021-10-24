@@ -8,6 +8,7 @@ import { getItems } from '../../lib/get-items'
 import { revalidate } from '../../constants/revalidate'
 import { Index } from '../../components/material'
 import { Item, Servant } from '../../interfaces/atlas-academy'
+import { serverSideTranslations } from '../../lib/server-side-translations'
 
 export type MaterialIndexProps = {
   servants: Servant[]
@@ -15,14 +16,17 @@ export type MaterialIndexProps = {
   items: Item[]
 }
 
-export const getStaticProps: GetStaticProps<MaterialIndexProps> = async () => {
-  const [servants, materials, items] = await Promise.all([
-    getServants(),
+export const getStaticProps: GetStaticProps<MaterialIndexProps> = async ({
+  locale,
+}) => {
+  const [servants, materials, items, translations] = await Promise.all([
+    getServants(locale),
     getMaterialsForServants(),
-    getItems(),
+    getItems(locale),
+    serverSideTranslations(locale),
   ])
   return {
-    props: { servants, materials, items },
+    props: { servants, materials, items, ...translations },
     revalidate,
   }
 }

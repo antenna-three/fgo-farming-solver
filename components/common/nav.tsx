@@ -10,51 +10,63 @@ import {
   MenuList,
 } from '@chakra-ui/react'
 import React from 'react'
+import { useRouter } from 'next/router'
 
-const menuGroups = [
+export const menuGroups = [
   {
     title: 'Tools',
     items: [
-      { href: '/material', label: '育成素材計算機' },
-      { href: '/farming', label: '周回ソルバー' },
-      { href: '/servants', label: 'サーヴァント一覧' },
-      { href: '/items', label: 'アイテム一覧' },
+      {
+        href: '/material',
+        label: { ja: '育成素材計算機', en: 'Material Calculator' },
+      },
+      { href: '/farming', label: { ja: '周回ソルバー', en: 'Farming Solver' } },
+      {
+        href: '/servants',
+        label: { ja: 'サーヴァント一覧', en: 'Sarvant List' },
+      },
+      { href: '/items', label: { ja: 'アイテム一覧', en: 'Item List' } },
     ],
   },
   {
     title: 'Docs',
     items: [
-      { href: '/docs', label: '使い方' },
-      { href: '/news', label: 'お知らせ' },
+      { href: '/docs', label: { ja: '使い方', en: 'About' } },
+      { href: '/news', label: { ja: 'お知らせ', en: 'News' } },
     ],
   },
 ]
 
-export const Nav = () => (
-  <nav>
-    <HStack alignItems="center">
-      <Menu>
-        <MenuButton
-          as={IconButton}
-          aria-label="Menu"
-          icon={<HamburgerIcon />}
-          size="lg"
-          variant="ghost"
-        />
-        <MenuList>
-          {menuGroups.map(({ title, items }) => (
-            <MenuGroup title={title} key={title}>
-              {items.map(({ href, label }) => (
-                <NextLink href={href} key={href}>
-                  <a>
-                    <MenuItem>{label}</MenuItem>
-                  </a>
-                </NextLink>
-              ))}
-            </MenuGroup>
-          ))}
-        </MenuList>
-      </Menu>
-    </HStack>
-  </nav>
-)
+export const Nav = () => {
+  const { locale } = useRouter()
+  return (
+    <nav>
+      <HStack alignItems="center">
+        <Menu>
+          <MenuButton
+            as={IconButton}
+            aria-label="Menu"
+            icon={<HamburgerIcon />}
+            size="lg"
+            variant="ghost"
+          />
+          <MenuList>
+            {menuGroups.map(({ title, items }) => (
+              <MenuGroup title={title} key={title}>
+                {items.map(({ href, label }) => (
+                  <NextLink href={href} key={href}>
+                    <a>
+                      <MenuItem>
+                        {label[(locale ?? 'ja') as 'en' | 'ja']}
+                      </MenuItem>
+                    </a>
+                  </NextLink>
+                ))}
+              </MenuGroup>
+            ))}
+          </MenuList>
+        </Menu>
+      </HStack>
+    </nav>
+  )
+}

@@ -2,6 +2,9 @@ import { Heading, HStack, Text, VStack } from '@chakra-ui/react'
 import { Link } from '../components/common/link'
 import React from 'react'
 import { Head } from '../components/common/head'
+import { useRouter } from 'next/router'
+import { useTranslation } from 'react-i18next'
+import { TopLink } from '../components/common/top-link'
 
 const statusCodes: { [code: number]: string } = {
   400: 'Bad Request',
@@ -10,12 +13,21 @@ const statusCodes: { [code: number]: string } = {
   500: 'Internal Server Error',
 }
 
-const messages: { [code: number]: string | string[] } = {
-  404: [
-    'ページが見つかりませんでした。',
-    'URLが間違っている可能性があります。',
-  ],
-  500: ['サーバーに問題があります。', 'サイト管理者にお問い合わせください。'],
+const messages: { [code: number]: { [locale: string]: string | string[] } } = {
+  404: {
+    ja: [
+      'ページが見つかりませんでした。',
+      'URLが間違っている可能性があります。',
+    ],
+    en: ['The page was not found.', 'Is your URL valid?'],
+  },
+  500: {
+    ja: ['サーバーに問題があります。', 'サイト管理者にお問い合わせください。'],
+    en: [
+      'An error occured on the server.',
+      'Ask the website administrator for more information.',
+    ],
+  },
 }
 
 const Error = ({
@@ -27,8 +39,10 @@ const Error = ({
   title?: string
   message?: string | string[]
 }) => {
+  const { locale } = useRouter()
   title = title || statusCodes[statusCode] || 'An unexpected error has occured'
-  message = message || messages[statusCode]
+  message ||= messages[statusCode][locale ?? 'ja']
+
   return (
     <>
       <Head title={`${statusCode} ${title}`} />
@@ -44,8 +58,7 @@ const Error = ({
         ) : (
           <Text>{message}</Text>
         )}
-
-        <Link href="/">トップに戻る</Link>
+        <TopLink />
       </VStack>
     </>
   )

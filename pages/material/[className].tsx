@@ -1,4 +1,4 @@
-import { GetStaticPaths, GetStaticProps } from 'next'
+import { GetStaticPaths, GetStaticProps, NextPage } from 'next'
 import { getServants } from '../../lib/get-servants'
 import {
   getMaterialsForServants,
@@ -7,6 +7,7 @@ import {
 import { revalidate } from '../../constants/revalidate'
 import { Material } from '../../components/material/material'
 import { Servant } from '../../interfaces/atlas-academy'
+import { serverSideTranslations } from '../../lib/server-side-translations'
 
 export type MaterialProps = {
   servants: Servant[]
@@ -14,19 +15,32 @@ export type MaterialProps = {
   className: string
 }
 
-export const getStaticPaths: GetStaticPaths = async () => {
+export const getStaticPaths: GetStaticPaths = async ({ locales }) => {
   const servants = await getServants()
-  const paths = servants.map(({ className }) => ({ params: { className } }))
+  const classNames = Array.from(
+    new Set<string>(servants.map(({ className }) => className))
+  )
+  const paths = classNames.flatMap((className) =>
+    (locales ?? ['ja']).map((locale) => ({ params: { className }, locale }))
+  )
   return { paths, fallback: false }
 }
 
-export const getStaticProps: GetStaticProps<MaterialProps> = async (
-  context
-) => {
-  const { className } = context.params as { className: string }
-  const servants = await getServants()
-  const materials = await getMaterialsForServants()
-  return { props: { servants, materials, className }, revalidate }
+export const getStaticProps: GetStaticProps<MaterialProps> = async ({
+  params,
+  locale,
+}) => {
+  if (typeof params?.className != 'string') return { notFound: true }
+  const { className } = params
+  const [servants, materials, translations] = await Promise.all([
+    getServants(locale),
+    getMaterialsForServants(),
+    serverSideTranslations(locale),
+  ])
+  return {
+    props: { servants, materials, className, ...translations },
+    revalidate,
+  }
 }
 
 export default Material

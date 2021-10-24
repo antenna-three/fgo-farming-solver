@@ -3,6 +3,9 @@ import React, { Fragment } from 'react'
 import { DropRate, DropRateKey, Item, Quest } from '../../interfaces/fgodrop'
 import { ItemLink } from '../common/item-link'
 import { DropTd } from './drop-td'
+import { useTranslation } from 'react-i18next'
+import { useRouter } from 'next/router'
+import { Localized } from '../../lib/get-local-items'
 
 type DropRateStyle = 'ap' | 'rate'
 
@@ -14,12 +17,13 @@ export const DropTable = ({
   dropRateStyle,
   ...rest
 }: {
-  itemIndexes: { [key: string]: Item }
+  itemIndexes: { [id: string]: Localized<Item> }
   quests: Quest[]
   dropGroups: { [key: string]: DropRate[] }
   dropRateKey: DropRateKey
   dropRateStyle: DropRateStyle
 } & TableProps) => {
+  const { t } = useTranslation('items')
   const colSpan =
     Object.values(dropGroups).reduce(
       (acc, cur) => (cur.length > acc ? cur.length : acc),
@@ -30,11 +34,11 @@ export const DropTable = ({
     <Table {...rest}>
       <Thead>
         <Tr>
-          <Th>エリア</Th>
-          <Th>クエスト</Th>
-          <Th isNumeric>サンプル数</Th>
+          <Th>{t('エリア')}</Th>
+          <Th>{t('クエスト')}</Th>
+          <Th isNumeric>{t('サンプル数')}</Th>
           <Th colSpan={colSpan}>
-            ドロップ ({dropRateStyle == 'rate' ? '%' : 'AP/個'})
+            {t('ドロップ')} ({dropRateStyle == 'rate' ? '%' : 'AP/個'})
           </Th>
         </Tr>
       </Thead>
@@ -49,7 +53,10 @@ export const DropTable = ({
               {dropGroups[quest.id].map((row) => (
                 <Fragment key={row.item_id}>
                   <Td pr={0}>
-                    <ItemLink item={itemIndexes[row.item_id]} />
+                    <ItemLink
+                      id={row.item_id}
+                      name={itemIndexes[row.item_id].name}
+                    />
                   </Td>
                   <DropTd
                     dropRate={row[`drop_rate_${dropRateKey}`]}

@@ -2,7 +2,6 @@ import React, { FormEvent, useCallback, useMemo, useState } from 'react'
 import { useRouter } from 'next/router'
 import { Box, Button, Checkbox, Text, VStack } from '@chakra-ui/react'
 import { useLocalStorage } from '../../hooks/use-local-storage'
-import { getLargeCategory } from '../../hooks/get-large-category'
 import { Link } from '../common/link'
 import { ResultAccordion } from './result-accordion'
 import { TargetCategorySelect } from './target-category-select'
@@ -12,6 +11,8 @@ import { Title } from '../common/title'
 import { priorityToApiId } from '../../lib/priority-to-api-id'
 import { NextPage } from 'next'
 import { MaterialResultProps } from '../../pages/material/result'
+import { useTranslation } from 'react-i18next'
+import { Item } from '../../interfaces/atlas-academy'
 
 export const Result: NextPage<MaterialResultProps> = ({ items }) => {
   const router = useRouter()
@@ -33,7 +34,22 @@ export const Result: NextPage<MaterialResultProps> = ({ items }) => {
     Object.fromEntries(filteredItems.map((item) => [item.id, 0]))
   )
   const [hideSufficient, setHideSufficient] = useState(false)
-  const [targetCategories, setTargetCategories] = useState(['強化素材'])
+  const itemGroup = useMemo(
+    () =>
+      Object.entries(
+        groupBy(filteredItems, ({ largeCategory }) => largeCategory)
+      ).map(([largeCategory, items]): [string, [string, Item[]][]] => [
+        largeCategory,
+        Object.entries(groupBy(items, ({ category }) => category)),
+      ]),
+    [filteredItems]
+  )
+  const largeCategories = itemGroup
+    .map(([largeCategory]) => largeCategory)
+    .filter((largeCategory) => largeCategory != 'QP')
+  const { locale } = useRouter()
+  const commonItems = locale == 'en' ? 'Common Items' : '強化素材'
+  const [targetCategories, setTargetCategories] = useState([commonItems])
   const onChangeSufficient = useCallback(
     (event: FormEvent<HTMLInputElement>) => {
       setHideSufficient(event.currentTarget.checked)
@@ -43,7 +59,7 @@ export const Result: NextPage<MaterialResultProps> = ({ items }) => {
   const onChange = useCallback(
     (event: FormEvent<HTMLInputElement>) => {
       const { name, valueAsNumber } = event.currentTarget
-      setPosession((state) => ({ ...state, [name]: valueAsNumber || 0 }))
+      setPosession((state) => ({ ...state, [name]: valueAsNumber ?? 0 }))
     },
     [setPosession]
   )
@@ -61,7 +77,7 @@ export const Result: NextPage<MaterialResultProps> = ({ items }) => {
           (item) =>
             deficiencies[item.id] > 0 &&
             priorityToApiId(item.priority) &&
-            targetCategories.includes(getLargeCategory(item.category))
+            targetCategories.includes(item.largeCategory)
         )
         .map(
           (item) => priorityToApiId(item.priority) + ':' + deficiencies[item.id]
@@ -75,23 +91,18 @@ export const Result: NextPage<MaterialResultProps> = ({ items }) => {
     [filteredItems, router, deficiencies, targetCategories]
   )
   const selectOnFocus = useSelectOnFocus()
-  const itemGroup = Object.entries(
-    groupBy(
-      Object.entries(groupBy(filteredItems, (item) => item.category)),
-      ([category, _items]) => getLargeCategory(category)
-    )
-  )
+  const { t } = useTranslation('material')
 
   return (
     <form onSubmit={goSolver}>
       <VStack spacing={8} alignItems="center">
-        <Title>アイテム必要数</Title>
+        <Title>{t('アイテム必要数')}</Title>
         <Checkbox checked={hideSufficient} onChange={onChangeSufficient}>
-          不足している素材のみ表示
+          {t('不足している素材のみ表示')}
         </Checkbox>
-        <Box w="xl" maxW="90vw">
+        <Box w="xl" maxW="100vw">
           {itemGroup.length == 0 ? (
-            <Text>表示するアイテムがありません。</Text>
+            <Text>{t('表示するアイテムがありません。')}</Text>
           ) : (
             <ResultAccordion
               itemGroup={itemGroup}
@@ -106,18 +117,14 @@ export const Result: NextPage<MaterialResultProps> = ({ items }) => {
         </Box>
         <Box>
           <TargetCategorySelect
+            categories={largeCategories}
             targetCategories={targetCategories}
             setTargetCategories={setTargetCategories}
           />
         </Box>
-
         <Button p={8} type="submit" colorScheme="blue">
-          クエスト周回数を求める
+          {t('クエスト周回数を求める')}
         </Button>
-
-        <Text>
-          <Link href="/material">サーヴァント選択に戻る</Link>
-        </Text>
       </VStack>
     </form>
   )

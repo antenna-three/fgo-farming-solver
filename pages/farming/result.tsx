@@ -1,13 +1,24 @@
 import { GetServerSidePropsContext } from 'next'
 import { getDrops } from '../../lib/get-drops'
 import { Page } from '../../components/farming/result'
+import { serverSideTranslations } from '../../lib/server-side-translations'
+import { getLocalItems } from '../../lib/get-local-items'
+import { getLocalQuests } from '../../lib/get-local-quests'
 
 export const getServerSideProps = async ({
   query,
+  locale,
 }: GetServerSidePropsContext) => {
   if (query == null) return { notFound: true }
   const _query = query as { items: string; quests: string; queries: string }
-  const { items, quests, drop_rates } = await getDrops()
+  const [{ items, quests, drop_rates }, translations] = await Promise.all([
+    getDrops(),
+    serverSideTranslations(locale),
+  ])
+  const [localItems, localQuests] = await Promise.all([
+    getLocalItems(items, locale),
+    getLocalQuests(quests, locale),
+  ])
   const props = {
     params: {
       items: _query.queries
@@ -48,7 +59,15 @@ export const getServerSideProps = async ({
     total_ap: props.quests.reduce((acc, { ap, lap }) => acc + ap * lap, 0),
   }
 
-  return { props: { ...props, ..._props } }
+  return {
+    props: {
+      items: localItems,
+      quests: localQuests,
+      drop_rates,
+      ..._props,
+      ...translations,
+    },
+  }
 }
 
 export default Page

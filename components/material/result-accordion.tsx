@@ -7,6 +7,7 @@ import {
   Text,
 } from '@chakra-ui/react'
 import React, { FormEventHandler } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Item } from '../../interfaces/atlas-academy'
 import { ResultTable } from './result-table'
 
@@ -27,6 +28,7 @@ export const ResultAccordion = ({
   onChange: FormEventHandler
   onFocus: FormEventHandler
 }) => {
+  const { t } = useTranslation('common')
   return (
     <Accordion
       defaultIndex={[
@@ -38,7 +40,7 @@ export const ResultAccordion = ({
         <AccordionItem key={category}>
           <AccordionButton>
             <AccordionIcon />
-            <Text>{category}</Text>
+            <Text>{t(category)}</Text>
           </AccordionButton>
           <AccordionPanel px={0}>
             <ResultTable

@@ -14,6 +14,10 @@ import { motion, TargetAndTransition, Transition } from 'framer-motion'
 import { LinkProps } from '../components/common/link'
 import { theme } from '../theme'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
+import { useTranslation } from 'react-i18next'
+import { GetStaticProps } from 'next'
+import { serverSideTranslations } from '../lib/server-side-translations'
+import { useRouter } from 'next/router'
 
 const MotionSpan = motion<any>(chakra.span)
 
@@ -24,7 +28,7 @@ const NoWrap: ChakraComponent<'span', {}> = ({ children, ...props }) => (
 )
 
 const Card: ChakraComponent<'div', {}> = ({ children, ...props }) => (
-  <Box p={5} maxW="xs" borderWidth="thin" rounded="lg" {...props}>
+  <Box p={5} w="xs" borderWidth="thin" rounded="lg" {...props}>
     <VStack spacing={5} align="start">
       {children}
     </VStack>
@@ -78,10 +82,14 @@ const transition: Transition = {
 }
 
 const Index = () => {
+  const { t } = useTranslation('common')
+  const { locale } = useRouter()
+  const space = locale == 'en' ? ' ' : ''
+
   return (
     <VStack spacing={12} mt={12}>
       <VStack size="xl" textAlign="center">
-        <Heading as="h1">
+        <Heading as="h1" size="xl">
           <MotionSpan
             animate={blueAnimate}
             transition={{
@@ -89,17 +97,22 @@ const Index = () => {
               delay: 0,
             }}
           >
-            <NoWrap>サーヴァント</NoWrap>
-            <NoWrap>育成目標</NoWrap>
+            <NoWrap>{t('サーヴァント')}</NoWrap>
+            {space}
+            <NoWrap>{t('育成目標')}</NoWrap>
+            {space}
           </MotionSpan>
-          <NoWrap fontSize="0.8em">から</NoWrap>
+          <NoWrap fontSize="0.8em">{t('から')}</NoWrap>
+          {space}
           <MotionSpan
             animate={greenAnimate}
             transition={{ ...transition, delay: 2 }}
           >
-            <NoWrap>アイテム必要数</NoWrap>
+            <NoWrap>{t('アイテム必要数')}</NoWrap>
+            {space}
           </MotionSpan>
-          <chakra.span fontSize="0.8em">を</chakra.span>
+          <chakra.span fontSize="0.8em">{t('を')}</chakra.span>
+          {space}
         </Heading>
         <Heading>
           <MotionSpan
@@ -109,9 +122,11 @@ const Index = () => {
               delay: 4,
             }}
           >
-            <NoWrap>アイテム必要数</NoWrap>
+            <NoWrap>{t('アイテム必要数')}</NoWrap>
+            {space}
           </MotionSpan>
-          <NoWrap fontSize="0.8em">から</NoWrap>
+          <NoWrap fontSize="0.8em">{t('から')}</NoWrap>
+          {space}
           <MotionSpan
             animate={orangeAnimate}
             transition={{
@@ -119,33 +134,32 @@ const Index = () => {
               delay: 6,
             }}
           >
-            <NoWrap>クエスト周回数</NoWrap>
+            <NoWrap>{t('クエスト周回数')}</NoWrap>
+            {space}
           </MotionSpan>
-          <chakra.span fontSize="0.8em">を</chakra.span>
-          <NoWrap>求めます</NoWrap>
+          <chakra.span fontSize="0.8em">{t('を')}</chakra.span>
+          <NoWrap>{t('求めます')}</NoWrap>
         </Heading>
       </VStack>
       <Wrap justify="center" spacing={4}>
         <LinkCard href="/material">
-          <Heading size="lg">育成素材計算機</Heading>
-          <Text>育成したいサーヴァントから、必要な素材の合計を求めます。</Text>
+          <Heading size="lg">{t('育成素材計算機')}</Heading>
+          <Text>{t('material-calculator-description')}</Text>
         </LinkCard>
 
         <LinkCard href="/farming">
-          <Heading size="lg">周回ソルバー</Heading>
-          <Text>
-            欲しい素材の数から、最も効率的なクエスト周回数を求めます。
-          </Text>
+          <Heading size="lg">{t('周回ソルバー')}</Heading>
+          <Text>{t('farming-solver-description')}</Text>
         </LinkCard>
 
         <LinkCard href="/servants">
-          <Heading size="lg">サーヴァント一覧</Heading>
-          <Text>サーヴァントの育成に必要な素材を確認できます。</Text>
+          <Heading size="lg">{t('サーヴァント一覧')}</Heading>
+          <Text>{t('servant-list-description')}</Text>
         </LinkCard>
 
         <LinkCard href="/items">
-          <Heading size="lg">アイテム一覧</Heading>
-          <Text>アイテムのクエストごとのドロップ率を確認できます。</Text>
+          <Heading size="lg">{t('アイテム一覧')}</Heading>
+          <Text>{t('item-list-description')}</Text>
         </LinkCard>
 
         <ExternalLinkCard
@@ -154,13 +168,18 @@ const Index = () => {
           )}`}
         >
           <Heading size="lg">
-            みんなの結果
+            {t('みんなの結果')}
             <ExternalLinkIcon mx={2} />
           </Heading>
-          <Text>Twitterに投稿された計算結果を見られます。</Text>
+          <Text>{t('shared-results-description')}</Text>
         </ExternalLinkCard>
       </Wrap>
     </VStack>
   )
 }
+
 export default Index
+
+export const getStaticProps: GetStaticProps = async ({ locale }) => ({
+  props: await serverSideTranslations(locale),
+})

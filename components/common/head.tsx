@@ -1,4 +1,5 @@
 import NextHead from 'next/head'
+import { useRouter } from 'next/router'
 
 export const Head = ({
   title,
@@ -7,7 +8,9 @@ export const Head = ({
   title?: string
   children?: React.ReactNode
 }) => {
-  title = (title ? title + ' | ' : '') + 'FGO周回ソルバー'
+  const { locale } = useRouter()
+  const siteName = locale == 'en' ? 'FGO Farming Solver' : 'FGO周回ソルバー'
+  title = (title ? title + ' | ' : '') + siteName
   return (
     <NextHead>
       <title>{title}</title>

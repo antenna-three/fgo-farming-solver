@@ -1,5 +1,5 @@
 // <reference types="node"/>
-import NextLink from 'next/link'
+import NextLink, { LinkProps as NextLinkProps } from 'next/link'
 import {
   ComponentWithAs,
   Link as ChakraLink,
@@ -10,14 +10,15 @@ import { UrlObject } from 'url'
 
 type Url = string | UrlObject
 
-export type LinkProps = Omit<ChakraLinkProps, 'href'> & { href: Url }
+export type LinkProps = Omit<ChakraLinkProps, 'href'> & NextLinkProps
 
 export const Link: ComponentWithAs<'a', LinkProps> = ({
   href,
+  locale,
   children,
   ...props
 }) => (
-  <NextLink href={href} passHref>
+  <NextLink href={href} locale={locale} passHref>
     <ChakraLink {...props}>{children}</ChakraLink>
   </NextLink>
 )

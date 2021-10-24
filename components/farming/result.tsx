@@ -1,17 +1,25 @@
 import { useRouter } from 'next/router'
 import React from 'react'
-import { Container, Heading, Skeleton, Text, VStack } from '@chakra-ui/react'
+import {
+  Box,
+  Container,
+  Heading,
+  Skeleton,
+  Text,
+  VStack,
+} from '@chakra-ui/react'
 import { QuestTable } from '../farming/quest-table'
 import { TweetIntent } from './tweet-intent'
 import { Link } from '../common/link'
 import { groupBy } from '../../utils/group-by'
 import { ResultStat } from './result-stat'
-import { Result } from '../../interfaces/api'
 import { ResultAccordion } from './result-accordion'
 import { Title } from '../common/title'
 import { NextPage } from 'next'
+import { useTranslation } from 'react-i18next'
+import { ResultProps } from '../../pages/farming/results/[id]'
 
-export const Page: NextPage<Result> = ({
+export const Page: NextPage<ResultProps> = ({
   params,
   quests,
   items,
@@ -20,11 +28,12 @@ export const Page: NextPage<Result> = ({
   total_lap,
 }) => {
   const router = useRouter()
+  const { t } = useTranslation(['farming', 'common'])
 
   if (router.isFallback) {
     return (
       <VStack>
-        <Title>計算結果</Title>
+        <Title>{t('計算結果')}</Title>
         <Skeleton height="100vh" />
       </VStack>
     )
@@ -33,12 +42,14 @@ export const Page: NextPage<Result> = ({
   if (quests && quests.length == 0) {
     return (
       <>
-        <Title>結果が見つかりませんでした</Title>
+        <Title>{t('結果が見つかりませんでした')}</Title>
         <Text>
-          新しく追加された素材のためドロップ率のデータがない場合などがあります。
+          {t(
+            '新しく追加された素材のためドロップ率のデータがない場合などがあります。'
+          )}
         </Text>
         <Text>
-          <Link href="/">トップに戻る</Link>
+          <Link href="/">{t('トップに戻る', { ns: 'common' })}</Link>
         </Text>
       </>
     )
@@ -55,21 +66,21 @@ export const Page: NextPage<Result> = ({
   return (
     <>
       <VStack spacing="8">
-        <Title>計算結果</Title>
+        <Title>{t('計算結果')}</Title>
 
-        <Heading size="lg">クエスト周回数</Heading>
+        <Heading size="lg">{t('クエスト周回数')}</Heading>
 
-        <Container maxW="sm">
+        <Box maxW="sm">
           <QuestTable
             questGroups={lapGroups}
             questToDrops={questToDrops}
             itemIndexes={itemIndexes}
           />
-        </Container>
+        </Box>
 
         <VStack>
           <Heading as="h3" size="md">
-            合計
+            {t('合計')}
           </Heading>
           <ResultStat totalLap={total_lap} totalAp={total_ap} />
         </VStack>
@@ -83,15 +94,11 @@ export const Page: NextPage<Result> = ({
         />
 
         <Heading size="lg" mb={4}>
-          アイテム獲得数
+          {t('アイテム獲得数')}
         </Heading>
         <Container maxW="container.xl">
           <ResultAccordion items={items} params={params} />
         </Container>
-
-        <Text>
-          <Link href="/farming">入力画面に戻る</Link>
-        </Text>
       </VStack>
     </>
   )

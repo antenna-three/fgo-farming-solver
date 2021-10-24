@@ -1,37 +1,37 @@
 import { FormControl, FormLabel } from '@chakra-ui/form-control'
-import { Input } from '@chakra-ui/react'
+import { HStack, Input } from '@chakra-ui/react'
+import { useRouter } from 'next/router'
 import React from 'react'
 
 export const ItemInput = ({
-  item,
+  id,
+  name,
   inputValues,
   handleChange,
 }: {
-  item: { name: string; id: string }
+  id: string
+  name: string
   inputValues: { [key: string]: string }
   handleChange: React.FormEventHandler
 }) => {
-  inputValues[item.id] ||= ''
+  inputValues[id] ||= ''
   return (
-    <FormControl id={`item-${item.id}`} whiteSpace="nowrap">
-      <FormLabel
-        display="inline-block"
-        w={10}
-        textAlign="right"
-        fontWeight="normal"
-      >
-        {item.name}
-      </FormLabel>
-      <Input
-        type="number"
-        inputMode="numeric"
-        name={item.id}
-        value={inputValues[item.id]}
-        min={0}
-        step={1}
-        onChange={handleChange}
-        w={20}
-      />
+    <FormControl id={`item-${id}`}>
+      <HStack align="center" justify="end">
+        <FormLabel display="inline-block" textAlign="right" fontWeight="normal">
+          {name}
+        </FormLabel>
+        <Input
+          type="number"
+          inputMode="numeric"
+          name={id}
+          value={inputValues[id]}
+          min={0}
+          step={1}
+          onChange={handleChange}
+          w="5em"
+        />
+      </HStack>
     </FormControl>
   )
 }

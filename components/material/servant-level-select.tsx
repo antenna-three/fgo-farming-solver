@@ -16,6 +16,7 @@ import {
   ServantState,
   TargetState,
 } from '../../hooks/create-chaldea-state'
+import { useTranslation } from 'react-i18next'
 
 const labels: { [key: string]: string } = {
   ascension: '再臨',
@@ -45,47 +46,50 @@ const _TargetLevelSelect = ({
   state: TargetState
   handleChangeDisabled: FormEventHandler<HTMLInputElement>
   setServantState: Dispatch<(state: ServantState) => ServantState>
-}) => (
-  <VStack align="stretch" key={`${id}-${target}`}>
-    <Checkbox
-      name={`${id}-${target}`}
-      isChecked={!disabled}
-      onChange={handleChangeDisabled}
-    >
-      {labels[target]}
-    </Checkbox>
-    {ranges.map(({ start, end }, index) => (
-      <RangeSliderWithInput
-        min={mins[target]}
-        max={maxs[target]}
-        step={1}
-        disabled={disabled}
-        name={`${id}-${target}-${index}`}
-        value={[start, end]}
-        setValue={(value) => {
-          setServantState((state) => ({
-            ...state,
-            targets: {
-              ...state.targets,
-              [target]: {
-                ...state.targets[target],
-                ranges: state.targets[target].ranges.map((range, i) =>
-                  i == index
-                    ? {
-                        start: value[0],
-                        end: value[1],
-                      }
-                    : range
-                ),
+}) => {
+  const { t } = useTranslation('common')
+  return (
+    <VStack align="stretch" key={`${id}-${target}`}>
+      <Checkbox
+        name={`${id}-${target}`}
+        isChecked={!disabled}
+        onChange={handleChangeDisabled}
+      >
+        {t(target)}
+      </Checkbox>
+      {ranges.map(({ start, end }, index) => (
+        <RangeSliderWithInput
+          min={mins[target]}
+          max={maxs[target]}
+          step={1}
+          disabled={disabled}
+          name={`${id}-${target}-${index}`}
+          value={[start, end]}
+          setValue={(value) => {
+            setServantState((state) => ({
+              ...state,
+              targets: {
+                ...state.targets,
+                [target]: {
+                  ...state.targets[target],
+                  ranges: state.targets[target].ranges.map((range, i) =>
+                    i == index
+                      ? {
+                          start: value[0],
+                          end: value[1],
+                        }
+                      : range
+                  ),
+                },
               },
-            },
-          }))
-        }}
-        key={`${id}-${target}-${index}`}
-      />
-    ))}
-  </VStack>
-)
+            }))
+          }}
+          key={`${id}-${target}-${index}`}
+        />
+      ))}
+    </VStack>
+  )
+}
 
 const TargetLevelSelect = memo(_TargetLevelSelect)
 

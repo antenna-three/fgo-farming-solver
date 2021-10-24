@@ -11,7 +11,6 @@ import {
   useBoolean,
   VStack,
 } from '@chakra-ui/react'
-import { getLargeCategory } from '../../hooks/get-large-category'
 import { useQuestTree } from '../../hooks/use-quest-tree'
 import { useLocalStorage } from '../../hooks/use-local-storage'
 import { useCheckboxTree } from '../../hooks/use-checkbox-tree'
@@ -23,6 +22,11 @@ import { CheckboxTree } from '../common/checkbox-tree'
 import { DropRateSelect } from './drop-rate-select'
 import { ResetAlertDialog } from './reset-alert-dialog'
 import { groupBy } from '../../utils/group-by'
+import { NextPage } from 'next'
+import { useTranslation } from 'react-i18next'
+import { FarmingIndexProps } from '../../pages/farming'
+import { Localized } from '../../lib/get-local-items'
+import { Item } from '../../interfaces/fgodrop'
 
 type InputState = {
   objective: string
@@ -93,20 +97,8 @@ const queryToInput: (
 const isInputState = (arg: any): arg is QueryInputState =>
   typeof arg.items == 'string'
 
-export const ItemForm = ({
-  items,
-  quests,
-}: {
-  items: { category: string; name: string; id: string }[]
-  quests: {
-    section: string
-    area: string
-    name: string
-    id: string
-    samples_1: number
-    samples_2: number
-  }[]
-}) => {
+export const Index: NextPage<FarmingIndexProps> = ({ items, quests }) => {
+  const { t } = useTranslation('farming')
   const { tree } = useQuestTree(quests)
   const questIds = quests.map(({ id }) => id)
   const initialInputState: InputState = useMemo(
@@ -175,10 +167,12 @@ export const ItemForm = ({
     [setInputState]
   )
 
-  const itemGroups = Object.entries(groupBy(items, (item) => item.category))
-  const categoryGroups = Object.entries(
-    groupBy(itemGroups, ([category, _]) => getLargeCategory(category))
-  )
+  const itemGroups = Object.entries(
+    groupBy(items, ({ largeCategory }) => largeCategory)
+  ).map(([largeCategory, items]): [string, [string, Localized<Item>[]][]] => [
+    largeCategory,
+    Object.entries(groupBy(items, ({ category }) => category)),
+  ])
 
   return (
     <form onSubmit={handleSubmit}>
@@ -190,18 +184,18 @@ export const ItemForm = ({
           }}
         />
         <ItemFieldset
-          categoryGroups={categoryGroups}
+          itemGroups={itemGroups}
           inputItems={inputState.items}
           handleChange={handleItemChange}
         />
         {Object.values(inputState.items).every((s) => !s) && (
           <Alert status="error">
             <AlertIcon />
-            集めたいアイテムの数を最低1つ入力してください。
+            {t('集めたいアイテムの数を最低1つ入力してください。')}
           </Alert>
         )}
         <FormControl as="fieldset">
-          <FormLabel as="legend">周回対象に含めるクエスト</FormLabel>
+          <FormLabel as="legend">{t('周回対象に含めるクエスト')}</FormLabel>
           <CheckboxTree
             tree={tree}
             checkedTree={checkedTree}
@@ -211,11 +205,11 @@ export const ItemForm = ({
         {inputState.quests.length == 0 && (
           <Alert status="error">
             <AlertIcon />
-            周回対象に含めるクエストを最低1つ選択してください。
+            {t('周回対象に含めるクエストを最低1つ選択してください。')}
           </Alert>
         )}
         <FormControl as="fieldset">
-          <FormLabel as="legend">キャンペーン</FormLabel>
+          <FormLabel as="legend">{t('キャンペーン')}</FormLabel>
           <Checkbox
             checked={inputState.halfDailyAp}
             onChange={(event) => {
@@ -223,7 +217,7 @@ export const ItemForm = ({
               setInputState((state) => ({ ...state, halfDailyAp: checked }))
             }}
           >
-            修練場AP半減
+            {t('修練場AP半減')}
           </Checkbox>
         </FormControl>
         <DropRateSelect
@@ -243,10 +237,10 @@ export const ItemForm = ({
             isLoading={isLoading}
             p={8}
           >
-            周回数を求める
+            {t('周回数を求める')}
           </Button>
           <Button type="button" onClick={setIsConfirming.on} p={8}>
-            リセット
+            {t('リセット')}
           </Button>
         </ButtonGroup>
         <ResetAlertDialog
@@ -261,7 +255,7 @@ export const ItemForm = ({
             query: inputToQuery(inputState),
           }}
         >
-          入力内容のエクスポート
+          {t('入力内容のエクスポート')}
         </Link>
       </VStack>
     </form>
