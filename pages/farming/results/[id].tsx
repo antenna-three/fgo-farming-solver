@@ -9,8 +9,11 @@ import { getLocalItems, Localized } from '../../../lib/get-local-items'
 
 export type ResultProps = Omit<Result, 'items'> & { items: Localized<Item>[] }
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  return { paths: [], fallback: true }
+export const getStaticPaths: GetStaticPaths = async ({ locales = ['ja'] }) => {
+  return {
+    paths: locales.map((locale) => ({ params: { id: '' }, locale })),
+    fallback: true,
+  }
 }
 
 export const getStaticProps: GetStaticProps<ResultProps> = async ({
