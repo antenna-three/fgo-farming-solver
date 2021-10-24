@@ -7,14 +7,15 @@ import { serverSideTranslations } from '../../lib/server-side-translations'
 
 export type ServantProps = { servant: NiceServant }
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  /*
+export const getStaticPaths: GetStaticPaths = async ({ locales = ['ja'] }) => {
   const servants = await getServants()
-  const paths = servants.map(({ id }) => ({
-    params: { id: id.toString() },
-  }))
-  */
-  return { paths: [], fallback: true }
+  const paths = servants.flatMap(({ id }) =>
+    locales.map((locale) => ({
+      params: { id: id.toString() },
+      locale,
+    }))
+  )
+  return { paths, fallback: true }
 }
 
 export const getStaticProps: GetStaticProps<ServantProps> = async ({
