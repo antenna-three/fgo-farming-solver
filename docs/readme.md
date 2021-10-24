@@ -1,66 +1,71 @@
 
-# FGO周回ソルバー
+# FGO Farming Solver
 
-FGOの集めたい素材の数から、どのクエストを何周するのが最も効率的かを求めるサイトです。
+A website to calculate the most efficient combination of quest runs from items you want to collect in mobile game "Fate/Grand Order" (FGO).
 
-## 使い方
+## How to use
 
-### 育成素材計算機
+### Material Calculator
 
-1. はじめに、全サーヴァントの共通設定を行います。素材計算の対象にしたい強化内容にチェックを入れ、どのレベルからどのレベルまで育成したいか入力します。矢印はスライダーになっています。
-2. 次に、育成したいサーヴァントを選択します。
-3. サーヴァントごとの個別設定を行います。
-4. 計算ボタンを押すと計算が始まります。
-5. 必要な素材が表示されます。アイテムの所持数を入力すると不足数が計算されます。
-6. 「クエスト周回数を求める」ボタンを押すと周回ソルバーへ移ります。
+1. Select servants you want to level.
+2. Check targets (ascension/skill/append skill) and input from what number to what number you want to level.
+3. Modify settings for each servant.
+4. Push "Calculate Materials" button.
+5. You got all the materials required.
+6. Input materials you have to calculate shortfalls.
+7. Push "Calculate Quest Runs" button to move to farming solver.
 
-### 周回ソルバー
+### Farming Solver
 
-1. 最小化する対象を決めます。消費APの合計を最小化するか、周回数の合計を最小化するかを選択することができます。
-2. 周回対象に含めるクエストを選びます。周回数を優先したいが修練場は含めたくない場合などに使ってください。
-3.  2021年8月の6周年記念イベントで素材のドロップ率が上がったので、旧データと新データのどちらを利用するかを決めます。旧データや新データの欠落部分はお互いに埋められますので、特定の素材やクエストが含まれないといったことはありません。
-4.  計算ボタンを押すと計算が始まります。計算には数秒ほどかかります。
-5.  計算が完了すると結果が表示されます。結果は次の2つの表からなります。
+1. Select the target to minimize. You can choose to minimize total comsumed ap or total quest runs.
+2. Input the number of items you want to collect.
+3. Choose quests to farm. For example, you can exclude training ground and minimize total runs.
+4. Since 6th anniversary in August 2021, drop rates have been increased by about 10%. You can choose which data to use for calculation.
+   Old data have a large sample size but a little lower drop rate. In contrast, New data reflects the drop rate increase but may have smaller sample size.
+   Lack of data will be compensated each other.
+5. Push "Calculate Quest Runs" button. It may take a few seconds.
+6. Results will be shown. They consists of two categories:
+   
+    - Quest Runs
 
-    - クエスト周回数
+        The most efficient combination of quest runs.
 
-        最も効率的なクエストの組み合わせと必要な周回数。
+    - Item Gain
 
-    - アイテム獲得数
+        Expected values of gained items. Some values may be exceed required numbers because of a trade-off between items.
 
-        獲得できるアイテムの個数の期待値。他の素材との兼ね合いで、必要数以上に獲得している素材がある場合があります。
+## Functions
 
-## 機能
+- Form inputs will be automatically saved to browser.
+- "Export" page is useful when you save inputs, or import/export inputs to other devices or browsers.
+- You can share results on Twitter.
 
-- 入力フォームの内容は自動的にブラウザに保存されます。
-- 入力フォームの「データのエクスポート」から、入力内容をブックマークに保存したり他のデバイス・ブラウザとやり取りすることができます。
-- 計算結果のページから計算結果をTwitterでツイートして共有できます。
+## Privacy Policy
 
-## データの取り扱いについて
+- Input values sended and received will be encrypted.
+- Submitted values will be saved to our database. They may be referenced to improve services.
+- Input values may be included in URLs to bookmark or share.
 
-- 入力された値の送受信は暗号化されています。
-- 送信された値は必要周回数の計算に使用します。また、機能改善の参考にする場合があります。
-- ブックマークや共有を手軽にするために、入力内容がURLに含まれる場合があります。
+## Disclaimer
 
-## 免責事項
+- Drop rates are from [FGOアイテム効率劇場](https://sites.google.com/view/fgo-domus-aurea).
+- Material data are from [Atlas Academy API](https://api.atlasacademy.io).
+- Data will be revalidated automatically but not guaranteed to be correct and newest.
+- This website has no relations to development and operation of "Fate/Grand Order".
+- We do not take any responsibility or liability for any damage or loss caused through our service.
 
-- アイテムのドロップ率は[FGOアイテム効率劇場](https://sites.google.com/view/fgo-domus-aurea)を参照しています。
-- サーヴァントの育成データは[Atlas Academy API](https://api.atlasacademy.io)を参照しています。
-- データは自動的に更新されますが、正確・最新である保証はありません。
-- このサイトは「Fate/Grand Order」の開発・運営とは一切関係ありません。
-- このサイトを利用することによって生じた損害について、責任は負いかねます。
+## Feedback/Bugs
 
-## 要望・不具合報告
+Contact me on [Twitter](https://twitter.com/antenna_games) or [GitHub](https://github.com/antenna-three/fgo-farming-solver/issues)
 
-[Twitter](https://twitter.com/antenna_games)または[Issue](https://github.com/antenna-three/fgo-farming-solver/issues)までお願いします。
-
-## 連絡先
+## Contact
 
 [@antenna_games](https://twitter.com/antenna_games)
 
-## 貢献
+## Contributing
 
-[CONTRIBUTING](contributing.md)をご覧ください。
+See [CONTRIBUTING](contributing.md).
 
-## ライセンス
+## License
+
 MIT License. See [LICENSE](../LICENSE) for more information.

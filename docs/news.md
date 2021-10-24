@@ -1,33 +1,18 @@
-# お知らせ
+# News
 
-## UIフレームワークの変更
+## Added English Version - 2021/10/24
 
-**2021/10/18**
+Added English version. Drop rates are JP server data regardless of languages.
 
-今までスタイリングに[MVP.css](https://andybrewer.github.io/mvp)を使ってきましたが、プロジェクトが大きくなってきたのでUIフレームワークとして[Chakra UI](https://chakra-ui.com/)を導入しました。
+## Changed UI Framework - 2021/10/18
 
-見た目が少し変わりますが、より多くの環境で一貫したスタイルになり、アクセシビリティの向上が期待されます。
+Changed UI Framework from [MVP.css](https://andybrewer.github.io/mvp) to [Chakra UI](https://chakra-ui.com/) expecting consistent styles in more environments and imporovement in acessibility.
 
-## 素材計算機の追加
+## Added Material Calculator - 2021/09/05
 
-**2021/09/05**
+Added material calculator.
+Moved farming solver from `/` to `/farming`.
 
-これまでは外部ツールの利用をお願いしていた素材計算機を当サイトに実装しました。これにより、育成したいサーヴァント→必要な素材数→必要なクエスト周回数をシームレスに求められるようになりました。
+## Added Drop Rate Selector - 2021/08/06
 
-本体機能以外の充実に伴い、周回ソルバーの機能を`/farming`以下に移動しました。旧URLにもリダイレクトは設定しておりますが、ブックマークなどはやり直してもらえるとスムーズに使えると思います。
-
-## ドロップ率改定に伴う対応について
-
-**2021/08/02**
-
-FGOでは2021/08/01 19:00に、フリークエストの素材のドロップ率がわずかに上がるアップデートが行われました。
-
-FGO周回ソルバーがドロップ率を参照している[FGOアイテム効率劇場](https://sites.google.com/view/fgo-domus-aurea)さんでは、改定以前と改定以後とでドロップ率の統計を分ける対応をとるとのことです。
-
-FGO周回ソルバーでは改定以前と改定以後のどちらを利用するか選択する機能を実装する予定です。それまでは旧データのみが利用できますので、計算結果の周回数は実際より少し多くなります。改定内容に傾向がみられる（一定の倍率、一定の増分など）場合には、その傾向をもとに旧データから新データを補完することも検討しています。
-
-**2021/08/06** 追記
-
-旧データ、新データ、旧データ＋新データの中から選べるようになりました。
-
-今回の更新にあたって裏側の仕組みを大きく変えたので、不具合が出た場合は[Twitter](https://twitter.com/antenna_games)などへお知らせいただけると助かります。
+Added drop rate selector from old data, new data and old data + new data due to increase in drop rates since 6th anniversary.
