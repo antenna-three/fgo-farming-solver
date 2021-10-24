@@ -1,6 +1,4 @@
 import { Item } from '../interfaces/atlas-academy'
-import { fetchJsonWithCache } from './cache'
-import { getHash } from './get-hash'
 import { orderBy } from '../utils/order-by'
 import { getUrl } from './get-url'
 
@@ -36,13 +34,14 @@ const getCategory = (item: Item, locale: string) => {
 
 export const getItems = async (locale: string = 'ja') => {
   const url = getUrl('nice_item', locale)
-  const hash = await getHash()
   const targetTypes = ['qp', 'skillLvUp', 'tdLvUp']
-  const items = fetchJsonWithCache(url, hash).then((items: Item[]) =>
-    items
-      .filter((item) => targetTypes.includes(item.type))
-      .map((item) => ({ ...item, ...getCategory(item, locale) }))
-      .sort(orderBy(({ priority }) => priority, 'asc'))
-  )
+  const items = fetch(url)
+    .then((res) => res.json())
+    .then((items: Item[]) =>
+      items
+        .filter((item) => targetTypes.includes(item.type))
+        .map((item) => ({ ...item, ...getCategory(item, locale) }))
+        .sort(orderBy(({ priority }) => priority, 'asc'))
+    )
   return items
 }

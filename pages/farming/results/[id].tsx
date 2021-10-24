@@ -13,7 +13,7 @@ export const getServerSideProps: GetServerSideProps<ResultProps> = async ({
   params,
   locale,
 }) => {
-  if (typeof params?.id !== 'string') {
+  if (typeof params?.id != 'string') {
     return { notFound: true }
   }
   try {
