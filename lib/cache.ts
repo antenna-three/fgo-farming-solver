@@ -20,6 +20,8 @@ const fetchAndWriteJson = async (
 }
 
 export const fetchJsonWithCache = async (url: string, hash: string) => {
+  if (process.env.NODE_ENV == 'production')
+    return fetch(url).then((res) => res.json())
   const cacheDir = path.resolve('cache')
   const stem = path.basename(url, '.json')
   const hashPath = path.resolve(cacheDir, `${stem}.hash.txt`)
