@@ -11,7 +11,10 @@ export type ResultProps = Omit<Result, 'items'> & { items: Localized<Item>[] }
 
 export const getStaticPaths: GetStaticPaths = async ({ locales = ['ja'] }) => {
   return {
-    paths: locales.map((locale) => ({ params: { id: '' }, locale })),
+    paths: locales.map((locale) => ({
+      params: { id: '735654d1-8dd2-468d-a020-223de6508adf' },
+      locale,
+    })),
     fallback: true,
   }
 }

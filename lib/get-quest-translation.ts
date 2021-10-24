@@ -17,7 +17,6 @@ export const getQuestTranslation = async (): Promise<{
       const res = (await fetch(url).then((res) => res.json())) as {
         values: [string, string][]
       }
-      console.log(res)
       const map = Object.fromEntries(
         res.values
           .filter((row) => row.length == 2)
