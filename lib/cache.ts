@@ -14,7 +14,7 @@ const fetchAndWriteJson = async (
     await fs.mkdir(path.dirname(hashPath), { recursive: true })
     fs.writeFile(hashPath, hash, 'utf-8')
     const cacheFile = createWriteStream(cachePath, 'utf-8')
-    res.body.pipe(cacheFile)
+    res.body.pipe(cacheFile).on('error', () => {})
   } catch (e) {
     console.error(e)
   }
