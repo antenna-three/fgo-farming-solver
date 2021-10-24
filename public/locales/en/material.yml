@@ -1,0 +1,23 @@
+サーヴァント: Servant
+アイテム: Item
+
+育成素材計算機: Material Calculator
+サーヴァント選択: Choose Servants
+全サーヴァント共通設定: Common Settings for All Servants
+引継ぎコード: Import/Export
+
+全体設定: Settings for All Servants
+個別設定: Settings for Each Servant
+
+必要な素材を計算する: Calculate Materials
+
+アイテム必要数: Required Items
+不足している素材のみ表示: Show only shortages
+表示するアイテムがありません。: There are no items to show.
+クエスト周回数を求める: Calculate quest runs for farming
+サーヴァント選択に戻る: Go back to servant selection
+周回数を求める対象: Target items to calculate for farming
+
+必要数: Required
+所持数: Available
+不足数: Short

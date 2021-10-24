@@ -1,0 +1,27 @@
+ascension: Ascension
+skill: Skill
+appendSkill: Append Skill
+
+サーヴァント: Servant
+育成目標: to Level
+から: to
+アイテム必要数: Items Required 
+クエスト周回数: Quest Runs
+を: ''
+求めます: ''
+
+育成素材計算機: Material Calculator
+material-calculator-description: |
+  Calculates total items required from servants you want to level.
+周回ソルバー: Farming Solver
+farming-solver-description: |
+  Calculates the most efficient combination of quest runs from items you want to collect.
+サーヴァント一覧: Servant List
+servant-list-description: |
+  Items required for each servant.
+アイテム一覧: Item List
+item-list-description: |
+  Drop rates in quests for each item.
+みんなの結果: Shared Results
+shared-results-description: |
+  Calculation results shared on Twitter.
