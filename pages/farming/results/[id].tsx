@@ -1,4 +1,4 @@
-import { GetStaticProps, GetStaticPaths, GetStaticPropsContext } from 'next'
+import { GetServerSideProps } from 'next'
 import { DBError } from '../../../lib/dynamodb'
 import { Page } from '../../../components/farming/result'
 import { getResult } from '../../../lib/get-result'
@@ -9,17 +9,7 @@ import { getLocalItems, Localized } from '../../../lib/get-local-items'
 
 export type ResultProps = Omit<Result, 'items'> & { items: Localized<Item>[] }
 
-export const getStaticPaths: GetStaticPaths = async ({ locales = ['ja'] }) => {
-  return {
-    paths: locales.map((locale) => ({
-      params: { id: '735654d1-8dd2-468d-a020-223de6508adf' },
-      locale,
-    })),
-    fallback: true,
-  }
-}
-
-export const getStaticProps: GetStaticProps<ResultProps> = async ({
+export const getServerSideProps: GetServerSideProps<ResultProps> = async ({
   params,
   locale,
 }) => {
