@@ -4,5 +4,5 @@ module.exports = {
         locales: ['en', 'ja'],
     },
     localeExtension: 'yml',
-    reloadOnPrerender: true
+    ns: ['common', 'farming', 'items', 'material', 'servants'],
 }
