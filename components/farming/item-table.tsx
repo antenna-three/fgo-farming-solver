@@ -33,19 +33,27 @@ export const ItemTable = ({
           <Table>
             <Thead>
               <Tr>
-                <Th>{t('アイテム')}</Th>
-                <Th isNumeric>{t('獲得数')}</Th>
-                <Th isNumeric>{t('必要数')}</Th>
+                <Th px={4}>{t('アイテム')}</Th>
+                <Th px={2} isNumeric>
+                  {t('獲得数')}
+                </Th>
+                <Th px={4} isNumeric>
+                  {t('必要数')}
+                </Th>
               </Tr>
             </Thead>
             <Tbody>
               {items.map((item) => (
                 <Tr key={item.id}>
-                  <Td>
+                  <Td px={4}>
                     <ItemLink id={item.id} name={item.name} />
                   </Td>
-                  <Td isNumeric>{item.count}</Td>
-                  <Td isNumeric>{itemToQuery[item.id] || '-'}</Td>
+                  <Td px={2} isNumeric>
+                    {item.count}
+                  </Td>
+                  <Td px={4} isNumeric>
+                    {itemToQuery[item.id] || '-'}
+                  </Td>
                 </Tr>
               ))}
             </Tbody>

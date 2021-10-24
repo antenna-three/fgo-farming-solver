@@ -2,6 +2,7 @@ import { useRouter } from 'next/router'
 import React from 'react'
 import {
   Box,
+  Center,
   Container,
   Heading,
   Skeleton,
@@ -70,13 +71,13 @@ export const Page: NextPage<ResultProps> = ({
 
         <Heading size="lg">{t('クエスト周回数')}</Heading>
 
-        <Box maxW="sm">
+        <Center w="sm">
           <QuestTable
             questGroups={lapGroups}
             questToDrops={questToDrops}
             itemIndexes={itemIndexes}
           />
-        </Box>
+        </Center>
 
         <VStack>
           <Heading as="h3" size="md">

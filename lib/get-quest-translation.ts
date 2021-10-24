@@ -26,7 +26,7 @@ export const getQuestTranslation = async (): Promise<{
       )
       fs.mkdir(cacheDir)
         .then(() => fs.writeFile(cachePath, JSON.stringify(map), 'utf-8'))
-        .catch((e) => console.error(e))
+        .catch(() => {})
       return map
     })
 }
