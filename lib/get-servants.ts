@@ -3,14 +3,15 @@ import { origin, region } from '../constants/atlasacademy'
 import { Servant } from '../interfaces/atlas-academy'
 import { fetchJsonWithCache } from './cache'
 import { getHash } from './get-hash'
+import { getUrl } from './get-url'
 
-export const getServants = async () => {
+export const getServants = async (locale?: string) => {
   const hash = await getHash()
   const enumUrl = `${origin}/export/${region}/nice_enums.json`
   const classNames: string[] = await fetchJsonWithCache(enumUrl, hash).then(
     (obj) => Object.values(obj.SvtClass)
   )
-  const servantsUrl = `${origin}/export/${region}/basic_servant.json`
+  const servantsUrl = getUrl('basic_servant', locale)
   const servants = fetchJsonWithCache(servantsUrl, hash)
     //exclude npc servants
     .then((servants: Servant[]) =>

@@ -1,51 +1,48 @@
-import { origin, region } from '../constants/atlasacademy'
 import { Item } from '../interfaces/atlas-academy'
 import { fetchJsonWithCache } from './cache'
 import { getHash } from './get-hash'
 import { orderBy } from '../utils/order-by'
+import { getUrl } from './get-url'
 
-const getCategory = (item: Item) => {
-  switch (Math.floor(item.priority / 100)) {
-    case 0:
-      return 'QP'
-    case 1:
-      switch (item.background) {
-        case 'bronze':
-          return '輝石'
-        case 'silver':
-          return '魔石'
-        case 'gold':
-          return '秘石'
-      }
-    case 2:
-      switch (item.background) {
-        case 'bronze':
-          return '銅素材'
-        case 'silver':
-          return '銀素材'
-        case 'gold':
-          return '金素材'
-      }
-    case 3:
-      switch (item.background) {
-        case 'silver':
-          return 'ピース'
-        case 'gold':
-          return 'モニュメント'
-      }
-    default:
-      return '特殊霊基再臨素材'
-  }
+const largeCategories: { [locale: string]: string[] } = {
+  en: ['QP', 'Gems', 'Common Items', 'Monuments and Pieces'],
+  ja: ['QP', 'スキル石', '強化素材', 'モニュピ'],
+}
+const categories: { [locale: string]: { [background: string]: string }[] } = {
+  en: [
+    { zero: 'QP' },
+    { bronze: 'Shining', silver: 'Magic', gold: 'Secret' },
+    { bronze: 'Bronze', silver: 'Silver', gold: 'Gold' },
+    { silver: 'Piece', gold: 'Monument' },
+  ],
+  ja: [
+    { zero: 'QP' },
+    { bronze: '輝石', silver: '魔石', gold: '秘石' },
+    { bronze: '銅素材', silver: '銀素材', gold: '金素材' },
+    { silver: 'ピース', gold: 'モニュメント' },
+  ],
 }
 
-export const getItems = async () => {
-  const url = `${origin}/export/${region}/nice_item.json`
+const getCategory = (item: Item, locale: string) => {
+  const index = Math.floor(item.priority / 100)
+  const largeCategory =
+    largeCategories[locale]?.[index] ??
+    (locale == 'en' ? 'Event Item' : 'イベントアイテム')
+  const category =
+    categories[locale]?.[index]?.[item.background] ??
+    (locale == 'en' ? 'Special Ascension Item' : '特殊霊基再臨素材')
+  return { largeCategory, category }
+}
+
+export const getItems = async (locale: string = 'ja') => {
+  const url = getUrl('nice_item', locale)
   const hash = await getHash()
   const targetTypes = ['qp', 'skillLvUp', 'tdLvUp']
-  return fetchJsonWithCache(url, hash).then((items: Item[]) =>
+  const items = fetchJsonWithCache(url, hash).then((items: Item[]) =>
     items
       .filter((item) => targetTypes.includes(item.type))
-      .map((item) => ({ ...item, category: getCategory(item) }))
+      .map((item) => ({ ...item, ...getCategory(item, locale) }))
       .sort(orderBy(({ priority }) => priority, 'asc'))
   )
+  return items
 }
