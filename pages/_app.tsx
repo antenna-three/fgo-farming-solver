@@ -1,12 +1,13 @@
 import React from 'react'
 import type { AppProps } from 'next/app'
 import { ChakraProvider } from '@chakra-ui/react'
-import { appWithTranslation } from 'next-i18next'
 import { theme } from '../theme'
 import { Head } from '../components/common/head'
 import { Layout } from '../components/common/layout'
+import { useLanguage } from '../hooks/use-language'
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
+  useLanguage()
   return (
     <>
       <Head />
@@ -18,4 +19,4 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
     </>
   )
 }
-export default appWithTranslation(MyApp)
+export default MyApp

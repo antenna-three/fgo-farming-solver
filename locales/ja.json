@@ -1,0 +1,36 @@
+{
+    "common": {
+        "ascension": "霊基再臨",
+        "skill": "スキル",
+        "appendSkill": "アペンドスキル",
+        "title": "<h><m1><nw>サーヴァント</nw><nw>育成目標</nw></m1><s><nw>から</nw></s><m2><nw>アイテム必要数</nw></m2><s>を</s></h><h><m3><nw>アイテム必要数</nw></m3><s><nw>から</nw></s><m4><nw>クエスト周回数</nw></m4><s>を<nw>求めます</nw></s></h>",
+        "material-calculator-description": "育成したいサーヴァントから必要なアイテムの数を計算します。",
+        "farming-solver-description": "集めたいアイテムの数から最も効率的なクエスト周回数の組み合わせを計算します。",
+        "servant-list-description": "サーヴァントの育成に必要な素材を確認できます。",
+        "item-list-description": "アイテムのクエストごとのドロップ率を確認できます。",
+        "shared-results-description": "Twitterに投稿された計算結果を見られます。"
+    },
+    "farming": {
+        "1": "旧データを優先",
+        "2": "新データを優先",
+        "add": "旧データ＋新データ",
+        "reset-form-values": "入力内容のリセット",
+        "do-you-reset": "本当にリセットしますか？",
+        "you-can-use-export": "「入力内容のエクスポート」を使えば入力内容をブックマークに保存できます。",
+        "required": "{{name}}{{count}}個",
+        "comma": "、",
+        "runs": "{{area}} {{name}} {{lap}}周",
+        "total": "合計 {{lap}}周",
+        "and-so-on": "など",
+        "text": "{{items}}{{iaso}}を集めるために必要な周回数:\n{{quests}}{{qaso}}\n{{total}}\n詳細:",
+        "export-device-description": "ChromeやSafariなどのブックマーク同期機能を持ったブラウザでこのページをブックマークしてください。その後入力内容をインポートしたいデバイスでブックマークを開いてください。",
+        "export-browser-description": "このページのURLをコピーして他のブラウザに貼り付けてください。"
+    },
+    "items": {
+        "title": "{{name}}のドロップ"
+    },
+    "material": {},
+    "servants": {
+        "title": "{{name}}の強化素材"
+    }
+}

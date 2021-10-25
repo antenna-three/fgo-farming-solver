@@ -14,9 +14,7 @@ import { motion, TargetAndTransition, Transition } from 'framer-motion'
 import { LinkProps } from '../components/common/link'
 import { theme } from '../theme'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
-import { useTranslation } from 'react-i18next'
-import { GetStaticProps } from 'next'
-import { serverSideTranslations } from '../lib/server-side-translations'
+import { Trans, useTranslation } from 'react-i18next'
 import { useRouter } from 'next/router'
 
 const MotionSpan = motion<any>(chakra.span)
@@ -84,62 +82,43 @@ const transition: Transition = {
 const Index = () => {
   const { t } = useTranslation('common')
   const { locale } = useRouter()
-  const space = locale == 'en' ? ' ' : ''
 
   return (
     <VStack spacing={12} mt={12}>
       <VStack size="xl" textAlign="center">
-        <Heading as="h1" size="xl">
-          <MotionSpan
-            animate={blueAnimate}
-            transition={{
-              ...transition,
-              delay: 0,
-            }}
-          >
-            <NoWrap>{t('サーヴァント')}</NoWrap>
-            {space}
-            <NoWrap>{t('育成目標')}</NoWrap>
-            {space}
-          </MotionSpan>
-          <NoWrap fontSize="0.8em">{t('から')}</NoWrap>
-          {space}
-          <MotionSpan
-            animate={greenAnimate}
-            transition={{ ...transition, delay: 2 }}
-          >
-            <NoWrap>{t('アイテム必要数')}</NoWrap>
-            {space}
-          </MotionSpan>
-          <chakra.span fontSize="0.8em">{t('を')}</chakra.span>
-          {space}
-        </Heading>
-        <Heading>
-          <MotionSpan
-            animate={greenAnimate}
-            transition={{
-              ...transition,
-              delay: 4,
-            }}
-          >
-            <NoWrap>{t('アイテム必要数')}</NoWrap>
-            {space}
-          </MotionSpan>
-          <NoWrap fontSize="0.8em">{t('から')}</NoWrap>
-          {space}
-          <MotionSpan
-            animate={orangeAnimate}
-            transition={{
-              ...transition,
-              delay: 6,
-            }}
-          >
-            <NoWrap>{t('クエスト周回数')}</NoWrap>
-            {space}
-          </MotionSpan>
-          <chakra.span fontSize="0.8em">{t('を')}</chakra.span>
-          <NoWrap>{t('求めます')}</NoWrap>
-        </Heading>
+        <Trans
+          t={t}
+          i18nKey="title"
+          components={{
+            h: <Heading as="h1" size="xl" />,
+            nw: <NoWrap />,
+            s: <NoWrap fontSize="0.8em" />,
+            m1: (
+              <MotionSpan
+                animate={blueAnimate}
+                transition={{ ...transition, delay: 0 }}
+              />
+            ),
+            m2: (
+              <MotionSpan
+                animate={greenAnimate}
+                transition={{ ...transition, delay: 2 }}
+              />
+            ),
+            m3: (
+              <MotionSpan
+                animate={greenAnimate}
+                transition={{ ...transition, delay: 4 }}
+              />
+            ),
+            m4: (
+              <MotionSpan
+                animate={orangeAnimate}
+                transition={{ ...transition, delay: 6 }}
+              />
+            ),
+          }}
+        />
       </VStack>
       <Wrap justify="center" spacing={4}>
         <LinkCard href="/material">
@@ -179,7 +158,3 @@ const Index = () => {
 }
 
 export default Index
-
-export const getStaticProps: GetStaticProps = async ({ locale }) => ({
-  props: await serverSideTranslations(locale),
-})

@@ -3,7 +3,6 @@ import { DBError } from '../../../lib/dynamodb'
 import { Page } from '../../../components/farming/result'
 import { getResult } from '../../../lib/get-result'
 import { Item, Result } from '../../../interfaces/api'
-import { serverSideTranslations } from '../../../lib/server-side-translations'
 import { getLocalQuests } from '../../../lib/get-local-quests'
 import { getLocalItems, Localized } from '../../../lib/get-local-items'
 
@@ -17,10 +16,8 @@ export const getServerSideProps: GetServerSideProps<ResultProps> = async ({
     return { notFound: true }
   }
   try {
-    const [{ items, quests, ...result }, translations] = await Promise.all([
-      getResult(params.id),
-      serverSideTranslations(locale),
-    ])
+    const { items, quests, ...result } = await getResult(params.id)
+
     const [localItems, localQuests] = await Promise.all([
       getLocalItems(items, locale),
       getLocalQuests(quests, locale),
@@ -30,7 +27,6 @@ export const getServerSideProps: GetServerSideProps<ResultProps> = async ({
         items: localItems,
         quests: localQuests,
         ...result,
-        ...translations,
       },
     }
   } catch (e) {

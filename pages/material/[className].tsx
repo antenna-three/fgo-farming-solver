@@ -1,4 +1,4 @@
-import { GetStaticPaths, GetStaticProps, NextPage } from 'next'
+import { GetStaticPaths, GetStaticProps } from 'next'
 import { getServants } from '../../lib/get-servants'
 import {
   getMaterialsForServants,
@@ -7,7 +7,6 @@ import {
 import { revalidate } from '../../constants/revalidate'
 import { Material } from '../../components/material/material'
 import { Servant } from '../../interfaces/atlas-academy'
-import { serverSideTranslations } from '../../lib/server-side-translations'
 
 export type MaterialProps = {
   servants: Servant[]
@@ -32,13 +31,12 @@ export const getStaticProps: GetStaticProps<MaterialProps> = async ({
 }) => {
   if (typeof params?.className != 'string') return { notFound: true }
   const { className } = params
-  const [servants, materials, translations] = await Promise.all([
+  const [servants, materials] = await Promise.all([
     getServants(locale),
     getMaterialsForServants(),
-    serverSideTranslations(locale),
   ])
   return {
-    props: { servants, materials, className, ...translations },
+    props: { servants, materials, className },
     revalidate,
   }
 }

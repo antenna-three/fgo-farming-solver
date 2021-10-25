@@ -2,7 +2,6 @@ import { GetStaticPaths, GetStaticProps } from 'next'
 import { getDrops } from '../../lib/get-drops'
 import { Page } from '../../components/items/item'
 import { DropRate, Item, Quest } from '../../interfaces/fgodrop'
-import { serverSideTranslations } from '../../lib/server-side-translations'
 import { getLocalQuests } from '../../lib/get-local-quests'
 import { getLocalItems, Localized } from '../../lib/get-local-items'
 
@@ -39,14 +38,12 @@ export const getStaticProps: GetStaticProps<ItemProps> = async ({
     getLocalItems(items, locale),
     getLocalQuests(quests, locale),
   ])
-  const translations = await serverSideTranslations(locale)
   return {
     props: {
       id: params.id,
       items: localItems,
       quests: localQuests,
       dropRates: drop_rates,
-      ...translations,
     },
     revalidate: 86400,
   }

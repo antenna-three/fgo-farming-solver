@@ -26,7 +26,7 @@ export const Page: NextPage<ServantProps> = ({ servant }) => {
   if (router.isFallback) {
     return <Text>読み込み中...</Text>
   }
-  const title = t('materials-for', { name: servant.name })
+  const title = t('title', { name: servant.name })
 
   return (
     <VStack align="stretch" spacing={16}>

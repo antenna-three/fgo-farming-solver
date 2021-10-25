@@ -1,9 +1,7 @@
 import { Heading, HStack, Text, VStack } from '@chakra-ui/react'
-import { Link } from '../components/common/link'
 import React from 'react'
 import { Head } from '../components/common/head'
 import { useRouter } from 'next/router'
-import { useTranslation } from 'react-i18next'
 import { TopLink } from '../components/common/top-link'
 
 const statusCodes: { [code: number]: string } = {

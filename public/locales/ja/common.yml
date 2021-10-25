@@ -1,9 +1,0 @@
-ascension: 霊基再臨
-skill: スキル
-appendSkill: アペンドスキル
-
-material-calculator-description: 育成したいサーヴァントから必要なアイテムの数を計算します。
-farming-solver-description: 集めたいアイテムの数から最も効率的なクエスト周回数の組み合わせを計算します。
-servant-list-description: サーヴァントの育成に必要な素材を確認できます。
-item-list-description: アイテムのクエストごとのドロップ率を確認できます。
-shared-results-description: Twitterに投稿された計算結果を見られます。
