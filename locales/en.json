@@ -3,7 +3,7 @@
         "ascension": "Ascension",
         "skill": "Skill",
         "appendSkill": "Append Skill",
-        "title": "<h><m1><nw>Servant to Level</nw></m1> <s>to</s> <m2><nw>Items Required</nw></m2></h><h><m3><nw>Items Required</nw></m3> <s>to</s> <m4><nw>Quest Runs</nw></m4></h>",
+        "title": "<h><m1><nw>Servant Levels</nw></m1> <s>to</s> <m2><nw>Items Required</nw></m2></h><h><m3><nw>Items Required</nw></m3> <s>to</s> <m4><nw>Quest Runs</nw></m4></h>",
         "育成素材計算機": "Material Calculator",
         "material-calculator-description": "Calculates total items required from servants you want to level.",
         "周回ソルバー": "Farming Solver",
