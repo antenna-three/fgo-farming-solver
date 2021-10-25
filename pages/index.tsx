@@ -8,6 +8,9 @@ import {
   Text,
   LinkProps as ChakraLinkProps,
   Wrap,
+  SimpleGrid,
+  GridItem,
+  Spacer,
 } from '@chakra-ui/react'
 import React from 'react'
 import { motion, TargetAndTransition, Transition } from 'framer-motion'
@@ -26,7 +29,7 @@ const NoWrap: ChakraComponent<'span', {}> = ({ children, ...props }) => (
 )
 
 const Card: ChakraComponent<'div', {}> = ({ children, ...props }) => (
-  <Box p={5} w="xs" borderWidth="thin" rounded="lg" {...props}>
+  <Box p={5} h="100%" borderWidth="thin" rounded="lg" {...props}>
     <VStack spacing={5} align="start">
       {children}
     </VStack>
@@ -81,7 +84,6 @@ const transition: Transition = {
 
 const Index = () => {
   const { t } = useTranslation('common')
-  const { locale } = useRouter()
 
   return (
     <VStack spacing={12} mt={12}>
@@ -120,39 +122,49 @@ const Index = () => {
           }}
         />
       </VStack>
-      <Wrap justify="center" spacing={4}>
-        <LinkCard href="/material">
-          <Heading size="lg">{t('育成素材計算機')}</Heading>
-          <Text>{t('material-calculator-description')}</Text>
-        </LinkCard>
+      <SimpleGrid minChildWidth="250px" spacing={4} alignItems="stretch">
+        <GridItem>
+          <LinkCard href="/material">
+            <Heading size="lg">{t('育成素材計算機')}</Heading>
+            <Text>{t('material-calculator-description')}</Text>
+          </LinkCard>
+        </GridItem>
 
-        <LinkCard href="/farming">
-          <Heading size="lg">{t('周回ソルバー')}</Heading>
-          <Text>{t('farming-solver-description')}</Text>
-        </LinkCard>
+        <GridItem>
+          <LinkCard href="/farming">
+            <Heading size="lg">{t('周回ソルバー')}</Heading>
+            <Text>{t('farming-solver-description')}</Text>
+          </LinkCard>
+        </GridItem>
 
-        <LinkCard href="/servants">
-          <Heading size="lg">{t('サーヴァント一覧')}</Heading>
-          <Text>{t('servant-list-description')}</Text>
-        </LinkCard>
+        <GridItem>
+          <LinkCard href="/servants">
+            <Heading size="lg">{t('サーヴァント一覧')}</Heading>
+            <Text>{t('servant-list-description')}</Text>
+          </LinkCard>
+        </GridItem>
 
-        <LinkCard href="/items">
-          <Heading size="lg">{t('アイテム一覧')}</Heading>
-          <Text>{t('item-list-description')}</Text>
-        </LinkCard>
+        <GridItem>
+          <LinkCard href="/items">
+            <Heading size="lg">{t('アイテム一覧')}</Heading>
+            <Text>{t('item-list-description')}</Text>
+          </LinkCard>
+        </GridItem>
 
-        <ExternalLinkCard
-          href={`https://twitter.com/search?q=${encodeURIComponent(
-            '#FGO周回ソルバー'
-          )}`}
-        >
-          <Heading size="lg">
-            {t('みんなの結果')}
-            <ExternalLinkIcon mx={2} />
-          </Heading>
-          <Text>{t('shared-results-description')}</Text>
-        </ExternalLinkCard>
-      </Wrap>
+        <GridItem>
+          <ExternalLinkCard
+            href={`https://twitter.com/search?q=${encodeURIComponent(
+              '#FGO周回ソルバー'
+            )}`}
+          >
+            <Heading size="lg">
+              {t('みんなの結果')}
+              <ExternalLinkIcon mx={2} />
+            </Heading>
+            <Text>{t('shared-results-description')}</Text>
+          </ExternalLinkCard>
+        </GridItem>
+      </SimpleGrid>
     </VStack>
   )
 }

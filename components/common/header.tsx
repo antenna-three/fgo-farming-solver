@@ -9,7 +9,7 @@ export const Header: React.FC = () => (
     <HStack align="center">
       <Logo />
       <Spacer />
-      <HStack align="center" justify="end">
+      <HStack align="center" justify="end" wrap="wrap">
         <LangSelect />
         <Nav />
       </HStack>

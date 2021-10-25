@@ -14,7 +14,14 @@ export const DropTd = ({
   samples: number
 }) => {
   if (dropRate == null) {
-    return <Td>-</Td>
+    return (
+      <>
+        <Td pr={0} isNumeric>
+          -
+        </Td>
+        <Td></Td>
+      </>
+    )
   }
   const value = dropRateStyle == 'rate' ? dropRate * 100 : ap / dropRate
   const sd = Math.sqrt(dropRate / samples)
@@ -25,7 +32,7 @@ export const DropTd = ({
   return (
     <>
       <Td pr={0} isNumeric>
-        <chakra.span pr={1}>{value.toFixed(1)}</chakra.span>
+        {value.toFixed(1)}
       </Td>
       <Td color="gray.400" fontSize="xs" pl={0} isNumeric>
         ±{diff.toFixed(1)}

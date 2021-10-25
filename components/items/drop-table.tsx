@@ -49,7 +49,7 @@ export const DropTable = ({
             <Tr key={quest.id}>
               <Td>{quest.area}</Td>
               <Td>{quest.name}</Td>
-              <Td isNumeric>{samples}</Td>
+              <Td isNumeric>{samples ?? '-'}</Td>
               {dropGroups[quest.id].map((row) => (
                 <Fragment key={row.item_id}>
                   <Td pr={0}>
