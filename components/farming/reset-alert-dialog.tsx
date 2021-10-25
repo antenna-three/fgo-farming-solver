@@ -31,9 +31,9 @@ export const ResetAlertDialog = ({
     >
       <AlertDialogOverlay>
         <AlertDialogContent>
-          <AlertDialogHeader>{t('reset-form-values')}</AlertDialogHeader>
+          <AlertDialogHeader>{t('入力内容のリセット')}</AlertDialogHeader>
           <AlertDialogBody>
-            <Text>{t('do-you-reset')}</Text>
+            <Text>{t('本当にリセットしますか？')}</Text>
             <Text>{t('you-can-use-export')}</Text>
           </AlertDialogBody>
           <AlertDialogFooter>
