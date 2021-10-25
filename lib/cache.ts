@@ -2,6 +2,7 @@ import { promises as fs, createWriteStream } from 'fs'
 import path from 'path'
 import fetch from 'node-fetch'
 import { readJson } from './read-json'
+import { getHash } from './get-hash'
 
 const fetchAndWriteJson = async (
   url: string,
@@ -19,13 +20,14 @@ const fetchAndWriteJson = async (
   return res.json()
 }
 
-export const fetchJsonWithCache = async (url: string, hash: string) => {
-  if (process.env.NODE_ENV == 'production')
+export const fetchJsonWithCache = async (url: string) => {
+  if (process.env.NODE_ENV == 'production' && process.env.CI != '1')
     return fetch(url).then((res) => res.json())
-  const cacheDir = path.resolve('cache')
+  const cacheDir = path.resolve('.next/cache/atlasacademy')
   const stem = path.basename(url, '.json')
   const hashPath = path.resolve(cacheDir, `${stem}.hash.txt`)
   const cachePath = path.resolve(cacheDir, `${stem}.json`)
+  const hash = await getHash()
   const obj = fs
     .readFile(hashPath, 'utf-8')
     .then((localHash) =>
