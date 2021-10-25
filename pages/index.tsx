@@ -8,12 +8,17 @@ import {
   Text,
   LinkProps as ChakraLinkProps,
   Wrap,
+  SimpleGrid,
+  GridItem,
+  Spacer,
 } from '@chakra-ui/react'
 import React from 'react'
 import { motion, TargetAndTransition, Transition } from 'framer-motion'
 import { LinkProps } from '../components/common/link'
 import { theme } from '../theme'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
+import { Trans, useTranslation } from 'react-i18next'
+import { useRouter } from 'next/router'
 
 const MotionSpan = motion<any>(chakra.span)
 
@@ -24,7 +29,7 @@ const NoWrap: ChakraComponent<'span', {}> = ({ children, ...props }) => (
 )
 
 const Card: ChakraComponent<'div', {}> = ({ children, ...props }) => (
-  <Box p={5} maxW="xs" borderWidth="thin" rounded="lg" {...props}>
+  <Box p={5} h="100%" borderWidth="thin" rounded="lg" {...props}>
     <VStack spacing={5} align="start">
       {children}
     </VStack>
@@ -78,89 +83,90 @@ const transition: Transition = {
 }
 
 const Index = () => {
+  const { t } = useTranslation('common')
+
   return (
     <VStack spacing={12} mt={12}>
       <VStack size="xl" textAlign="center">
-        <Heading as="h1">
-          <MotionSpan
-            animate={blueAnimate}
-            transition={{
-              ...transition,
-              delay: 0,
-            }}
-          >
-            <NoWrap>サーヴァント</NoWrap>
-            <NoWrap>育成目標</NoWrap>
-          </MotionSpan>
-          <NoWrap fontSize="0.8em">から</NoWrap>
-          <MotionSpan
-            animate={greenAnimate}
-            transition={{ ...transition, delay: 2 }}
-          >
-            <NoWrap>アイテム必要数</NoWrap>
-          </MotionSpan>
-          <chakra.span fontSize="0.8em">を</chakra.span>
-        </Heading>
-        <Heading>
-          <MotionSpan
-            animate={greenAnimate}
-            transition={{
-              ...transition,
-              delay: 4,
-            }}
-          >
-            <NoWrap>アイテム必要数</NoWrap>
-          </MotionSpan>
-          <NoWrap fontSize="0.8em">から</NoWrap>
-          <MotionSpan
-            animate={orangeAnimate}
-            transition={{
-              ...transition,
-              delay: 6,
-            }}
-          >
-            <NoWrap>クエスト周回数</NoWrap>
-          </MotionSpan>
-          <chakra.span fontSize="0.8em">を</chakra.span>
-          <NoWrap>求めます</NoWrap>
-        </Heading>
+        <Trans
+          t={t}
+          i18nKey="title"
+          components={{
+            h: <Heading as="h1" size="xl" />,
+            nw: <NoWrap />,
+            s: <NoWrap fontSize="0.8em" />,
+            m1: (
+              <MotionSpan
+                animate={blueAnimate}
+                transition={{ ...transition, delay: 0 }}
+              />
+            ),
+            m2: (
+              <MotionSpan
+                animate={greenAnimate}
+                transition={{ ...transition, delay: 2 }}
+              />
+            ),
+            m3: (
+              <MotionSpan
+                animate={greenAnimate}
+                transition={{ ...transition, delay: 4 }}
+              />
+            ),
+            m4: (
+              <MotionSpan
+                animate={orangeAnimate}
+                transition={{ ...transition, delay: 6 }}
+              />
+            ),
+          }}
+        />
       </VStack>
-      <Wrap justify="center" spacing={4}>
-        <LinkCard href="/material">
-          <Heading size="lg">育成素材計算機</Heading>
-          <Text>育成したいサーヴァントから、必要な素材の合計を求めます。</Text>
-        </LinkCard>
+      <SimpleGrid minChildWidth="250px" spacing={4} alignItems="stretch">
+        <GridItem>
+          <LinkCard href="/material">
+            <Heading size="lg">{t('育成素材計算機')}</Heading>
+            <Text>{t('material-calculator-description')}</Text>
+          </LinkCard>
+        </GridItem>
 
-        <LinkCard href="/farming">
-          <Heading size="lg">周回ソルバー</Heading>
-          <Text>
-            欲しい素材の数から、最も効率的なクエスト周回数を求めます。
-          </Text>
-        </LinkCard>
+        <GridItem>
+          <LinkCard href="/farming">
+            <Heading size="lg">{t('周回ソルバー')}</Heading>
+            <Text>{t('farming-solver-description')}</Text>
+          </LinkCard>
+        </GridItem>
 
-        <LinkCard href="/servants">
-          <Heading size="lg">サーヴァント一覧</Heading>
-          <Text>サーヴァントの育成に必要な素材を確認できます。</Text>
-        </LinkCard>
+        <GridItem>
+          <LinkCard href="/servants">
+            <Heading size="lg">{t('サーヴァント一覧')}</Heading>
+            <Text>{t('servant-list-description')}</Text>
+          </LinkCard>
+        </GridItem>
 
-        <LinkCard href="/items">
-          <Heading size="lg">アイテム一覧</Heading>
-          <Text>アイテムのクエストごとのドロップ率を確認できます。</Text>
-        </LinkCard>
+        <GridItem>
+          <LinkCard href="/items">
+            <Heading size="lg">{t('アイテム一覧')}</Heading>
+            <Text>{t('item-list-description')}</Text>
+          </LinkCard>
+        </GridItem>
 
-        <ExternalLinkCard
-          href={`https://twitter.com/search?q=${encodeURIComponent(
-            '#FGO周回ソルバー'
-          )}`}
-        >
-          <Heading size="lg">
-            みんなの結果
-            <ExternalLinkIcon mx={2} />
-          </Heading>
-          <Text>Twitterに投稿された計算結果を見られます。</Text>
-        </ExternalLinkCard>
-      </Wrap>
+        <GridItem>
+          <ExternalLinkCard
+            href={`https://twitter.com/search?q=${encodeURIComponent(
+              '#FGO周回ソルバー'
+            )}`}
+          >
+            <Heading size="lg">
+              {t('みんなの結果')}
+              <ExternalLinkIcon mx={2} />
+            </Heading>
+            <Text>{t('shared-results-description')}</Text>
+          </ExternalLinkCard>
+        </GridItem>
+      </SimpleGrid>
     </VStack>
   )
 }
+
 export default Index

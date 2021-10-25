@@ -25,10 +25,8 @@ export const MaterialList = ({ materials }: { materials: Materials }) => {
               <Stat key={item.id} mx={2}>
                 <StatLabel>
                   <ItemLink
-                    item={{
-                      id: priorityToApiId(item.priority),
-                      name: item.name,
-                    }}
+                    id={priorityToApiId(item.priority)}
+                    name={item.name}
                   />
                 </StatLabel>
                 <StatNumber>{amount}</StatNumber>

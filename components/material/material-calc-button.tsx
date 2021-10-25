@@ -5,6 +5,7 @@ import { ComponentWithAs } from '@chakra-ui/system'
 import { ChaldeaState } from '../../hooks/create-chaldea-state'
 import { useBoolean } from '@chakra-ui/hooks'
 import { MaterialsForServants } from '../../lib/get-materials'
+import { useTranslation } from 'react-i18next'
 
 export const CalcButton: ComponentWithAs<
   'button',
@@ -15,6 +16,7 @@ export const CalcButton: ComponentWithAs<
 > = ({ state, materials, ...props }) => {
   const [calculating, setCalculating] = useBoolean()
   const router = useRouter()
+  const { t } = useTranslation('material')
   const calc = () => {
     setCalculating.on()
     const query = sumMaterials(state, materials)
@@ -25,7 +27,7 @@ export const CalcButton: ComponentWithAs<
   }
   return (
     <Button onClick={calc} isLoading={calculating} {...props}>
-      必要な素材を計算する
+      {t('必要な素材を計算する')}
     </Button>
   )
 }

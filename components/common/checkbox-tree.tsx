@@ -11,17 +11,18 @@ import React, { FormEventHandler, memo, useCallback } from 'react'
 import { CheckedTree } from '../../hooks/use-checkbox-tree'
 
 export type Node = { label: string; value: string; children?: Node[] }
+type CheckboxTreeProps = {
+  tree: Node[]
+  onCheck: (value: string, checked: boolean) => void
+  checkedTree: CheckedTree
+} & AccordionProps
 
 const CheckboxTree_ = ({
   tree,
   onCheck,
   checkedTree,
   ...rest
-}: {
-  tree: Node[]
-  onCheck: (value: string, checked: boolean) => void
-  checkedTree: CheckedTree
-} & AccordionProps) => {
+}: CheckboxTreeProps) => {
   const onChange: FormEventHandler<HTMLInputElement> = useCallback(
     (e) => onCheck(e.currentTarget.value, e.currentTarget.checked),
     [onCheck]
@@ -85,18 +86,23 @@ const CheckboxTree_ = ({
   )
 }
 
-const areTreesEqual = (prevTree: CheckedTree, nextTree: CheckedTree): boolean =>
+const areTreesEqual = (prevTree: Node[], nextTree: Node[]): boolean =>
+  prevTree == nextTree
+
+const areCheckedTreesEqual = (
+  prevTree: CheckedTree,
+  nextTree: CheckedTree
+): boolean =>
   Object.entries(prevTree).every(([value, { checked, children }]) => {
     const next = nextTree[value]
     if (next == null) return false
     if (children == null || next.children == null)
       return checked == next.checked
-    return areTreesEqual(children, next.children)
+    return areCheckedTreesEqual(children, next.children)
   })
 
-const areEqual = (
-  prevProps: { checkedTree: CheckedTree },
-  nextProps: { checkedTree: CheckedTree }
-) => areTreesEqual(prevProps.checkedTree, nextProps.checkedTree)
+const areEqual = (prevProps: CheckboxTreeProps, nextProps: CheckboxTreeProps) =>
+  areCheckedTreesEqual(prevProps.checkedTree, nextProps.checkedTree) &&
+  areTreesEqual(prevProps.tree, nextProps.tree)
 
 export const CheckboxTree = memo(CheckboxTree_, areEqual)

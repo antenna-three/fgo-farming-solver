@@ -8,6 +8,7 @@ import {
   StatNumber,
 } from '@chakra-ui/react'
 import React, { FormEventHandler, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 export const ResultStat = ({
   totalLap,
@@ -21,10 +22,12 @@ export const ResultStat = ({
     const { checked } = event.currentTarget
     setShowSum(checked)
   }
+  const { t } = useTranslation('farming')
+
   return (
     <VStack>
       <Checkbox isChecked={showSum} onChange={handleChange}>
-        表示
+        {t('表示')}
       </Checkbox>
       <StatGroup>
         {[
@@ -37,7 +40,7 @@ export const ResultStat = ({
           },
         ].map(({ label, value }) => (
           <Stat flexWrap="wrap" key={label} m={5}>
-            <StatLabel>{label}</StatLabel>
+            <StatLabel>{t(label)}</StatLabel>
             <Skeleton h="32px" isLoaded={showSum} fadeDuration={1}>
               <StatNumber>{value}</StatNumber>
             </Skeleton>

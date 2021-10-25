@@ -1,17 +1,16 @@
 import { orderBy } from '../utils/order-by'
 import { origin, region } from '../constants/atlasacademy'
 import { Servant } from '../interfaces/atlas-academy'
+import { getUrl } from './get-url'
 import { fetchJsonWithCache } from './cache'
-import { getHash } from './get-hash'
 
-export const getServants = async () => {
-  const hash = await getHash()
+export const getServants = async (locale?: string) => {
   const enumUrl = `${origin}/export/${region}/nice_enums.json`
-  const classNames: string[] = await fetchJsonWithCache(enumUrl, hash).then(
-    (obj) => Object.values(obj.SvtClass)
-  )
-  const servantsUrl = `${origin}/export/${region}/basic_servant.json`
-  const servants = fetchJsonWithCache(servantsUrl, hash)
+  const classNames: string[] = await fetch(enumUrl)
+    .then((res) => res.json())
+    .then((obj) => Object.values(obj.SvtClass))
+  const servantsUrl = getUrl('basic_servant', locale)
+  const servants = fetchJsonWithCache(servantsUrl)
     //exclude npc servants
     .then((servants: Servant[]) =>
       servants.filter(({ type }) => type == 'normal' || type == 'heroine')

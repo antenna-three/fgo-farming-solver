@@ -6,18 +6,22 @@ import { NiceServant } from '../../interfaces/atlas-academy'
 
 export type ServantProps = { servant: NiceServant }
 
-export const getStaticPaths: GetStaticPaths = async () => {
+export const getStaticPaths: GetStaticPaths = async ({ locales = ['ja'] }) => {
   const servants = await getServants()
-  const paths = servants.map(({ id }) => ({
-    params: { id: id.toString() },
-  }))
+  const paths = servants.flatMap(({ id }) =>
+    locales.map((locale) => ({
+      params: { id: id.toString() },
+      locale,
+    }))
+  )
   return { paths, fallback: true }
 }
 
 export const getStaticProps: GetStaticProps<ServantProps> = async ({
   params,
+  locale,
 }) => {
-  const servant = await getNiceServants().then((servants) =>
+  const servant = await getNiceServants(locale).then((servants) =>
     servants.find(({ id }) => id.toString() == params?.id)
   )
   return servant == null ? { notFound: true } : { props: { servant } }

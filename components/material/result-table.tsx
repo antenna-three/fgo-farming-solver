@@ -1,5 +1,6 @@
 import { Input, Table, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react'
 import React, { FormEventHandler, Fragment } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Item } from '../../interfaces/atlas-academy'
 import { priorityToApiId } from '../../lib/priority-to-api-id'
 import { ItemLink } from '../common/item-link'
@@ -24,17 +25,19 @@ export const ResultTable = ({
   onChange: FormEventHandler
   onFocus: FormEventHandler
 }) => {
+  const { t } = useTranslation('material')
+
   return (
     <Table>
       <Thead>
         <Tr>
-          <Th px={px}>アイテム</Th>
+          <Th px={px}>{t('アイテム')}</Th>
           <Th px={px} isNumeric>
-            必要数
+            {t('必要数')}
           </Th>
-          <Th px={px}>所持数</Th>
+          <Th px={px}>{t('所持数')}</Th>
           <Th px={px} isNumeric>
-            不足数
+            {t('不足数')}
           </Th>
         </Tr>
       </Thead>
@@ -43,7 +46,7 @@ export const ResultTable = ({
           <Fragment key={category}>
             <Tr>
               <Th px={px} colSpan={4}>
-                {category}
+                {t(category)}
               </Th>
             </Tr>
             {items
@@ -52,10 +55,8 @@ export const ResultTable = ({
                 <Tr key={item.id}>
                   <Td px={px} py={3}>
                     <ItemLink
-                      item={{
-                        name: item.name,
-                        id: priorityToApiId(item.priority),
-                      }}
+                      name={item.name}
+                      id={priorityToApiId(item.priority)}
                     />
                   </Td>
                   <Td px={px} py={3} isNumeric>
@@ -65,7 +66,7 @@ export const ResultTable = ({
                     <Input
                       type="number"
                       name={item.id.toString()}
-                      value={possession[item.id]}
+                      value={showPositive(possession[item.id])}
                       min={0}
                       onChange={onChange}
                       onFocus={onFocus}

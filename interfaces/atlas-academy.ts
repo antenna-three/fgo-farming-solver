@@ -53,3 +53,13 @@ export type Item = {
   priority: number
   dropPriority: number
 }
+
+export type War = {
+  id: number
+  coordinates: [[number, number], [number, number]]
+  age: string
+  name: string
+  longName: string
+  eventId: number
+  eventName: string
+}

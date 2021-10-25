@@ -14,19 +14,31 @@ export type MaterialProps = {
   className: string
 }
 
-export const getStaticPaths: GetStaticPaths = async () => {
+export const getStaticPaths: GetStaticPaths = async ({ locales }) => {
   const servants = await getServants()
-  const paths = servants.map(({ className }) => ({ params: { className } }))
+  const classNames = Array.from(
+    new Set<string>(servants.map(({ className }) => className))
+  )
+  const paths = classNames.flatMap((className) =>
+    (locales ?? ['ja']).map((locale) => ({ params: { className }, locale }))
+  )
   return { paths, fallback: false }
 }
 
-export const getStaticProps: GetStaticProps<MaterialProps> = async (
-  context
-) => {
-  const { className } = context.params as { className: string }
-  const servants = await getServants()
-  const materials = await getMaterialsForServants()
-  return { props: { servants, materials, className }, revalidate }
+export const getStaticProps: GetStaticProps<MaterialProps> = async ({
+  params,
+  locale,
+}) => {
+  if (typeof params?.className != 'string') return { notFound: true }
+  const { className } = params
+  const [servants, materials] = await Promise.all([
+    getServants(locale),
+    getMaterialsForServants(),
+  ])
+  return {
+    props: { servants, materials, className },
+    revalidate,
+  }
 }
 
 export default Material

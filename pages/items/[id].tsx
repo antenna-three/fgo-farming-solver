@@ -1,45 +1,49 @@
 import { GetStaticPaths, GetStaticProps } from 'next'
 import { getDrops } from '../../lib/get-drops'
 import { Page } from '../../components/items/item'
-import { getItems } from '../../lib/get-items'
 import { DropRate, Item, Quest } from '../../interfaces/fgodrop'
-import { Item as AtlasItem } from '../../interfaces/atlas-academy'
+import { getLocalQuests } from '../../lib/get-local-quests'
+import { getLocalItems, Localized } from '../../lib/get-local-items'
 
 export type ItemProps = {
   id: string
-  items: Item[]
+  items: Localized<Item>[]
   quests: Quest[]
   dropRates: DropRate[]
-  atlasItems: AtlasItem[]
 }
 
-export const getStaticPaths: GetStaticPaths = async () => {
+export const getStaticPaths: GetStaticPaths = async ({ locales = ['ja'] }) => {
   const { items } = await getDrops()
-  const paths = items.map(({ id }) => ({ params: { id: id as string } }))
+  const paths = items.flatMap(({ id }) =>
+    locales.map((locale) => ({ params: { id }, locale }))
+  )
   return {
     paths,
     fallback: true,
   }
 }
 
-export const getStaticProps: GetStaticProps<ItemProps> = async ({ params }) => {
+export const getStaticProps: GetStaticProps<ItemProps> = async ({
+  params,
+  locale,
+}) => {
   if (typeof params?.id !== 'string') {
     return { notFound: true }
   }
-  const [{ items, quests, drop_rates }, atlasItems] = await Promise.all([
-    getDrops(),
-    getItems(),
-  ])
+  const { items, quests, drop_rates } = await getDrops()
   if (!items.some(({ id }) => id == params.id)) {
     return { notFound: true }
   }
+  const [localItems, localQuests] = await Promise.all([
+    getLocalItems(items, locale),
+    getLocalQuests(quests, locale),
+  ])
   return {
     props: {
       id: params.id,
-      items,
-      quests,
+      items: localItems,
+      quests: localQuests,
       dropRates: drop_rates,
-      atlasItems,
     },
     revalidate: 86400,
   }

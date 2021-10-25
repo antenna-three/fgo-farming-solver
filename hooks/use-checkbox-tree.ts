@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction, useCallback, useMemo } from 'react'
 
 export type Node = { value: string; children?: Node[] }
-export type Checked = true | false | 'intermediate'
+export type Checked = boolean | 'intermediate'
 export type CheckedTree = {
   [value: string]: { checked: Checked; children?: CheckedTree }
 }
@@ -73,11 +73,10 @@ export const useCheckboxTree = (
     (value: string, checked: boolean) => {
       setLeafState((state) => {
         const leaves = nodeToLeaves[value]
-        let state_ = {
+        return {
           ...state,
           ...Object.fromEntries(leaves.map((value) => [value, checked])),
         }
-        return state_
       })
     },
     [nodeToLeaves, setLeafState]

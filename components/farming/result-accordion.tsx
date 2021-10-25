@@ -6,8 +6,8 @@ import {
   AccordionPanel,
 } from '@chakra-ui/accordion'
 import React from 'react'
-import { getLargeCategory } from '../../hooks/get-large-category'
 import { Item, Params } from '../../interfaces/api'
+import { Localized } from '../../lib/get-local-items'
 import { groupBy } from '../../utils/group-by'
 import { ItemTable } from './item-table'
 
@@ -15,16 +15,19 @@ export const ResultAccordion = ({
   items,
   params,
 }: {
-  items: Item[]
+  items: Localized<Item>[]
   params: Params
 }) => {
-  const itemGroups = groupBy(items, ({ category }) => category)
-  const largeItemGroups = groupBy(Object.entries(itemGroups), ([category, _]) =>
-    getLargeCategory(category)
-  )
+  const itemGroups = Object.entries(
+    groupBy(items, ({ largeCategory }) => largeCategory)
+  ).map(([largeCategory, items]): [string, [string, Localized<Item>[]][]] => [
+    largeCategory,
+    Object.entries(groupBy(items, ({ category }) => category)),
+  ])
+
   return (
     <Accordion allowMultiple>
-      {Object.entries(largeItemGroups).map(([largeCategory, itemGroups]) => (
+      {itemGroups.map(([largeCategory, itemGroups]) => (
         <AccordionItem className="item-details" key={largeCategory}>
           <h3>
             <AccordionButton>

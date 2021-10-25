@@ -15,17 +15,22 @@ import { useAllChaldeaState } from '../../hooks/use-all-chaldea-state'
 import { Title } from '../common/title'
 import { NextPage } from 'next'
 import { MaterialIndexProps } from '../../pages/material'
+import { useTranslation } from 'react-i18next'
+import { useRouter } from 'next/router'
 
 export const Index: NextPage<MaterialIndexProps> = ({
   servants,
   materials,
   items,
 }) => {
+  const { locale } = useRouter()
+  const { t } = useTranslation('material')
+
   const ids = servants.map(({ id }) => id.toString())
   const [chaldeaState, setChaldeaState] = useChaldeaState(ids)
   const setAllChaldeaState = useAllChaldeaState(setChaldeaState)
 
-  const tree = useServantTree(servants)
+  const tree = useServantTree(servants, locale)
   const [posession, setPosession] = useLocalStorage(
     'posession',
     Object.fromEntries(items.map((item) => [item.id, 0]))
@@ -36,12 +41,12 @@ export const Index: NextPage<MaterialIndexProps> = ({
   return (
     <VStack spacing={8} alignItems="stretch">
       <Center>
-        <Title>育成素材計算機</Title>
+        <Title>{t('育成素材計算機')}</Title>
       </Center>
       <Wrap justify="center" spacing={8}>
         <WrapItem w="md" maxW="md" display="block">
           <VStack align="stretch">
-            <Heading size="md">育成サーヴァント選択</Heading>
+            <Heading size="md">{t('サーヴァント選択')}</Heading>
             <CheckboxTree
               tree={tree}
               checkedTree={checkedTree}
@@ -52,7 +57,7 @@ export const Index: NextPage<MaterialIndexProps> = ({
         </WrapItem>
         <WrapItem w="md" maxW="md" display="block">
           <VStack align="stretch">
-            <Heading size="md">全サーヴァント共通設定</Heading>
+            <Heading size="md">{t('全サーヴァント共通設定')}</Heading>
             <ServantLevelSelect
               id={'all'}
               servantState={chaldeaState.all}
@@ -76,7 +81,7 @@ export const Index: NextPage<MaterialIndexProps> = ({
           <ExternalLink href="http://fgosimulator.webcrow.jp/Material/">
             Material Simulator
           </ExternalLink>{' '}
-          引継ぎコード
+          {t('引継ぎコード')}
         </Heading>
         <MsIo
           servants={servants}

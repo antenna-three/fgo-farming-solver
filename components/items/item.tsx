@@ -14,7 +14,6 @@ import {
 import React from 'react'
 import { useLocalStorage } from '../../hooks/use-local-storage'
 import { DropRateKey } from '../../interfaces/fgodrop'
-import { priorityToApiId } from '../../lib/priority-to-api-id'
 import { ItemProps } from '../../pages/items/[id]'
 import { groupBy } from '../../utils/group-by'
 import { orderBy } from '../../utils/order-by'
@@ -23,16 +22,11 @@ import { BreadcrumbLink } from '../common/breadcrumb-link'
 import { DropRateKeyRadio } from './drop-rate-key-radio'
 import { DropRateStyleRadio } from './drop-rate-style-radio'
 import { DropTable } from './drop-table'
+import { useTranslation } from 'react-i18next'
 
 export type DropRateStyle = 'ap' | 'rate'
 
-export const Page: NextPage<ItemProps> = ({
-  id,
-  items,
-  quests,
-  dropRates,
-  atlasItems,
-}) => {
+export const Page: NextPage<ItemProps> = ({ id, items, quests, dropRates }) => {
   const [dropRateKey, setDropRateKey] = useLocalStorage<DropRateKey>(
     'dropRateKey',
     '1',
@@ -43,13 +37,10 @@ export const Page: NextPage<ItemProps> = ({
     'ap'
   )
   const router = useRouter()
+  const { t } = useTranslation('items')
   if (router.isFallback) {
     return <Skeleton height="100vh" />
   }
-  const itemIndexes = Object.fromEntries(items.map((item) => [item.id, item]))
-  const atlasItem = atlasItems.find(
-    ({ priority }) => priorityToApiId(priority) == id
-  )
   const sortedDropRates = dropRates.sort(
     orderBy(
       ({ item_id }) => (item_id == id ? -Infinity : parseInt(item_id, 36)),
@@ -70,13 +61,14 @@ export const Page: NextPage<ItemProps> = ({
       : filteredQuests.sort(
           orderBy(({ id, ap }) => ap / getDropRate(id), 'asc')
         )
-  const title = atlasItem?.name + 'のドロップ一覧'
+  const itemIndexes = Object.fromEntries(items.map((item) => [item.id, item]))
+  const title = t('title', { name: itemIndexes[id].name })
 
   return (
     <VStack display="block" spacing={8}>
       <Breadcrumb>
         <BreadcrumbItem>
-          <BreadcrumbLink href="/items">アイテム一覧</BreadcrumbLink>
+          <BreadcrumbLink href="/items">{t('アイテム一覧')}</BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbItem isCurrentPage>
           <Text>{title}</Text>

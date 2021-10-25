@@ -10,6 +10,7 @@ import {
   IconButton,
 } from '@chakra-ui/react'
 import React, { FormEventHandler, Fragment, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { ItemLink } from '../common/item-link'
 
 export const QuestTable = ({
@@ -36,16 +37,17 @@ export const QuestTable = ({
     const { value } = event.currentTarget
     setIsOpen((isOpen) => ({ ...isOpen, [value]: !isOpen[value] }))
   }
+  const { t } = useTranslation('farming')
 
   return (
     <Table whiteSpace="nowrap">
       <Thead>
         <Tr>
           <Th key="quest-header" colSpan={2}>
-            クエスト
+            {t('クエスト')}
           </Th>
           <Th key="lap-header" isNumeric>
-            周回数
+            {t('周回数')}
           </Th>
         </Tr>
       </Thead>
@@ -79,15 +81,18 @@ export const QuestTable = ({
                       <Table>
                         <Thead>
                           <Tr>
-                            <Th>アイテム</Th>
-                            <Th isNumeric>獲得数</Th>
+                            <Th>{t('アイテム')}</Th>
+                            <Th isNumeric>{t('獲得数')}</Th>
                           </Tr>
                         </Thead>
                         <Tbody>
                           {questToDrops[id].map((d) => (
                             <Tr key={id + d.item_id}>
                               <Td>
-                                <ItemLink item={itemIndexes[d.item_id]} />
+                                <ItemLink
+                                  id={d.item_id}
+                                  name={itemIndexes[d.item_id].name}
+                                />
                               </Td>
                               <Td isNumeric>
                                 {Math.round(

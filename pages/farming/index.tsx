@@ -1,27 +1,31 @@
-import { Head } from '../../components/common/head'
-import { ItemForm } from '../../components/farming/item-form'
+import { Index } from '../../components/farming'
 import { Drops, getDrops } from '../../lib/get-drops'
-import { GetStaticProps, NextPage } from 'next'
+import { GetStaticProps } from 'next'
+import { getLocalQuests } from '../../lib/get-local-quests'
+import { getLocalItems, Localized } from '../../lib/get-local-items'
+import { Item } from '../../interfaces/fgodrop'
 
-export const getStaticProps: GetStaticProps<Drops> = async () => {
-  const props = await getDrops()
+export type FarmingIndexProps = Omit<Drops, 'items'> & {
+  items: Localized<Item>[]
+}
+
+export const getStaticProps: GetStaticProps<FarmingIndexProps> = async ({
+  locale,
+}) => {
+  const { items, quests, drop_rates } = await getDrops()
+  const [localItems, localQuests] = await Promise.all([
+    getLocalItems(items, locale),
+    getLocalQuests(quests, locale),
+  ])
 
   return {
-    props,
+    props: {
+      items: localItems,
+      quests: localQuests,
+      drop_rates,
+    },
     revalidate: 86400,
   }
 }
 
-const Index: NextPage<Drops> = ({ items, quests }) => {
-  const description =
-    '欲しい素材の数を入力すると、どのフリクエを何周するのが最も効率的かを求めます。'
-  return (
-    <>
-      <Head>
-        <meta name="description" content={description} />
-      </Head>
-      <ItemForm items={items} quests={quests} />
-    </>
-  )
-}
 export default Index

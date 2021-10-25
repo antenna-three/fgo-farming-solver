@@ -15,11 +15,13 @@ export type MaterialIndexProps = {
   items: Item[]
 }
 
-export const getStaticProps: GetStaticProps<MaterialIndexProps> = async () => {
+export const getStaticProps: GetStaticProps<MaterialIndexProps> = async ({
+  locale,
+}) => {
   const [servants, materials, items] = await Promise.all([
-    getServants(),
+    getServants(locale),
     getMaterialsForServants(),
-    getItems(),
+    getItems(locale),
   ])
   return {
     props: { servants, materials, items },

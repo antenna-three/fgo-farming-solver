@@ -3,7 +3,7 @@ import { Box } from '@chakra-ui/layout'
 import { FaTwitter } from 'react-icons/fa'
 import { orderBy } from '../../utils/order-by'
 import { Button } from '@chakra-ui/react'
-import Link from 'next/link'
+import { useTranslation } from 'react-i18next'
 
 export const TweetIntent = ({
   itemCounts,
@@ -14,37 +14,32 @@ export const TweetIntent = ({
   questLaps: { area: string; name: string; lap: number }[]
   url: string
 }) => {
-  const weights: { [key: string]: number } = {
-    銅素材: 1,
-    銀素材: 3,
-    金素材: 5,
-    輝石: 0.3,
-    魔石: 0.5,
-    秘石: 5,
-    ピース: 1,
-    モニュ: 3,
-  }
+  const { t } = useTranslation('farming')
+  const weights = [1, 2, 4, 0.25, 0.75, 4, 1, 2]
   const displayedItems = itemCounts
     .slice()
-    .sort(orderBy(({ count, category }) => count * weights[category], 'desc'))
+    .sort(orderBy(({ id, count }) => count * weights[parseInt(id[0])], 'desc'))
     .slice(0, 3)
-    .map(({ name, count }) => `${name}${count}個`)
-    .join('、')
+    .map(({ name, count }) => t('required', { name, count }))
+    .join(t('comma'))
   const displayedLaps = questLaps
     .slice()
     .sort(orderBy(({ lap }) => lap, 'desc'))
     .slice(0, 3)
-    .map(({ area, name, lap }) => `${area} ${name} ${lap}周`)
+    .map(({ area, name, lap }) => t('runs', { area, name, lap }))
     .join('\r\n')
-  const lapSum = `合計 ${questLaps
-    .map(({ lap }) => lap)
-    .reduce((acc, cur) => acc + cur, 0)}周`
-  const text = `${displayedItems}${
-    itemCounts.length > 3 ? 'など' : ''
-  }を集めるために必要な周回数:
-${displayedLaps}${questLaps.length > 3 ? 'など' : ''}
-${questLaps.length > 1 ? lapSum : ''}
-詳細: `
+  const total = t('total', {
+    lap: questLaps.map(({ lap }) => lap).reduce((acc, cur) => acc + cur, 0),
+  })
+  const iaso = itemCounts.length > 3 ? t('and-so-on') : ''
+  const qaso = questLaps.length > 3 ? t('and-so-on') : ''
+  const text = t('text', {
+    items: displayedItems,
+    iaso,
+    quests: displayedLaps,
+    qaso,
+    total,
+  })
   const hashtags = 'FGO周回ソルバー'
   const intentUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
     text
@@ -62,7 +57,7 @@ ${questLaps.length > 1 ? lapSum : ''}
         variant="solid"
         p={2}
       >
-        結果をツイートする
+        {t('結果をツイートする')}
       </Button>
     </Box>
   )
