@@ -1,4 +1,4 @@
-import { Flex, HStack, Spacer, Wrap, WrapItem } from '@chakra-ui/react'
+import { Flex, HStack, Spacer } from '@chakra-ui/react'
 import React from 'react'
 import { LangSelect } from './lang-select'
 import { Logo } from './logo'
@@ -9,7 +9,7 @@ export const Header: React.FC = () => (
     <HStack align="center">
       <Logo />
       <Spacer />
-      <Flex wrap="wrap">
+      <Flex wrap="wrap" justify="end">
         <LangSelect />
         <Nav />
       </Flex>

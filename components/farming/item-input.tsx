@@ -18,7 +18,7 @@ export const ItemInput = ({
   return (
     <FormControl id={`item-${id}`}>
       <HStack align="center" justify="end">
-        <FormLabel display="inline-block" textAlign="right" fontWeight="normal">
+        <FormLabel textAlign="right" fontWeight="normal">
           {name}
         </FormLabel>
         <Input
