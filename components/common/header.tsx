@@ -9,10 +9,10 @@ export const Header: React.FC = () => (
     <HStack align="center">
       <Logo />
       <Spacer />
-      <HStack align="center" justify="end" wrap="wrap">
+      <Flex wrap="wrap">
         <LangSelect />
         <Nav />
-      </HStack>
+      </Flex>
     </HStack>
   </header>
 )

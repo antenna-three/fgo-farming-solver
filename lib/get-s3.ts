@@ -25,7 +25,7 @@ export const getGzip = async (region: string, bucket: string, key: string) => {
     const src = response.Body as Readable
 
     if (src == null) {
-      console.log('Response body is empty')
+      console.error('Response body is empty')
       return {}
     }
 
@@ -41,7 +41,7 @@ export const getGzip = async (region: string, bucket: string, key: string) => {
     return JSON.parse(data)
   } catch (e) {
     if (e instanceof Error) {
-      console.log(e, e.stack)
+      console.error(e, e.stack)
     }
     return {}
   }
@@ -56,7 +56,7 @@ export const putGzip = async (
   const accessKeyId = process.env.MY_AWS_ACCESS_KEY_ID
   const secretAccessKey = process.env.MY_AWS_SECRET_ACCESS_KEY
   if (accessKeyId == null || secretAccessKey == null) {
-    console.log('Environment variables are not set')
+    console.error('Environment variables are not set')
     return
   }
 
@@ -74,7 +74,7 @@ export const putGzip = async (
     await client.send(command)
   } catch (e) {
     if (e instanceof Error) {
-      console.log(e, e.stack)
+      console.error(e, e.stack)
     }
     return
   }

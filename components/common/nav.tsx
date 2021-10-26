@@ -41,32 +41,30 @@ export const Nav = () => {
   const { locale } = useRouter()
   return (
     <nav>
-      <HStack alignItems="center">
-        <Menu>
-          <MenuButton
-            as={IconButton}
-            aria-label="Menu"
-            icon={<HamburgerIcon />}
-            size="lg"
-            variant="ghost"
-          />
-          <MenuList>
-            {menuGroups.map(({ title, items }) => (
-              <MenuGroup title={title} key={title}>
-                {items.map(({ href, label }) => (
-                  <NextLink href={href} key={href}>
-                    <a>
-                      <MenuItem>
-                        {label[(locale ?? 'ja') as 'en' | 'ja']}
-                      </MenuItem>
-                    </a>
-                  </NextLink>
-                ))}
-              </MenuGroup>
-            ))}
-          </MenuList>
-        </Menu>
-      </HStack>
+      <Menu>
+        <MenuButton
+          as={IconButton}
+          aria-label="Menu"
+          icon={<HamburgerIcon />}
+          size="lg"
+          variant="ghost"
+        />
+        <MenuList>
+          {menuGroups.map(({ title, items }) => (
+            <MenuGroup title={title} key={title}>
+              {items.map(({ href, label }) => (
+                <NextLink href={href} key={href}>
+                  <a>
+                    <MenuItem>
+                      {label[(locale ?? 'ja') as 'en' | 'ja']}
+                    </MenuItem>
+                  </a>
+                </NextLink>
+              ))}
+            </MenuGroup>
+          ))}
+        </MenuList>
+      </Menu>
     </nav>
   )
 }

@@ -12,16 +12,15 @@ export const getServerSideProps: GetServerSideProps<ResultProps> = async ({
   params,
   locale,
 }) => {
-  if (typeof params?.id != 'string') {
-    return { notFound: true }
-  }
+  if (typeof params?.id != 'string') return { notFound: true }
+
   try {
     const { items, quests, ...result } = await getResult(params.id)
-
     const [localItems, localQuests] = await Promise.all([
       getLocalItems(items, locale),
       getLocalQuests(quests, locale),
     ])
+
     return {
       props: {
         items: localItems,

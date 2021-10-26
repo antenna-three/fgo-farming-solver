@@ -90,7 +90,8 @@ export const Page: NextPage<ResultProps> = ({
           itemCounts={paramItems}
           questLaps={quests}
           url={`${
-            process.env.VERCEL_URL || 'https://fgo-farming-solver.vercel.app'
+            process.env.NEXT_PUBLIC_VERCEL_URL ||
+            'https://fgo-farming-solver.vercel.app'
           }${router.asPath}`}
         />
 
