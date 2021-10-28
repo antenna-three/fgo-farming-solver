@@ -1,4 +1,11 @@
-import { Dispatch, SetStateAction, useCallback, useMemo } from 'react'
+import {
+  Dispatch,
+  FormEventHandler,
+  SetStateAction,
+  useCallback,
+  useMemo,
+  useState,
+} from 'react'
 
 export type Node = { value: string; children?: Node[] }
 export type Checked = boolean | 'intermediate'
@@ -63,14 +70,27 @@ const createCheckedTree = (tree: Node[], nodeState: NodeState): CheckedTree =>
     })
     .reduce((acc, cur) => Object.assign(acc, cur), {})
 
+const getBranches = (tree: Node[]): string[] =>
+  tree.flatMap(({ value, children }) =>
+    children == null ? [] : [value, ...getBranches(children)]
+  )
+const getExpanded = (
+  tree: Node[],
+  expandedValues: string[]
+): { [value: string]: boolean } =>
+  Object.fromEntries(
+    getBranches(tree).map((value) => [value, expandedValues.includes(value)])
+  )
+
 export const useCheckboxTree = (
   tree: Node[],
   leafState: LeafState,
-  setLeafState: Dispatch<SetStateAction<LeafState>>
+  setLeafState: Dispatch<SetStateAction<LeafState>>,
+  expandedValues: string[] = []
 ) => {
   const nodeToLeaves = useMemo(() => getNodeToLeaves(tree), [tree])
-  const onCheck = useCallback(
-    (value: string, checked: boolean) => {
+  const onCheck: FormEventHandler<HTMLInputElement> = useCallback(
+    ({ currentTarget: { value, checked } }) => {
       setLeafState((state) => {
         const leaves = nodeToLeaves[value]
         return {
@@ -81,13 +101,20 @@ export const useCheckboxTree = (
     },
     [nodeToLeaves, setLeafState]
   )
-  const nodeState = useMemo(
+  const checked = useMemo(
     () => getNodeState(tree, leafState),
     [leafState, tree]
   )
-  const checkedTree = useMemo(
-    () => createCheckedTree(tree, nodeState),
-    [nodeState, tree]
+  const initialExpanded = useMemo(
+    () => getExpanded(tree, expandedValues),
+    [expandedValues, tree]
   )
-  return { checkedTree, onCheck }
+  const [expanded, setExpanded] = useState(initialExpanded)
+  const onExpand: FormEventHandler<HTMLButtonElement> = useCallback(
+    ({ currentTarget: { value } }) => {
+      setExpanded((expanded) => ({ ...expanded, [value]: !expanded[value] }))
+    },
+    []
+  )
+  return { onCheck, checked, expanded, onExpand }
 }

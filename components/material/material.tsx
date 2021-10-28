@@ -51,8 +51,12 @@ export const Material: NextPage<MaterialProps> = ({
     () => [getClassNode(className, currentClassServants, locale)],
     [className, currentClassServants, locale]
   )
-  const [checked, setChecked] = useChecked(chaldeaState, setChaldeaState)
-  const { onCheck, checkedTree } = useCheckboxTree(tree, checked, setChecked)
+  const [selected, setSelected] = useChecked(chaldeaState, setChaldeaState)
+  const { checked, onCheck, expanded, onExpand } = useCheckboxTree(
+    tree,
+    selected,
+    setSelected
+  )
 
   return (
     <VStack alignItems="stretch" spacing={8}>
@@ -69,7 +73,13 @@ export const Material: NextPage<MaterialProps> = ({
       </Breadcrumb>
       <VStack align="stretch">
         <Heading size="md">{t('サーヴァント選択')}</Heading>
-        <CheckboxTree tree={tree} checkedTree={checkedTree} onCheck={onCheck} />
+        <CheckboxTree
+          tree={tree}
+          checked={checked}
+          onCheck={onCheck}
+          expanded={expanded}
+          onExpand={onExpand}
+        />
       </VStack>
       <VStack align="stretch">
         <Heading size="md">{t('個別設定')}</Heading>

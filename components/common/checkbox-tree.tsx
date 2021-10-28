@@ -1,108 +1,107 @@
+import React, { FormEventHandler, memo } from 'react'
 import {
-  Accordion,
-  AccordionItem,
-  AccordionButton,
-  AccordionIcon,
-  AccordionPanel,
-  AccordionProps,
-} from '@chakra-ui/accordion'
-import { Box, Checkbox } from '@chakra-ui/react'
-import React, { FormEventHandler, memo, useCallback } from 'react'
-import { CheckedTree } from '../../hooks/use-checkbox-tree'
+  Box,
+  Checkbox,
+  Collapse,
+  HStack,
+  IconButton,
+  VStack,
+} from '@chakra-ui/react'
+import { NodeState } from '../../hooks/use-checkbox-tree'
+import { zip } from '../../utils/group-by'
+import { ExpandChevronIcon } from './expand-chevron'
 
 export type Node = { label: string; value: string; children?: Node[] }
+
 type CheckboxTreeProps = {
   tree: Node[]
-  onCheck: (value: string, checked: boolean) => void
-  checkedTree: CheckedTree
-} & AccordionProps
+  onCheck: FormEventHandler<HTMLInputElement>
+  onExpand: FormEventHandler<HTMLButtonElement>
+  checked: NodeState
+  expanded: { [value: string]: boolean }
+}
 
-const CheckboxTree_ = ({
-  tree,
-  onCheck,
-  checkedTree,
-  ...rest
-}: CheckboxTreeProps) => {
-  const onChange: FormEventHandler<HTMLInputElement> = useCallback(
-    (e) => onCheck(e.currentTarget.value, e.currentTarget.checked),
-    [onCheck]
+const getValues = (tree: Node[]): string[] =>
+  tree.flatMap((node) =>
+    node.children == null
+      ? [node.value]
+      : [node.value, ...getValues(node.children)]
   )
-  return tree.every(({ children }) => children == null) ? (
-    <Box>
-      {tree.map(({ label, value }) => (
-        <Box ml={8} mb={1} key={value}>
-          <Checkbox
-            value={value}
-            isChecked={checkedTree[value].checked == true}
-            isIndeterminate={checkedTree[value].checked == 'intermediate'}
-            onChange={onChange}
-          >
-            {label}
-          </Checkbox>
-        </Box>
-      ))}
-    </Box>
-  ) : (
-    <Accordion allowMultiple {...rest}>
-      {tree.map(({ label, value, children }) =>
+const filterObject = (object: { [key: string]: any }, keys: string[]) =>
+  Object.fromEntries(
+    Object.entries(object).filter(([key]) => keys.includes(key))
+  )
+
+const _CheckboxTree = ({
+  tree,
+  checked,
+  onCheck,
+  expanded,
+  onExpand,
+}: CheckboxTreeProps) => {
+  return (
+    <VStack align="start" my={1} spacing={1}>
+      {tree.map(({ value, label, children }) =>
         children == null ? (
-          <Box ml={10} mb={1} key={value}>
+          <Box key={value} pl={12}>
             <Checkbox
               value={value}
-              isChecked={checkedTree[value].checked == true}
-              isIndeterminate={checkedTree[value].checked == 'intermediate'}
-              onChange={onChange}
+              isChecked={checked[value] == true}
+              onChange={onCheck}
             >
               {label}
             </Checkbox>
           </Box>
         ) : (
-          <AccordionItem key={value} border="none">
-            <h2>
-              <AccordionButton p={1}>
-                <AccordionIcon />
-                <Checkbox
-                  value={value}
-                  isChecked={checkedTree[value].checked == true}
-                  isIndeterminate={checkedTree[value].checked == 'intermediate'}
-                  onChange={onChange}
-                  ml={2}
-                >
-                  {label}
-                </Checkbox>
-              </AccordionButton>
-            </h2>
-            <AccordionPanel pt={1}>
+          <Box key={value} pl={4}>
+            <HStack>
+              <IconButton
+                value={value}
+                icon={<ExpandChevronIcon expanded={expanded[value]} />}
+                onClick={onExpand}
+                aria-label="Expand"
+                variant="ghost"
+                size="xs"
+              />
+              <Checkbox
+                value={value}
+                isChecked={checked[value] == true}
+                isIndeterminate={checked[value] == 'intermediate'}
+                onChange={onCheck}
+              >
+                {label}
+              </Checkbox>
+            </HStack>
+            <Collapse in={expanded[value]}>
               <CheckboxTree
                 tree={children}
-                checkedTree={checkedTree[value].children as CheckedTree}
+                checked={filterObject(checked, getValues(children))}
                 onCheck={onCheck}
+                expanded={filterObject(expanded, getValues(children))}
+                onExpand={onExpand}
               />
-            </AccordionPanel>
-          </AccordionItem>
+            </Collapse>
+          </Box>
         )
       )}
-    </Accordion>
+    </VStack>
   )
 }
 
 const areTreesEqual = (prevTree: Node[], nextTree: Node[]): boolean =>
-  prevTree == nextTree
+  zip(prevTree, nextTree).every(
+    ([prevNode, nextNode]) => prevNode.label == nextNode.label
+  )
 
-const areCheckedTreesEqual = (
-  prevTree: CheckedTree,
-  nextTree: CheckedTree
+const areObjectEqual = (
+  prevObj: { [key: string]: any },
+  nextObj: { [key: string]: any }
 ): boolean =>
-  Object.entries(prevTree).every(([value, { checked, children }]) => {
-    const next = nextTree[value]
-    if (next == null) return false
-    if (children == null || next.children == null)
-      return checked == next.checked
-    return areCheckedTreesEqual(children, next.children)
-  })
+  Object.entries(prevObj).every(([key, value]) => nextObj[key] == value)
 
 const areEqual = (prevProps: CheckboxTreeProps, nextProps: CheckboxTreeProps) =>
-  areCheckedTreesEqual(prevProps.checkedTree, nextProps.checkedTree) &&
+  areObjectEqual(prevProps.checked, nextProps.checked) &&
+  areObjectEqual(prevProps.expanded, nextProps.expanded) &&
   areTreesEqual(prevProps.tree, nextProps.tree)
 
-export const CheckboxTree = memo(CheckboxTree_, areEqual)
+export const CheckboxTree = memo(_CheckboxTree, areEqual)

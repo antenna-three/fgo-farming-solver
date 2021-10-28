@@ -35,8 +35,13 @@ export const Index: NextPage<MaterialIndexProps> = ({
     'posession',
     Object.fromEntries(items.map((item) => [item.id, 0]))
   )
-  const [checked, setChecked] = useChecked(chaldeaState, setChaldeaState)
-  const { onCheck, checkedTree } = useCheckboxTree(tree, checked, setChecked)
+  const [selected, setSelected] = useChecked(chaldeaState, setChaldeaState)
+  const { checked, onCheck, expanded, onExpand } = useCheckboxTree(
+    tree,
+    selected,
+    setSelected,
+    ['all']
+  )
 
   return (
     <VStack spacing={8} alignItems="stretch">
@@ -49,9 +54,10 @@ export const Index: NextPage<MaterialIndexProps> = ({
             <Heading size="md">{t('サーヴァント選択')}</Heading>
             <CheckboxTree
               tree={tree}
-              checkedTree={checkedTree}
+              checked={checked}
               onCheck={onCheck}
-              defaultIndex={[0]}
+              expanded={expanded}
+              onExpand={onExpand}
             />
           </VStack>
         </WrapItem>

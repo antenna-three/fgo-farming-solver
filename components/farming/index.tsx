@@ -118,12 +118,16 @@ export const Index: NextPage<FarmingIndexProps> = ({ items, quests }) => {
   const router = useRouter()
   const [isConfirming, setIsConfirming] = useBoolean()
   const [isLoading, setIsLoading] = useBoolean(false)
-  const [checked, setChecked] = useChecked(
+  const [selected, setSelected] = useChecked(
     questIds,
     inputState.quests,
     setInputState
   )
-  const { onCheck, checkedTree } = useCheckboxTree(tree, checked, setChecked)
+  const { checked, onCheck, expanded, onExpand } = useCheckboxTree(
+    tree,
+    selected,
+    setSelected
+  )
 
   useEffect(() => {
     const { query } = router
@@ -198,8 +202,10 @@ export const Index: NextPage<FarmingIndexProps> = ({ items, quests }) => {
           <FormLabel as="legend">{t('周回対象に含めるクエスト')}</FormLabel>
           <CheckboxTree
             tree={tree}
-            checkedTree={checkedTree}
+            checked={checked}
             onCheck={onCheck}
+            expanded={expanded}
+            onExpand={onExpand}
           />
         </FormControl>
         {inputState.quests.length == 0 && (
