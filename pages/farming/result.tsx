@@ -1,4 +1,4 @@
-import { GetServerSideProps, GetServerSidePropsContext } from 'next'
+import { GetServerSideProps } from 'next'
 import { getDrops } from '../../lib/get-drops'
 import { Page } from '../../components/farming/result'
 import { getLocalItems } from '../../lib/get-local-items'
@@ -44,13 +44,15 @@ export const getServerSideProps: GetServerSideProps<ResultProps> = async ({
         const quest = localQuestIndexes[id]
         return { ...quest, lap: parseInt(lap) }
       }),
-    drop_rates: drop_rates.map(({ item_id, quest_id, drop_rate_1 }) => ({
-      item_id: item_id,
-      item_name: localItemIndexes[item_id].name,
-      quest_id: quest_id,
-      quest_name: localQuestIndexes[quest_id].name,
-      drop_rate: drop_rate_1,
-    })),
+    drop_rates: drop_rates.map(
+      ({ item_id, quest_id, drop_rate_1, drop_rate_2 }) => ({
+        item_id: item_id,
+        item_name: localItemIndexes[item_id].name,
+        quest_id: quest_id,
+        quest_name: localQuestIndexes[quest_id].name,
+        drop_rate: drop_rate_1 ?? drop_rate_2 ?? 0,
+      })
+    ),
   }
   const _props = {
     total_lap: props.quests.reduce((acc, { lap }) => acc + lap, 0),

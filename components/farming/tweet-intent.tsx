@@ -18,7 +18,9 @@ export const TweetIntent = ({
   const weights = [1, 2, 4, 0.25, 0.75, 4, 1, 2]
   const displayedItems = itemCounts
     .slice()
-    .sort(orderBy(({ id, count }) => count * weights[parseInt(id[0])], 'desc'))
+    .sort(
+      orderBy(({ id, count }) => count * weights[parseInt(id?.[0])], 'desc')
+    )
     .slice(0, 3)
     .map(({ name, count }) => t('required', { name, count }))
     .join(t('comma'))

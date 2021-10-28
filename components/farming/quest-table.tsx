@@ -29,7 +29,7 @@ export const QuestTable = ({
   const [isOpen, setIsOpen] = useState(
     Object.fromEntries(
       Object.entries(questGroups)
-        .flatMap(([area, quests]) => quests.map(({ id }) => id))
+        .flatMap(([, quests]) => quests.map(({ id }) => id))
         .map((id) => [id, false])
     )
   )
@@ -91,7 +91,7 @@ export const QuestTable = ({
                               <Td>
                                 <ItemLink
                                   id={d.item_id}
-                                  name={itemIndexes[d.item_id].name}
+                                  name={itemIndexes[d.item_id]?.name}
                                 />
                               </Td>
                               <Td isNumeric>
