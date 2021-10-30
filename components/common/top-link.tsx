@@ -1,4 +1,3 @@
-import { Text } from '@chakra-ui/layout'
 import { Link } from './link'
 import { useRouter } from 'next/router'
 import React from 'react'

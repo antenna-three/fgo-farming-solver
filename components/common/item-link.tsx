@@ -1,6 +1,5 @@
 import { Link } from './link'
 
-type Item = { id: string; name: string }
 const itemColors: { [key: string]: string } = {
   0: 'item.bronze',
   1: 'item.silver',
@@ -13,9 +12,7 @@ const itemColors: { [key: string]: string } = {
 }
 
 export const ItemLink = ({ id, name }: { id: string; name: string }) => (
-  <>
-    <Link href={`/items/${id}`} color={itemColors[id[0]]}>
-      {name}
-    </Link>
-  </>
+  <Link href={`/items/${id}`} color={itemColors[id[0]]}>
+    {name}
+  </Link>
 )

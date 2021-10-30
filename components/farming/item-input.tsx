@@ -1,6 +1,5 @@
 import { FormControl, FormLabel } from '@chakra-ui/form-control'
 import { HStack, Input } from '@chakra-ui/react'
-import { useRouter } from 'next/router'
 import React from 'react'
 
 export const ItemInput = ({

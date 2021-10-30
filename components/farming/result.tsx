@@ -1,7 +1,7 @@
+import { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import React from 'react'
 import {
-  Box,
   Center,
   Container,
   Heading,
@@ -9,16 +9,15 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react'
-import { QuestTable } from '../farming/quest-table'
-import { TweetIntent } from './tweet-intent'
-import { Link } from '../common/link'
-import { groupBy } from '../../utils/group-by'
-import { ResultStat } from './result-stat'
-import { ResultAccordion } from './result-accordion'
-import { Title } from '../common/title'
-import { NextPage } from 'next'
 import { useTranslation } from 'react-i18next'
 import { ResultProps } from '../../pages/farming/results/[id]'
+import { useFarmingResult } from '../../hooks/use-farming-result'
+import { Title } from '../common/title'
+import { Link } from '../common/link'
+import { QuestTable } from './quest-table'
+import { TweetIntent } from './tweet-intent'
+import { ResultStat } from './result-stat'
+import { ResultAccordion } from './result-accordion'
 
 export const Page: NextPage<ResultProps> = ({
   params,
@@ -30,6 +29,7 @@ export const Page: NextPage<ResultProps> = ({
 }) => {
   const router = useRouter()
   const { t } = useTranslation(['farming', 'common'])
+  const text = useFarmingResult(items, quests)
 
   if (router.isFallback) {
     return (
@@ -56,14 +56,6 @@ export const Page: NextPage<ResultProps> = ({
     )
   }
 
-  const itemIndexes = Object.fromEntries(items.map((item) => [item.id, item]))
-  const paramItems = Object.entries(params.items).map(([id, count]) => ({
-    ...itemIndexes[id],
-    count,
-  }))
-  const lapGroups = groupBy(quests, ({ area }) => area)
-  const questToDrops = groupBy(drop_rates, ({ quest_id }) => quest_id)
-
   return (
     <>
       <VStack spacing="8">
@@ -72,11 +64,7 @@ export const Page: NextPage<ResultProps> = ({
         <Heading size="lg">{t('クエスト周回数')}</Heading>
 
         <Center w="sm">
-          <QuestTable
-            questGroups={lapGroups}
-            questToDrops={questToDrops}
-            itemIndexes={itemIndexes}
-          />
+          <QuestTable items={items} quests={quests} dropRates={drop_rates} />
         </Center>
 
         <VStack>
@@ -86,18 +74,10 @@ export const Page: NextPage<ResultProps> = ({
           <ResultStat totalLap={total_lap} totalAp={total_ap} />
         </VStack>
 
-        <TweetIntent
-          itemCounts={paramItems}
-          questLaps={quests}
-          url={`${
-            process.env.NEXT_PUBLIC_VERCEL_URL ||
-            'https://fgo-farming-solver.vercel.app'
-          }${router.asPath}`}
-        />
+        <TweetIntent text={text} />
 
-        <Heading size="lg" mb={4}>
-          {t('アイテム獲得数')}
-        </Heading>
+        <Heading size="lg">{t('アイテム獲得数')}</Heading>
+
         <Container maxW="container.xl">
           <ResultAccordion items={items} params={params} />
         </Container>

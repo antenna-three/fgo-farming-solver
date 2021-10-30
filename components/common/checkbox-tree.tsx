@@ -15,10 +15,10 @@ export type Node = { label: string; value: string; children?: Node[] }
 
 type CheckboxTreeProps = {
   tree: Node[]
-  onCheck: FormEventHandler<HTMLInputElement>
-  onExpand: FormEventHandler<HTMLButtonElement>
   checked: NodeState
+  onCheck: FormEventHandler<HTMLInputElement>
   expanded: { [value: string]: boolean }
+  onExpand: FormEventHandler<HTMLButtonElement>
 }
 
 const getValues = (tree: Node[]): string[] =>

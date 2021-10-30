@@ -6,9 +6,6 @@ import {
   LinkProps as ChakraLinkProps,
 } from '@chakra-ui/react'
 import React from 'react'
-import { UrlObject } from 'url'
-
-type Url = string | UrlObject
 
 export type LinkProps = Omit<ChakraLinkProps, 'href'> & NextLinkProps
 

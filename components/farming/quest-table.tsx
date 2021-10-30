@@ -1,4 +1,3 @@
-import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons'
 import {
   Table,
   Thead,
@@ -9,23 +8,35 @@ import {
   Collapse,
   IconButton,
 } from '@chakra-ui/react'
-import React, { FormEventHandler, Fragment, useState } from 'react'
+import React, { FormEventHandler, Fragment, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ItemLink } from '../common/item-link'
+import { DropRate, Item, Quest } from '../../interfaces/api'
+import { groupBy } from '../../utils/group-by'
+import { ExpandChevronIcon } from '../common/expand-chevron'
+import { QuestItemTable } from './quest-item-table'
 
 export const QuestTable = ({
-  questGroups,
-  questToDrops,
-  itemIndexes,
+  items,
+  quests,
+  dropRates,
 }: {
-  questGroups: {
-    [key: string]: { area: string; name: string; id: string; lap: number }[]
-  }
-  questToDrops: {
-    [key: string]: { item_id: string; drop_rate: number | string }[]
-  }
-  itemIndexes: { [key: string]: { id: string; name: string } }
+  items: Item[]
+  quests: Quest[]
+  dropRates: DropRate[]
 }) => {
+  const itemIndexes = useMemo(
+    () => Object.fromEntries(items.map((item) => [item.id, item])),
+    [items]
+  )
+  const questGroups = useMemo(
+    () => groupBy(quests, ({ area }) => area),
+    [quests]
+  )
+  const questToDrops = useMemo(
+    () => groupBy(dropRates, ({ quest_id }) => quest_id),
+    [dropRates]
+  )
+
   const [isOpen, setIsOpen] = useState(
     Object.fromEntries(
       Object.entries(questGroups)
@@ -63,9 +74,7 @@ export const QuestTable = ({
                   <Td px={1} py={0}>
                     <IconButton
                       aria-label="toggle collapse"
-                      icon={
-                        isOpen[id] ? <ChevronUpIcon /> : <ChevronDownIcon />
-                      }
+                      icon={<ExpandChevronIcon expanded={isOpen[id]} />}
                       variant="ghost"
                       value={id}
                       onClick={onToggle}
@@ -78,33 +87,11 @@ export const QuestTable = ({
                 <Tr>
                   <Td colSpan={3} py={0}>
                     <Collapse in={isOpen[id]} animateOpacity>
-                      <Table>
-                        <Thead>
-                          <Tr>
-                            <Th>{t('アイテム')}</Th>
-                            <Th isNumeric>{t('獲得数')}</Th>
-                          </Tr>
-                        </Thead>
-                        <Tbody>
-                          {questToDrops[id].map((d) => (
-                            <Tr key={id + d.item_id}>
-                              <Td>
-                                <ItemLink
-                                  id={d.item_id}
-                                  name={itemIndexes[d.item_id]?.name}
-                                />
-                              </Td>
-                              <Td isNumeric>
-                                {Math.round(
-                                  (typeof d.drop_rate == 'string'
-                                    ? parseFloat(d.drop_rate)
-                                    : d.drop_rate) * lap
-                                )}
-                              </Td>
-                            </Tr>
-                          ))}
-                        </Tbody>
-                      </Table>
+                      <QuestItemTable
+                        dropRates={questToDrops[id]}
+                        itemIndexes={itemIndexes}
+                        lap={lap}
+                      />
                     </Collapse>
                   </Td>
                 </Tr>

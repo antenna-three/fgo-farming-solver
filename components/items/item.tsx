@@ -30,7 +30,7 @@ export const Page: NextPage<ItemProps> = ({ id, items, quests, dropRates }) => {
   const [dropRateKey, setDropRateKey] = useLocalStorage<DropRateKey>(
     'dropRateKey',
     '1',
-    (key) => (key == '1' || key == '2' ? key : '1')
+    { onGet: (key) => (key == '1' || key == '2' ? key : '1') }
   )
   const [dropRateStyle, setDropRateStyle] = useLocalStorage<DropRateStyle>(
     'dropRateStyle',

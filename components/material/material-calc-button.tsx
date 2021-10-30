@@ -19,11 +19,9 @@ export const CalcButton: ComponentWithAs<
   const { t } = useTranslation('material')
   const calc = () => {
     setCalculating.on()
-    const query = sumMaterials(state, materials)
-    router.push({
-      pathname: '/material/result',
-      query,
-    })
+    const result = sumMaterials(state, materials)
+    localStorage.setItem('material/result', JSON.stringify(result))
+    router.push('/material/result')
   }
   return (
     <Button onClick={calc} isLoading={calculating} {...props}>

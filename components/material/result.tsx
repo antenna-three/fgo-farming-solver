@@ -1,48 +1,49 @@
 import React, { FormEvent, useCallback, useMemo, useState } from 'react'
+import { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { Box, Button, Checkbox, Text, VStack } from '@chakra-ui/react'
-import { useLocalStorage } from '../../hooks/use-local-storage'
-import { Link } from '../common/link'
-import { ResultAccordion } from './result-accordion'
-import { TargetCategorySelect } from './target-category-select'
-import { groupBy } from '../../utils/group-by'
-import { useSelectOnFocus } from '../../hooks/use-select-on-focus'
-import { Title } from '../common/title'
-import { priorityToApiId } from '../../lib/priority-to-api-id'
-import { NextPage } from 'next'
-import { MaterialResultProps } from '../../pages/material/result'
 import { useTranslation } from 'react-i18next'
 import { Item } from '../../interfaces/atlas-academy'
+import { useLocalStorage } from '../../hooks/use-local-storage'
+import { useSelectOnFocus } from '../../hooks/use-select-on-focus'
+import { priorityToApiId } from '../../lib/priority-to-api-id'
+import { MaterialResultProps } from '../../pages/material/result'
+import { groupBy } from '../../utils/group-by'
+import { Title } from '../common/title'
+import { ResultAccordion } from './result-accordion'
+import { TargetCategorySelect } from './target-category-select'
 
 export const Result: NextPage<MaterialResultProps> = ({ items }) => {
   const router = useRouter()
-  const amounts = useMemo(
-    () =>
-      Object.fromEntries(
-        Object.entries(router.query)
-          .filter(([k, v]) => typeof v == 'string')
-          .map(([k, v]) => [k, parseInt(v as string)])
-      ),
-    [router.query]
+  const initialAmounts = Object.fromEntries(
+    Object.entries(router.query).map(([k, v]) => [
+      k,
+      parseInt(typeof v == 'string' ? v : '0') || 0,
+    ])
   )
-  const filteredItems = useMemo(
+  const [amounts] = useLocalStorage<{ [id: string]: number }>(
+    'material/result',
+    initialAmounts,
+    { useInitial: Object.keys(router.query).length > 0 }
+  )
+  const requiredItems = useMemo(
     () => items.filter((item) => item.id.toString() in amounts),
     [amounts, items]
   )
   const [possession, setPosession] = useLocalStorage(
     'posession',
-    Object.fromEntries(filteredItems.map((item) => [item.id, 0]))
+    Object.fromEntries(requiredItems.map((item) => [item.id, 0]))
   )
   const [hideSufficient, setHideSufficient] = useState(false)
   const itemGroup = useMemo(
     () =>
       Object.entries(
-        groupBy(filteredItems, ({ largeCategory }) => largeCategory)
+        groupBy(requiredItems, ({ largeCategory }) => largeCategory)
       ).map(([largeCategory, items]): [string, [string, Item[]][]] => [
         largeCategory,
         Object.entries(groupBy(items, ({ category }) => category)),
       ]),
-    [filteredItems]
+    [requiredItems]
   )
   const largeCategories = itemGroup
     .map(([largeCategory]) => largeCategory)
@@ -64,7 +65,7 @@ export const Result: NextPage<MaterialResultProps> = ({ items }) => {
     [setPosession]
   )
   const deficiencies = Object.fromEntries(
-    filteredItems.map((item) => [
+    requiredItems.map((item) => [
       item.id,
       amounts[item.id.toString()] - possession[item.id],
     ])
@@ -72,7 +73,7 @@ export const Result: NextPage<MaterialResultProps> = ({ items }) => {
   const goSolver = useCallback(
     (event) => {
       event.preventDefault()
-      const queryItems = filteredItems
+      const queryItems = requiredItems
         .filter(
           (item) =>
             deficiencies[item.id] > 0 &&
@@ -88,7 +89,7 @@ export const Result: NextPage<MaterialResultProps> = ({ items }) => {
         query: { items: queryItems },
       })
     },
-    [filteredItems, router, deficiencies, targetCategories]
+    [requiredItems, router, deficiencies, targetCategories]
   )
   const selectOnFocus = useSelectOnFocus()
   const { t } = useTranslation('material')

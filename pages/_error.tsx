@@ -17,7 +17,7 @@ const messages: { [code: number]: { [locale: string]: string | string[] } } = {
       'ページが見つかりませんでした。',
       'URLが間違っている可能性があります。',
     ],
-    en: ['The page was not found.', 'Is your URL valid?'],
+    en: ['The page was not found.', 'URL may not be invalid.'],
   },
   500: {
     ja: ['サーバーに問題があります。', 'サイト管理者にお問い合わせください。'],
@@ -39,7 +39,7 @@ const Error = ({
 }) => {
   const { locale } = useRouter()
   title = title || statusCodes[statusCode] || 'An unexpected error has occured'
-  message ||= messages[statusCode][locale ?? 'ja']
+  message ||= messages[statusCode]?.[locale ?? 'ja']
 
   return (
     <>

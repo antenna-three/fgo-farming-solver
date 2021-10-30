@@ -6,8 +6,6 @@ import {
   Tbody,
   Td,
   Heading,
-  HStack,
-  Box,
   Wrap,
   VStack,
 } from '@chakra-ui/react'

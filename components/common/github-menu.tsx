@@ -7,7 +7,6 @@ import {
   MenuList,
 } from '@chakra-ui/menu'
 import { useRouter } from 'next/router'
-import { FaGithub } from 'react-icons/fa'
 
 const repos: { repo: string; label: { [locale: string]: string } }[] = [
   {

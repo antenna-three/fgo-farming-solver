@@ -7,18 +7,16 @@ import {
   ChakraComponent,
   Text,
   LinkProps as ChakraLinkProps,
-  Wrap,
   SimpleGrid,
   GridItem,
-  Spacer,
 } from '@chakra-ui/react'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { motion, TargetAndTransition, Transition } from 'framer-motion'
-import { LinkProps } from '../components/common/link'
+import { Link, LinkProps } from '../components/common/link'
 import { theme } from '../theme'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
 import { Trans, useTranslation } from 'react-i18next'
-import { useRouter } from 'next/router'
+import { useLocalStorage } from '../hooks/use-local-storage'
 
 const MotionSpan = motion<any>(chakra.span)
 
@@ -84,6 +82,11 @@ const transition: Transition = {
 
 const Index = () => {
   const { t } = useTranslation('common')
+  const [farmingResultUrl] = useLocalStorage('farming/results', '')
+  const [materialResultExists, setMaterialResultExists] = useState(false)
+  useEffect(() => {
+    if ('material/result' in localStorage) setMaterialResultExists(true)
+  }, [])
 
   return (
     <VStack spacing={12} mt={12}>
@@ -127,6 +130,9 @@ const Index = () => {
           <LinkCard href="/material">
             <Heading size="lg">{t('育成素材計算機')}</Heading>
             <Text>{t('material-calculator-description')}</Text>
+            {materialResultExists && (
+              <Link href="/material/result">{t('前回の結果')}</Link>
+            )}
           </LinkCard>
         </GridItem>
 
@@ -134,6 +140,9 @@ const Index = () => {
           <LinkCard href="/farming">
             <Heading size="lg">{t('周回ソルバー')}</Heading>
             <Text>{t('farming-solver-description')}</Text>
+            {farmingResultUrl && (
+              <Link href={farmingResultUrl}>{t('前回の結果')}</Link>
+            )}
           </LinkCard>
         </GridItem>
 

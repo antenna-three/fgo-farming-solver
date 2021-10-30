@@ -1,20 +1,15 @@
 import {
-  Box,
   Flex,
-  GridItem,
   Heading,
   HStack,
   Icon,
   IconButton,
-  SimpleGrid,
   Stack,
   StackDivider,
   Text,
   VStack,
-  Wrap,
 } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
-import Image from 'next/image'
 import React from 'react'
 import { FaGithub, FaTwitter } from 'react-icons/fa'
 import { GithubMenu } from './github-menu'
