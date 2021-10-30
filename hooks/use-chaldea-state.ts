@@ -8,10 +8,8 @@ export const useChaldeaState = (
 ): [ChaldeaState, Dispatch<SetStateAction<ChaldeaState>>] => {
   const initialState = useMemo(() => createChaldeaState(['all', ...ids]), [ids])
   const mergeState = useChaldeaStateMarger(initialState)
-  const [state, setState] = useLocalStorage(
-    'material',
-    initialState,
-    mergeState
-  )
+  const [state, setState] = useLocalStorage('material', initialState, {
+    onGet: mergeState,
+  })
   return [state, setState]
 }
