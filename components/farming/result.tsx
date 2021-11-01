@@ -29,7 +29,7 @@ export const Page: NextPage<ResultProps> = ({
 }) => {
   const router = useRouter()
   const { t } = useTranslation(['farming', 'common'])
-  const text = useFarmingResult(items, quests)
+  const text = useFarmingResult(items, params.items, quests)
 
   if (router.isFallback) {
     return (

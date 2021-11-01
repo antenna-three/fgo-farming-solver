@@ -3,17 +3,21 @@ import { useTranslation } from 'react-i18next'
 import { Item, Quest } from '../interfaces/api'
 import { orderBy } from '../utils/order-by'
 
-export const useFarmingResult = (items: Item[], quests: Quest[]) => {
+export const useFarmingResult = (
+  items: Item[],
+  paramItems: { [id: string]: number },
+  quests: Quest[]
+) => {
   const { t } = useTranslation('farming')
   return useMemo(() => {
     const weights = [1, 2, 4, 0.25, 0.75, 4, 1, 2]
     const displayedItems = items
       .slice()
       .sort(
-        orderBy(({ id, count }) => count * weights[parseInt(id?.[0])], 'desc')
+        orderBy(({ id }) => paramItems[id] * weights[parseInt(id?.[0])], 'desc')
       )
       .slice(0, 3)
-      .map(({ name, count }) => t('required', { name, count }))
+      .map(({ id, name }) => t('required', { name, count: paramItems[id] }))
       .join(t('comma'))
     const displayedLaps = quests
       .slice()
@@ -33,5 +37,5 @@ export const useFarmingResult = (items: Item[], quests: Quest[]) => {
       qaso,
       total,
     })
-  }, [items, quests, t])
+  }, [items, paramItems, quests, t])
 }
