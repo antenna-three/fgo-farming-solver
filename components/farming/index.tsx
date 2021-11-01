@@ -151,7 +151,7 @@ export const Index: NextPage<FarmingIndexProps> = ({ items, quests }) => {
         router.push('/500')
       } else {
         const url = `/farming/results/${id}`
-        localStorage.setItem('farming/results', JSON.stringify(url))
+        localStorage.setItem('farming/results', url)
         router.push(url)
       }
     },

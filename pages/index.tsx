@@ -83,7 +83,9 @@ const transition: Transition = {
 const Index = () => {
   const { t } = useTranslation('common')
   const farmingResultUrl =
-    typeof window == 'undefined' ? '' : localStorage.getItem('farming/results')
+    typeof window == 'undefined'
+      ? ''
+      : localStorage.getItem('farming/results')?.replace(/"/g, '')
   const materialResultExists =
     typeof window == 'undefined' ? false : 'material/result' in localStorage
 
