@@ -7,9 +7,7 @@ import { useTranslation } from 'react-i18next'
 
 export const TweetIntent = ({ text }: { text: string }) => {
   const router = useRouter()
-  const url = `https://${
-    process.env.NEXT_PUBLIC_VERCEL_URL ?? 'fgo-farming-solver.vercel.com'
-  }${router.pathname}`
+  const url = `https://fgo-farming-solver.vercel.app${router.asPath}`
   const hashtags = 'FGO周回ソルバー'
   const intentUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
     text
