@@ -13,7 +13,6 @@ import { ResultTable } from './result-table'
 
 export const ResultAccordion = ({
   itemGroup,
-  hideSufficient,
   amounts,
   possession,
   deficiencies,
@@ -21,7 +20,6 @@ export const ResultAccordion = ({
   onFocus,
 }: {
   itemGroup: [string, [string, Item[]][]][]
-  hideSufficient: boolean
   amounts: { [id: string]: number }
   possession: { [id: string]: number }
   deficiencies: { [id: string]: number }
@@ -46,7 +44,6 @@ export const ResultAccordion = ({
             <ResultTable
               amounts={amounts}
               deficiencies={deficiencies}
-              hideSufficient={hideSufficient}
               itemGroup={subItemGroup}
               onChange={onChange}
               onFocus={onFocus}

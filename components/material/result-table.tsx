@@ -10,7 +10,6 @@ const px = [2, 4, 6]
 
 export const ResultTable = ({
   itemGroup,
-  hideSufficient,
   amounts,
   possession,
   deficiencies,
@@ -18,7 +17,6 @@ export const ResultTable = ({
   onFocus,
 }: {
   itemGroup: [string, Item[]][]
-  hideSufficient: boolean
   amounts: { [id: string]: number }
   possession: { [id: string]: number }
   deficiencies: { [id: string]: number }
@@ -49,35 +47,33 @@ export const ResultTable = ({
                 {t(category)}
               </Th>
             </Tr>
-            {items
-              .filter((item) => !hideSufficient || deficiencies[item.id] > 0)
-              .map((item) => (
-                <Tr key={item.id}>
-                  <Td px={px} py={3}>
-                    <ItemLink
-                      name={item.name}
-                      id={priorityToApiId(item.priority)}
-                    />
-                  </Td>
-                  <Td px={px} py={3} isNumeric>
-                    {amounts[item.id.toString()]}
-                  </Td>
-                  <Td px={px} py={0}>
-                    <Input
-                      type="number"
-                      name={item.id.toString()}
-                      value={showPositive(possession[item.id])}
-                      min={0}
-                      onChange={onChange}
-                      onFocus={onFocus}
-                      w={20}
-                    />
-                  </Td>
-                  <Td px={px} py={3} isNumeric>
-                    {showPositive(deficiencies[item.id])}
-                  </Td>
-                </Tr>
-              ))}
+            {items.map((item) => (
+              <Tr key={item.id}>
+                <Td px={px} py={3}>
+                  <ItemLink
+                    name={item.name}
+                    id={priorityToApiId(item.priority)}
+                  />
+                </Td>
+                <Td px={px} py={3} isNumeric>
+                  {amounts[item.id.toString()]}
+                </Td>
+                <Td px={px} py={0}>
+                  <Input
+                    type="number"
+                    name={item.id.toString()}
+                    value={showPositive(possession[item.id])}
+                    min={0}
+                    onChange={onChange}
+                    onFocus={onFocus}
+                    w={20}
+                  />
+                </Td>
+                <Td px={px} py={3} isNumeric>
+                  {showPositive(deficiencies[item.id])}
+                </Td>
+              </Tr>
+            ))}
           </Fragment>
         ))}
       </Tbody>

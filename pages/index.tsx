@@ -82,11 +82,10 @@ const transition: Transition = {
 
 const Index = () => {
   const { t } = useTranslation('common')
-  const [farmingResultUrl] = useLocalStorage('farming/results', '')
-  const [materialResultExists, setMaterialResultExists] = useState(false)
-  useEffect(() => {
-    if ('material/result' in localStorage) setMaterialResultExists(true)
-  }, [])
+  const farmingResultUrl =
+    typeof window == 'undefined' ? '' : localStorage.getItem('farming/results')
+  const materialResultExists =
+    typeof window == 'undefined' ? false : 'material/result' in localStorage
 
   return (
     <VStack spacing={12} mt={12}>

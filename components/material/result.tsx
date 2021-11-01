@@ -21,11 +21,10 @@ export const Result: NextPage<MaterialResultProps> = ({ items }) => {
       parseInt(typeof v == 'string' ? v : '0') || 0,
     ])
   )
-  const [amounts] = useLocalStorage<{ [id: string]: number }>(
-    'material/result',
-    initialAmounts,
-    { useInitial: Object.keys(router.query).length > 0 }
-  )
+  const amounts: { [id: string]: number } =
+    typeof window == 'undefined'
+      ? initialAmounts
+      : JSON.parse(localStorage.getItem('material/result') ?? '{}')
   const requiredItems = useMemo(
     () => items.filter((item) => item.id.toString() in amounts),
     [amounts, items]
@@ -35,19 +34,6 @@ export const Result: NextPage<MaterialResultProps> = ({ items }) => {
     Object.fromEntries(requiredItems.map((item) => [item.id, 0]))
   )
   const [hideSufficient, setHideSufficient] = useState(false)
-  const itemGroup = useMemo(
-    () =>
-      Object.entries(
-        groupBy(requiredItems, ({ largeCategory }) => largeCategory)
-      ).map(([largeCategory, items]): [string, [string, Item[]][]] => [
-        largeCategory,
-        Object.entries(groupBy(items, ({ category }) => category)),
-      ]),
-    [requiredItems]
-  )
-  const largeCategories = itemGroup
-    .map(([largeCategory]) => largeCategory)
-    .filter((largeCategory) => largeCategory != 'QP')
   const { locale } = useRouter()
   const commonItems = locale == 'en' ? 'Common Items' : '強化素材'
   const [targetCategories, setTargetCategories] = useState([commonItems])
@@ -91,6 +77,24 @@ export const Result: NextPage<MaterialResultProps> = ({ items }) => {
     },
     [requiredItems, router, deficiencies, targetCategories]
   )
+  const sufficientItems = useMemo(
+    () => requiredItems.filter(({ id }) => deficiencies[id] > 0),
+    [deficiencies, requiredItems]
+  )
+  const displayedItems = hideSufficient ? sufficientItems : requiredItems
+  const itemGroup = useMemo(
+    () =>
+      Object.entries(
+        groupBy(displayedItems, ({ largeCategory }) => largeCategory)
+      ).map(([largeCategory, items]): [string, [string, Item[]][]] => [
+        largeCategory,
+        Object.entries(groupBy(items, ({ category }) => category)),
+      ]),
+    [displayedItems]
+  )
+  const largeCategories = itemGroup
+    .map(([largeCategory]) => largeCategory)
+    .filter((largeCategory) => largeCategory != 'QP')
   const selectOnFocus = useSelectOnFocus()
   const { t } = useTranslation('material')
 
@@ -107,7 +111,6 @@ export const Result: NextPage<MaterialResultProps> = ({ items }) => {
           ) : (
             <ResultAccordion
               itemGroup={itemGroup}
-              hideSufficient={hideSufficient}
               amounts={amounts}
               possession={possession}
               deficiencies={deficiencies}
