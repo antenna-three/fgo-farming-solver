@@ -12,7 +12,7 @@ export const useFarmingResult = (
   return useMemo(() => {
     const weights = [1, 2, 4, 0.25, 0.75, 4, 1, 2]
     const displayedItems = items
-      .slice()
+      .filter(({ id }) => paramItems[id] != null)
       .sort(
         orderBy(({ id }) => paramItems[id] * weights[parseInt(id?.[0])], 'desc')
       )
