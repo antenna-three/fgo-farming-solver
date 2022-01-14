@@ -312,7 +312,27 @@ const noToMsId: { [key: number]: number } = {
   314: 309,
   315: 310,
   316: 311,
+  317: 312,
+  318: 313,
+  319: 314,
+  320: 315,
+  321: 316,
+  322: 317,
+  323: 318,
+  324: 319,
+  325: 320,
+  326: 321,
+  327: 322,
+  328: 323,
+  329: 324,
+  330: 325,
+  331: 326,
+  332: 327,
+  334: 328,
+  335: 329,
 }
+
+const diff = 6
 
 const msIdToNo = Object.fromEntries(
   Object.entries(noToMsId).map(([k, v]) => [v, parseInt(k)])
@@ -336,13 +356,13 @@ export const useMsServantId = (servants: Servant[]) => {
   const getMsId = useCallback(
     (id: number): number => {
       const no = idToNo[id]
-      return noToMsId[no] || no - 5
+      return noToMsId[no] || no - diff
     },
     [idToNo]
   )
   const getId = useCallback(
     (msId: number): number => {
-      const no = msIdToNo[msId] || msId + 5
+      const no = msIdToNo[msId] || msId + diff
       return noToId[no]
     },
     [noToId]
