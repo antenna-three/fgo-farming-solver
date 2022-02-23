@@ -3,15 +3,13 @@ import { Heading, HStack, Link, Text, VStack } from '@chakra-ui/react'
 import React from 'react'
 import { BiWindows } from 'react-icons/bi'
 import { MdDevices, MdDownload, MdImportExport } from 'react-icons/md'
-import { useQuery } from '../../hooks/use-query'
 import { useTranslation } from 'react-i18next'
 import { Title } from '../common/title'
 import { useRouter } from 'next/router'
 
 export const ImportExport = () => {
-  const [query, setQuery] = useQuery()
   const { t } = useTranslation('farming')
-  const { locale } = useRouter()
+  const { locale, query } = useRouter()
 
   return (
     <>
