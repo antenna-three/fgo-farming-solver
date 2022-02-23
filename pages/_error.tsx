@@ -39,7 +39,7 @@ const Error = ({
 }) => {
   const { locale } = useRouter()
   title = title || statusCodes[statusCode] || 'An unexpected error has occured'
-  message ||= messages[statusCode]?.[locale ?? 'ja']
+  message = message || messages[statusCode]?.[locale ?? 'ja']
 
   return (
     <>

@@ -13,7 +13,7 @@ export const ItemInput = ({
   inputValues: { [key: string]: string }
   handleChange: React.FormEventHandler
 }) => {
-  inputValues[id] ||= ''
+  if (!(id in inputValues)) inputValues[id] = ''
   return (
     <FormControl id={`item-${id}`}>
       <HStack align="center" justify="end">
