@@ -91,7 +91,7 @@ const Index = () => {
 
   return (
     <VStack spacing={12} mt={12}>
-      <VStack size="xl" textAlign="center">
+      <VStack textAlign="center">
         <Trans
           t={t}
           i18nKey="title"
