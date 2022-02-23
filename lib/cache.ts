@@ -16,8 +16,8 @@ const fetchAndWriteJson = async (
     .catch((e) => console.error(e))
   fs.writeFile(hashPath, hash, 'utf-8').catch((e) => console.error(e))
   const cacheFile = createWriteStream(cachePath, 'utf-8')
-  res.body.pipe(cacheFile).on('error', (e) => console.error(e))
-  return res.json()
+  res.body?.pipe(cacheFile).once('error', (e) => console.error(e))
+  return res.json() as any
 }
 
 export const fetchJsonWithCache = async (url: string) => {
