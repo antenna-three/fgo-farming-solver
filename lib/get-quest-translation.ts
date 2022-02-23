@@ -1,6 +1,6 @@
 import fs from 'fs/promises'
 import path from 'path'
-import fetch from 'node-fetch'
+import got from 'got'
 
 export const getQuestTranslation = async (): Promise<{
   [jpQuestName: string]: string
@@ -15,7 +15,7 @@ export const getQuestTranslation = async (): Promise<{
       const spreadsheetId = '1NY7nOVQkDyWTXhnK1KP1oPUXoN1C0SY6pMEXPcFuKyI'
       const range = "'JP Droprate Table'!D:E"
       const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?key=${key}`
-      const res = (await fetch(url).then((res) => res.json())) as {
+      const res = (await got(url).json()) as {
         values: [string, string][]
       }
       const map = Object.fromEntries(

@@ -6,9 +6,9 @@ import { fetchJsonWithCache } from './cache'
 
 export const getServants = async (locale?: string) => {
   const enumUrl = `${origin}/export/${region}/nice_enums.json`
-  const classNames: string[] = await fetch(enumUrl)
-    .then((res) => res.json())
-    .then((obj) => Object.values(obj.SvtClass))
+  const classNames: string[] = await fetchJsonWithCache(enumUrl).then((obj) =>
+    Object.values((obj as { SvtClass: String }).SvtClass)
+  )
   const servantsUrl = getUrl('basic_servant', locale)
   const servants = fetchJsonWithCache(servantsUrl)
     //exclude npc servants

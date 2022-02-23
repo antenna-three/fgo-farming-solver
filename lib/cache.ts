@@ -1,8 +1,13 @@
-import { promises as fs, createWriteStream } from 'fs'
+import { promises as fs } from 'fs'
 import path from 'path'
-import fetch from 'node-fetch'
 import { readJson } from './read-json'
 import { getHash } from './get-hash'
+import got, { OptionsOfJSONResponseBody, OptionsOfTextResponseBody } from 'got'
+
+const option: OptionsOfTextResponseBody & OptionsOfJSONResponseBody = {
+  timeout: { request: 60000 },
+  retry: { limit: 10 },
+}
 
 const fetchAndWriteJson = async (
   url: string,
@@ -10,19 +15,19 @@ const fetchAndWriteJson = async (
   hashPath: string,
   cachePath: string
 ) => {
-  const res = await fetch(url)
+  console.log(`fetching ${url}`)
+  const res = await got(url, option)
   await fs
     .mkdir(path.dirname(hashPath), { recursive: true })
     .catch((e) => console.error(e))
   fs.writeFile(hashPath, hash, 'utf-8').catch((e) => console.error(e))
-  const cacheFile = createWriteStream(cachePath, 'utf-8')
-  res.body?.pipe(cacheFile).once('error', (e) => console.error(e))
-  return res.json() as any
+  fs.writeFile(cachePath, res.body, 'utf-8').catch((e) => console.error(e))
+  return JSON.parse(res.body)
 }
 
 export const fetchJsonWithCache = async (url: string) => {
   if (process.env.NODE_ENV == 'production' && process.env.CI != '1')
-    return fetch(url).then((res) => res.json())
+    return got(url, option).json()
   const cacheDir = path.resolve('.next/cache/atlasacademy')
   const stem = path.basename(url, '.json')
   const hashPath = path.resolve(cacheDir, `${stem}.hash.txt`)
