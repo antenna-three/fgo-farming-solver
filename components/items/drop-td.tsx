@@ -28,7 +28,7 @@ export const DropTd = ({
   const diff =
     dropRateStyle == 'rate'
       ? sd * 2 * 100
-      : ap / dropRate - ap / (dropRate + 2 * sd)
+      : (ap * 2 * sd) / (dropRate * dropRate - 4 * sd * sd)
   return (
     <>
       <Td pr={0} isNumeric>
