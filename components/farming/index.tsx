@@ -219,7 +219,7 @@ export const Index: NextPage<FarmingIndexProps> = ({ items, quests }) => {
         <FormControl as="fieldset">
           <FormLabel as="legend">{t('キャンペーン')}</FormLabel>
           <Checkbox
-            checked={inputState.halfDailyAp}
+            isChecked={inputState.halfDailyAp}
             onChange={(event) => {
               const { checked } = event.currentTarget
               setInputState((state) => ({ ...state, halfDailyAp: checked }))
