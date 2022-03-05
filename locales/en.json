@@ -14,7 +14,9 @@
         "item-list-description": "Drop rates in quests for each item.",
         "みんなの結果": "Shared Results",
         "shared-results-description": "Calculation results shared on Twitter.",
-        "前回の結果": "Previous Result"
+        "前回の結果": "Previous Result",
+        "サインイン": "Sign in",
+        "サインアウト": "Sign out"
     },
     "farming": {
         "集めたいアイテムの数を最低1つ入力してください。": "Input at least 1 number of items.",

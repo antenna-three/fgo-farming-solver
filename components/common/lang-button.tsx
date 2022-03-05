@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import React from 'react'
 import { MdTranslate } from 'react-icons/md'
 
-export const LangSelect = () => {
+export const LangButton = () => {
   const { pathname, query, locale } = useRouter()
   const nextLocale = locale == 'en' ? 'ja' : 'en'
   const url = { pathname, query }

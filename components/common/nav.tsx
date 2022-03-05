@@ -1,16 +1,18 @@
 import NextLink from 'next/link'
 import { HamburgerIcon } from '@chakra-ui/icons'
 import {
-  HStack,
   IconButton,
   Menu,
   MenuButton,
+  MenuDivider,
   MenuGroup,
   MenuItem,
   MenuList,
 } from '@chakra-ui/react'
 import React from 'react'
 import { useRouter } from 'next/router'
+import { LangMenuItem } from './lang-menu-item'
+import { AuthMenuItem } from './auth-menu-item'
 
 export const menuGroups = [
   {
@@ -63,6 +65,9 @@ export const Nav = () => {
               ))}
             </MenuGroup>
           ))}
+          <MenuDivider />
+          <LangMenuItem />
+          <AuthMenuItem />
         </MenuList>
       </Menu>
     </nav>
