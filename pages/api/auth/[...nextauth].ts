@@ -9,4 +9,16 @@ export default NextAuth({
       version: '2.0',
     }),
   ],
+  callbacks: {
+    jwt: async ({ token, profile }) => {
+      if (profile) {
+        token.userId = profile.id
+      }
+      return token
+    },
+    session: async ({ session, token }) => {
+      session.user.id = token.sub
+      return session
+    },
+  },
 })

@@ -16,7 +16,14 @@
         "shared-results-description": "Calculation results shared on Twitter.",
         "前回の結果": "Previous Result",
         "サインイン": "Sign in",
-        "サインアウト": "Sign out"
+        "サインアウト": "Sign out",
+        "クラウドセーブ": "Save to cloud",
+        "cloud-description": "Saves input data to server tagged with your Twitter account.",
+        "保存": "Save",
+        "保存しました": "Saved",
+        "読み込み": "Load",
+        "読み込みました": "Loaded",
+        "データがありません": "Not found"
     },
     "farming": {
         "集めたいアイテムの数を最低1つ入力してください。": "Input at least 1 number of items.",

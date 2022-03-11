@@ -28,6 +28,7 @@ export const menuGroups = [
         label: { ja: 'サーヴァント一覧', en: 'Sarvant List' },
       },
       { href: '/items', label: { ja: 'アイテム一覧', en: 'Item List' } },
+      { href: '/cloud', label: { ja: 'クラウドセーブ', en: 'Save to Cloud' } },
     ],
   },
   {
@@ -67,7 +68,6 @@ export const Nav = () => {
           ))}
           <MenuDivider />
           <LangMenuItem />
-          <AuthMenuItem />
         </MenuList>
       </Menu>
     </nav>

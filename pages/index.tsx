@@ -162,6 +162,13 @@ const Index = () => {
         </GridItem>
 
         <GridItem>
+          <LinkCard href="/cloud">
+            <Heading size="lg">{t('クラウドセーブ')}</Heading>
+            <Text>{t('cloud-description')}</Text>
+          </LinkCard>
+        </GridItem>
+
+        <GridItem>
           <ExternalLinkCard
             href={`https://twitter.com/search?q=${encodeURIComponent(
               '#FGO周回ソルバー'
