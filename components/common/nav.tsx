@@ -1,16 +1,18 @@
 import NextLink from 'next/link'
 import { HamburgerIcon } from '@chakra-ui/icons'
 import {
-  HStack,
   IconButton,
   Menu,
   MenuButton,
+  MenuDivider,
   MenuGroup,
   MenuItem,
   MenuList,
 } from '@chakra-ui/react'
 import React from 'react'
 import { useRouter } from 'next/router'
+import { LangMenuItem } from './lang-menu-item'
+import { AuthMenuItem } from './auth-menu-item'
 
 export const menuGroups = [
   {
@@ -26,6 +28,7 @@ export const menuGroups = [
         label: { ja: 'サーヴァント一覧', en: 'Sarvant List' },
       },
       { href: '/items', label: { ja: 'アイテム一覧', en: 'Item List' } },
+      { href: '/cloud', label: { ja: 'クラウドセーブ', en: 'Save to Cloud' } },
     ],
   },
   {
@@ -63,6 +66,8 @@ export const Nav = () => {
               ))}
             </MenuGroup>
           ))}
+          <MenuDivider />
+          <LangMenuItem />
         </MenuList>
       </Menu>
     </nav>

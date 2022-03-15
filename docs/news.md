@@ -1,5 +1,9 @@
 # News
 
+## Added Save-to-Cloud Function - 2022/03/15
+
+Now input of material calculator and farming solver can be stored in server tagged with your Twitter account. You can use it to share your input between your devices.
+
 ## Added English Version - 2021/10/24
 
 Added English version. Drop rates are JP server data regardless of languages.
