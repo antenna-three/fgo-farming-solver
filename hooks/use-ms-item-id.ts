@@ -11,17 +11,17 @@ const itemToMsItemId = (item: Item) => {
   } else if (114 <= item.priority && item.priority < 121) {
     //秘石
     return item.priority - 114 + 220
-  } else if (200 <= item.priority && item.priority < 210) {
+  } else if (200 <= item.priority && item.priority < 212) {
     //銅素材
     return item.priority - 200 + 300
-  } else if (210 <= item.priority && item.priority < 220) {
+  } else if (212 <= item.priority && item.priority < 222) {
     //銀素材
-    return item.priority - 210 + 400
-  } else if (220 <= item.priority && item.priority < 232) {
-    return item.priority - 211 + 400
-  } else if (232 <= item.priority && item.priority < 299) {
+    return item.priority - 212 + 400
+  } else if (222 <= item.priority && item.priority < 235) {
+    return item.priority - 213 + 400
+  } else if (235 <= item.priority && item.priority < 299) {
     //金素材
-    return item.priority - 232 + 500
+    return item.priority - 235 + 500
   } else if (300 <= item.priority && item.priority < 307) {
     //ピース
     return item.priority - 300 + 100

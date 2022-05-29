@@ -8,17 +8,17 @@ export const priorityToApiId = (priority: number) => {
   } else if (114 <= priority && priority < 121) {
     //秘石
     return '5' + (priority - 114).toString(36)
-  } else if (200 <= priority && priority < 210) {
+  } else if (200 <= priority && priority < 212) {
     //銅素材
     return '0' + (priority - 200).toString()
-  } else if (210 <= priority && priority < 220) {
+  } else if (212 <= priority && priority < 222) {
     //銀素材
-    return '1' + (priority - 210).toString(36)
-  } else if (220 <= priority && priority < 232) {
-    return '1' + (priority - 211).toString(36)
-  } else if (232 <= priority && priority < 299) {
+    return '1' + (priority - 212).toString(36)
+  } else if (222 <= priority && priority < 235) {
+    return '1' + (priority - 213).toString(36)
+  } else if (235 <= priority && priority < 299) {
     //金素材
-    return '2' + (priority - 232).toString(36)
+    return '2' + (priority - 235).toString(36)
   } else if (300 <= priority && priority < 307) {
     //ピース
     return '6' + (priority - 300).toString(36)
