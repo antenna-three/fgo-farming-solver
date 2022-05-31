@@ -1,9 +1,7 @@
-import { NextPage } from 'next'
-import React, { FC } from 'react'
-import ReactMarkdown from 'react-markdown'
 import {
   Code,
   Heading,
+  HeadingProps,
   Link,
   LinkProps,
   ListItem,
@@ -13,11 +11,14 @@ import {
   TextProps,
   UnorderedList,
 } from '@chakra-ui/react'
-import { Head } from './head'
+import { NextPage } from 'next'
+import React from 'react'
+import ReactMarkdown from 'react-markdown'
 import { PageProps } from '../../pages/[page]'
+import { Head } from './head'
 
 const h = (n: 1 | 2 | 3 | 4 | 5) => {
-  const H: FC = (props) => (
+  const H = (props: HeadingProps) => (
     <Heading
       {...props}
       as={`h${n}`}

@@ -3,7 +3,7 @@ import React from 'react'
 import { Logo } from './logo'
 import { Nav } from './nav'
 
-export const Header: React.FC = () => (
+export const Header = () => (
   <header>
     <HStack align="center">
       <Logo />
