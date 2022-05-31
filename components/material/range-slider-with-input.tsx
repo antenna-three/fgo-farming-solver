@@ -5,7 +5,7 @@ import {
   RangeSliderFilledTrack,
   RangeSliderThumb,
   RangeSliderTrack,
-} from '../slider'
+} from '@chakra-ui/react'
 import React from 'react'
 
 export const RangeSliderWithInput = ({
