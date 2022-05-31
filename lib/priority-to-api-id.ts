@@ -14,11 +14,11 @@ export const priorityToApiId = (priority: number) => {
   } else if (212 <= priority && priority < 222) {
     //銀素材
     return '1' + (priority - 212).toString(36)
-  } else if (222 <= priority && priority < 235) {
+  } else if (222 <= priority && priority < 234) {
     return '1' + (priority - 213).toString(36)
-  } else if (235 <= priority && priority < 299) {
+  } else if (234 <= priority && priority < 299) {
     //金素材
-    return '2' + (priority - 235).toString(36)
+    return '2' + (priority - 234).toString(36)
   } else if (300 <= priority && priority < 307) {
     //ピース
     return '6' + (priority - 300).toString(36)
