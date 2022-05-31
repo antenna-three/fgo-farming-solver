@@ -1,4 +1,3 @@
-import NextLink from 'next/link'
 import {
   Heading,
   chakra,
@@ -6,17 +5,15 @@ import {
   Box,
   ChakraComponent,
   Text,
-  LinkProps as ChakraLinkProps,
   SimpleGrid,
   GridItem,
 } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
 import { motion, TargetAndTransition, Transition } from 'framer-motion'
-import { Link, LinkProps } from '../components/common/link'
+import { ExternalLink, Link } from '../components/common/link'
 import { theme } from '../theme'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
 import { Trans, useTranslation } from 'react-i18next'
-import { useLocalStorage } from '../hooks/use-local-storage'
 
 const MotionSpan = motion<any>(chakra.span)
 
@@ -26,38 +23,31 @@ const NoWrap: ChakraComponent<'span', {}> = ({ children, ...props }) => (
   </chakra.span>
 )
 
-const Card: ChakraComponent<'div', {}> = ({ children, ...props }) => (
-  <Box p={5} h="100%" borderWidth="thin" rounded="lg" {...props}>
-    <VStack spacing={5} align="start">
+const Card: ChakraComponent<'div'> = ({ children, ...props }) => {
+  return (
+    <VStack
+      align="stretch"
+      justify="space-between"
+      h="100%"
+      borderWidth="thin"
+      rounded="lg"
+      _hover={{ boxShadow: 'lg' }}
+      {...props}
+    >
       {children}
     </VStack>
-  </Box>
-)
+  )
+}
 
-const LinkCard: ChakraComponent<'div', LinkProps> = ({
+const CardBody: ChakraComponent<'div', { href: string }> = ({
   href,
   children,
-  ...props
 }) => (
-  <NextLink href={href}>
-    <a>
-      <Card _hover={{ boxShadow: 'lg' }} {...props}>
-        {children}
-      </Card>
-    </a>
-  </NextLink>
-)
-
-const ExternalLinkCard: ChakraComponent<'div', ChakraLinkProps> = ({
-  href,
-  children,
-  ...props
-}) => (
-  <a href={href} target="_blank" rel="noopenner noreferrer">
-    <Card _hover={{ boxShadow: 'lg' }} {...props}>
+  <Link href={href} flexGrow="1" variant="unstyled">
+    <VStack p={5} spacing={5} align="start" flexGrow={1}>
       {children}
-    </Card>
-  </a>
+    </VStack>
+  </Link>
 )
 
 const gray = theme.colors.gray[800]
@@ -82,12 +72,15 @@ const transition: Transition = {
 
 const Index = () => {
   const { t } = useTranslation('common')
-  const farmingResultUrl =
-    typeof window == 'undefined'
-      ? ''
-      : localStorage.getItem('farming/results')?.replace(/"/g, '')
-  const materialResultExists =
-    typeof window == 'undefined' ? false : 'material/result' in localStorage
+  const [farmingResultUrl, setFarmingResultUrl] = useState('')
+  const [materialResultExists, setMaterialResultExists] = useState(false)
+
+  useEffect(() => {
+    setFarmingResultUrl(
+      localStorage.getItem('farming/results')?.replace(/"/g, '') ?? ''
+    )
+    setMaterialResultExists('material/result' in localStorage)
+  }, [])
 
   return (
     <VStack spacing={12} mt={12}>
@@ -128,58 +121,81 @@ const Index = () => {
       </VStack>
       <SimpleGrid minChildWidth="250px" spacing={4} alignItems="stretch">
         <GridItem>
-          <LinkCard href="/material">
-            <Heading size="lg">{t('育成素材計算機')}</Heading>
-            <Text>{t('material-calculator-description')}</Text>
+          <Card>
+            <CardBody href="/material">
+              <Heading size="lg">{t('育成素材計算機')}</Heading>
+              <Text>{t('material-calculator-description')}</Text>
+            </CardBody>
             {materialResultExists && (
-              <Link href="/material/result">{t('前回の結果')}</Link>
+              <Link href="/material/result">
+                <Box p={5} borderTop="1px solid #eee">
+                  {t('前回の結果')}
+                </Box>
+              </Link>
             )}
-          </LinkCard>
+          </Card>
         </GridItem>
 
         <GridItem>
-          <LinkCard href="/farming">
-            <Heading size="lg">{t('周回ソルバー')}</Heading>
-            <Text>{t('farming-solver-description')}</Text>
+          <Card>
+            <CardBody href="/farming">
+              <Heading size="lg">{t('周回ソルバー')}</Heading>
+              <Text>{t('farming-solver-description')}</Text>
+            </CardBody>
             {farmingResultUrl && (
-              <Link href={farmingResultUrl}>{t('前回の結果')}</Link>
+              <Link href={farmingResultUrl}>
+                <Box p={5} borderTop="1px solid #eee">
+                  {t('前回の結果')}
+                </Box>
+              </Link>
             )}
-          </LinkCard>
+          </Card>
         </GridItem>
 
         <GridItem>
-          <LinkCard href="/servants">
-            <Heading size="lg">{t('サーヴァント一覧')}</Heading>
-            <Text>{t('servant-list-description')}</Text>
-          </LinkCard>
+          <Card>
+            <CardBody href="/servants">
+              <Heading size="lg">{t('サーヴァント一覧')}</Heading>
+              <Text>{t('servant-list-description')}</Text>
+            </CardBody>
+          </Card>
         </GridItem>
 
         <GridItem>
-          <LinkCard href="/items">
-            <Heading size="lg">{t('アイテム一覧')}</Heading>
-            <Text>{t('item-list-description')}</Text>
-          </LinkCard>
+          <Card>
+            <CardBody href="/items">
+              <Heading size="lg">{t('アイテム一覧')}</Heading>
+              <Text>{t('item-list-description')}</Text>
+            </CardBody>
+          </Card>
         </GridItem>
 
         <GridItem>
-          <LinkCard href="/cloud">
-            <Heading size="lg">{t('クラウドセーブ')}</Heading>
-            <Text>{t('cloud-description')}</Text>
-          </LinkCard>
+          <Card>
+            <CardBody href="/cloud">
+              <Heading size="lg">{t('クラウドセーブ')}</Heading>
+              <Text>{t('cloud-description')}</Text>
+            </CardBody>
+          </Card>
         </GridItem>
 
         <GridItem>
-          <ExternalLinkCard
-            href={`https://twitter.com/search?q=${encodeURIComponent(
-              '#FGO周回ソルバー'
-            )}`}
-          >
-            <Heading size="lg">
-              {t('みんなの結果')}
-              <ExternalLinkIcon mx={2} />
-            </Heading>
-            <Text>{t('shared-results-description')}</Text>
-          </ExternalLinkCard>
+          <Card>
+            <ExternalLink
+              href={`https://twitter.com/search?q=${encodeURIComponent(
+                '#FGO周回ソルバー'
+              )}`}
+              variant="unstyled"
+            >
+              <VStack p={5} spacing={5} align="start">
+                <Heading size="lg">
+                  {t('みんなの結果')}
+                  <ExternalLinkIcon mx={2} />
+                </Heading>
+                <Text>{t('shared-results-description')}</Text>
+              </VStack>
+            </ExternalLink>
+          </Card>
         </GridItem>
       </SimpleGrid>
     </VStack>

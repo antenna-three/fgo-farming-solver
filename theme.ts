@@ -15,6 +15,14 @@ export const theme = extendTheme({
       baseStyle: {
         color: 'blue.500',
       },
+      variants: {
+        unstyled: {
+          color: 'default',
+          _hover: {
+            textDecoration: 'none',
+          },
+        },
+      },
     },
   },
   styles: {
