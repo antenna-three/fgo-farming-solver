@@ -1,5 +1,5 @@
 import { Box, Checkbox, HStack, IconButton, VStack } from '@chakra-ui/react'
-import React, { FormEventHandler, memo } from 'react'
+import React, { FormEventHandler } from 'react'
 import { NodeState } from '../../hooks/use-checkbox-tree'
 import { ExpandChevronIcon } from './expand-chevron'
 
@@ -14,18 +14,7 @@ type CheckboxTreeProps = {
   debug?: boolean
 }
 
-const getValues = (tree: Node[]): string[] =>
-  tree.flatMap((node) =>
-    node.children == null
-      ? [node.value]
-      : [node.value, ...getValues(node.children)]
-  )
-const filterObject = (object: { [key: string]: any }, keys: string[]) =>
-  Object.fromEntries(
-    Object.entries(object).filter(([key]) => keys.includes(key))
-  )
-
-const _CheckboxTree = ({
+export const CheckboxTree = ({
   tree,
   checked,
   onCheck,
@@ -68,9 +57,9 @@ const _CheckboxTree = ({
             {expanded[value] && (
               <CheckboxTree
                 tree={children}
-                checked={filterObject(checked, getValues(children))}
+                checked={checked}
                 onCheck={onCheck}
-                expanded={filterObject(expanded, getValues(children))}
+                expanded={expanded}
                 onExpand={onExpand}
               />
             )}
@@ -80,24 +69,3 @@ const _CheckboxTree = ({
     </VStack>
   )
 }
-
-const areObjectEqual = (
-  prevObj: { [key: string]: unknown },
-  nextObj: { [key: string]: unknown }
-): boolean => JSON.stringify(prevObj) == JSON.stringify(nextObj)
-//Object.entries(prevObj).every(([key, value]) => nextObj[key] === value)
-
-const areEqual = (
-  prevProps: CheckboxTreeProps,
-  nextProps: CheckboxTreeProps
-) => {
-  const checked = areObjectEqual(prevProps.checked, nextProps.checked)
-  const expanded = areObjectEqual(prevProps.expanded, nextProps.expanded)
-  const tree = prevProps.tree === nextProps.tree
-  if (prevProps.debug) {
-    console.log(checked, expanded, tree)
-  }
-  return checked && expanded && tree
-}
-
-export const CheckboxTree = memo(_CheckboxTree, areEqual)
