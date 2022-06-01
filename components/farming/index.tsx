@@ -27,7 +27,6 @@ import { Localized } from '../../lib/get-local-items'
 import { FarmingIndexProps } from '../../pages/farming'
 import { groupBy } from '../../utils/group-by'
 import { CheckboxTree } from '../common/checkbox-tree'
-import { Link } from '../common/link'
 import { DropRateSelect } from './drop-rate-select'
 import { ItemFieldset } from './item-fieldset'
 import { ObjectiveFieldset } from './objective-fieldset'
@@ -297,21 +296,6 @@ export const Index: NextPage<FarmingIndexProps> = ({ items, quests }) => {
           onClose={setIsConfirming.off}
           onReset={onReset}
         />
-
-        <Link
-          href={{
-            pathname: '/farming/import-export',
-            query: inputToQuery({
-              objective,
-              itemCounts,
-              checkedQuests,
-              halfDailyAp,
-              dropMergeMethod,
-            }),
-          }}
-        >
-          {t('入力内容のエクスポート')}
-        </Link>
       </VStack>
     </form>
   )
