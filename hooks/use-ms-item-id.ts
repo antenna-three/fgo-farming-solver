@@ -17,11 +17,11 @@ const itemToMsItemId = (item: Item) => {
   } else if (212 <= item.priority && item.priority < 222) {
     //銀素材
     return item.priority - 212 + 400
-  } else if (222 <= item.priority && item.priority < 235) {
+  } else if (222 <= item.priority && item.priority < 234) {
     return item.priority - 213 + 400
-  } else if (235 <= item.priority && item.priority < 299) {
+  } else if (234 <= item.priority && item.priority < 299) {
     //金素材
-    return item.priority - 235 + 500
+    return item.priority - 234 + 500
   } else if (300 <= item.priority && item.priority < 307) {
     //ピース
     return item.priority - 300 + 100
