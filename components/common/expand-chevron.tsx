@@ -1,18 +1,15 @@
 import { ChevronDownIcon, IconProps } from '@chakra-ui/icons'
 import { ComponentWithAs } from '@chakra-ui/system'
-import { motion } from 'framer-motion'
-
-export const MotionChevronIcon = motion<IconProps>(ChevronDownIcon)
 
 export const ExpandChevronIcon: ComponentWithAs<
   'svg',
   IconProps & { expanded?: boolean }
 > = ({ expanded, ...props }) => {
-  const rotate = expanded ? 0 : -90
+  const rotate = expanded ? '0deg' : '-90deg'
 
   return (
-    <MotionChevronIcon
-      animate={{ rotate }}
+    <ChevronDownIcon
+      transform={`rotate(${rotate})`}
       boxSize={5}
       color="gray"
       {...props}
