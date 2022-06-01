@@ -56,7 +56,7 @@ export const Result: NextPage<MaterialResultProps> = ({ items }) => {
       amounts[item.id.toString()] - possession[item.id],
     ])
   )
-  const goSolver = useCallback(
+  const goSolver = useCallback<React.FormEventHandler<HTMLFormElement>>(
     (event) => {
       event.preventDefault()
       const queryItems = requiredItems

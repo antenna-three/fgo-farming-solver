@@ -67,7 +67,7 @@ export const Footer = (): JSX.Element => {
             />
           </HStack>
           <Text>
-            <Link href="LICENSE" color="inherit">
+            <Link href="/LICENSE" color="inherit">
               © 2021 antenna-three
             </Link>
           </Text>

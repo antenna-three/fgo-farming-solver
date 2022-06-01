@@ -84,7 +84,7 @@ export const Index: NextPage<MaterialIndexProps> = ({
       </Center>
       <VStack align="stretch">
         <Heading size="md">
-          <ExternalLink href="http://fgosimulator.webcrow.jp/Material/">
+          <ExternalLink href="https://fgosim.github.io/Material/">
             Material Simulator
           </ExternalLink>{' '}
           {t('引継ぎコード')}
