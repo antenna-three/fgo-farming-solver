@@ -1,5 +1,3 @@
-import React, { useCallback, useEffect, useMemo } from 'react'
-import { useRouter } from 'next/router'
 import {
   Alert,
   AlertIcon,
@@ -11,51 +9,58 @@ import {
   useBoolean,
   VStack,
 } from '@chakra-ui/react'
-import { useQuestTree } from '../../hooks/use-quest-tree'
-import { useLocalStorage } from '../../hooks/use-local-storage'
+import { NextPage } from 'next'
+import { useRouter } from 'next/router'
+import React, {
+  ChangeEventHandler,
+  useCallback,
+  useEffect,
+  useMemo,
+} from 'react'
+import { useTranslation } from 'react-i18next'
 import { useCheckboxTree } from '../../hooks/use-checkbox-tree'
 import { useChecked } from '../../hooks/use-checked-from-quest-state'
-import { Link } from '../common/link'
-import { ObjectiveFieldset } from './objective-fieldset'
-import { ItemFieldset } from './item-fieldset'
-import { CheckboxTree } from '../common/checkbox-tree'
-import { DropRateSelect } from './drop-rate-select'
-import { ResetAlertDialog } from './reset-alert-dialog'
-import { groupBy } from '../../utils/group-by'
-import { NextPage } from 'next'
-import { useTranslation } from 'react-i18next'
-import { FarmingIndexProps } from '../../pages/farming'
-import { Localized } from '../../lib/get-local-items'
+import { useLocalStorage } from '../../hooks/use-local-storage'
+import { useQuestTree } from '../../hooks/use-quest-tree'
 import { Item } from '../../interfaces/fgodrop'
+import { Localized } from '../../lib/get-local-items'
+import { FarmingIndexProps } from '../../pages/farming'
+import { groupBy } from '../../utils/group-by'
+import { CheckboxTree } from '../common/checkbox-tree'
+import { Link } from '../common/link'
+import { DropRateSelect } from './drop-rate-select'
+import { ItemFieldset } from './item-fieldset'
+import { ObjectiveFieldset } from './objective-fieldset'
+import { ResetAlertDialog } from './reset-alert-dialog'
 
 type InputState = {
   objective: string
-  items: { [key: string]: string }
-  quests: string[]
+  itemCounts: { [key: string]: string }
+  checkedQuests: string[]
   halfDailyAp: boolean
   dropMergeMethod: string
 }
 type QueryInputState = {
-  objective: string
+  objective?: string
   items: string
-  quests: string
-  ap_coefficients: string
-  drop_merge_method: string
+  quests?: string
+  ap_coefficients?: string
+  drop_merge_method?: string
 }
 
-const inputToQuery: (inputState: InputState) => QueryInputState = ({
+const inputToQuery = ({
   objective,
-  items,
-  quests,
+  itemCounts,
+  checkedQuests,
   halfDailyAp,
   dropMergeMethod,
-}) => ({
+}: InputState) => ({
   objective,
-  items: Object.entries(items)
+  items: Object.entries(itemCounts)
     .filter(([, count]) => count != '')
     .map(([item, count]) => item + ':' + count)
     .join(','),
-  quests: quests
+  quests: checkedQuests
     .reduce(
       (acc, cur) =>
         acc.includes(cur[0]) || acc.includes(cur.slice(0, 2))
@@ -68,60 +73,48 @@ const inputToQuery: (inputState: InputState) => QueryInputState = ({
   drop_merge_method: dropMergeMethod,
 })
 
-const queryToInput: (
-  baseInputState: InputState,
-  queryInputState: QueryInputState
-) => InputState = (
-  baseInputState,
-  { objective, items, quests, ap_coefficients, drop_merge_method }
-) => {
-  const queryQuests = quests ? quests.split(',') : ['0', '1', '2', '3']
-  return {
-    objective: objective || baseInputState.objective || 'ap',
-    items: Object.fromEntries(
-      items.split(',').map((itemCount) => itemCount.split(':'))
-    ),
-    quests: baseInputState.quests.filter(
-      (quest) =>
-        queryQuests.includes(quest[0]) ||
-        queryQuests.includes(quest.slice(0, 2)) ||
-        queryQuests.includes(quest)
-    ),
-    halfDailyAp:
-      ap_coefficients === '0:0.5' || baseInputState.halfDailyAp || false,
-    dropMergeMethod:
-      drop_merge_method || baseInputState.dropMergeMethod || 'add',
+export const migrateLocalInput = () => {
+  const json = localStorage.getItem('input')
+  if (json == null) {
+    return
   }
+  const input: InputState = JSON.parse(json)
+  Object.entries(input).forEach(([key, value]) =>
+    localStorage.setItem(key, JSON.stringify(value))
+  )
+  localStorage.removeItem('input')
 }
 
 const isInputState = (arg: any): arg is QueryInputState =>
   typeof arg.items == 'string'
 
 export const Index: NextPage<FarmingIndexProps> = ({ items, quests }) => {
+  useEffect(migrateLocalInput, [])
   const { t } = useTranslation('farming')
   const { tree } = useQuestTree(quests)
   const questIds = quests.map(({ id }) => id)
-  const initialInputState: InputState = useMemo(
-    () => ({
-      objective: 'ap',
-      items: Object.fromEntries(items.map((item) => [item.id, ''])),
-      quests: questIds,
-      halfDailyAp: false,
-      dropMergeMethod: 'add',
-    }),
-    [items, questIds]
+  const initialItemCounts = useMemo(
+    () => Object.fromEntries(items.map((item) => [item.id, ''])),
+    [items]
   )
-  const [inputState, setInputState] = useLocalStorage(
-    'input',
-    initialInputState
+  const [objective, setObjective] = useLocalStorage('objective', 'ap')
+  const [itemCounts, setItemCounts] = useLocalStorage(
+    'items',
+    initialItemCounts
+  )
+  const [checkedQuests, setCheckedQuests] = useLocalStorage('quests', questIds)
+  const [halfDailyAp, setHalfDailyAp] = useLocalStorage('halfDailyAp', false)
+  const [dropMergeMethod, setDropMergeMethod] = useLocalStorage(
+    'dropMergeMethod',
+    'add'
   )
   const router = useRouter()
   const [isConfirming, setIsConfirming] = useBoolean()
   const [isLoading, setIsLoading] = useBoolean(false)
   const [selected, setSelected] = useChecked(
     questIds,
-    inputState.quests,
-    setInputState
+    checkedQuests,
+    setCheckedQuests
   )
   const { checked, onCheck, expanded, onExpand } = useCheckboxTree(
     tree,
@@ -132,20 +125,55 @@ export const Index: NextPage<FarmingIndexProps> = ({ items, quests }) => {
   useEffect(() => {
     const { query } = router
     if (isInputState(query)) {
-      setInputState((baseInputState) => queryToInput(baseInputState, query))
+      setObjective((objective) => query.objective ?? objective)
+      setItemCounts(
+        (itemCounts) =>
+          Object.fromEntries(
+            query.items.split(',').map((itemCount) => itemCount.split(':'))
+          ) ?? itemCounts
+      )
+      setCheckedQuests((checkedQuests) => {
+        const { quests } = query
+        if (quests == null) {
+          return checkedQuests
+        } else {
+          return questIds.filter(
+            (id) =>
+              quests.includes(id[0]) ||
+              quests.includes(id.slice(0, 2)) ||
+              quests.includes(id)
+          )
+        }
+      })
+      setHalfDailyAp(query.ap_coefficients == '0:0.5')
+      setDropMergeMethod(query.drop_merge_method ?? 'add')
       router.replace('/farming', undefined, { scroll: false, shallow: true })
     }
-  }, [router, setInputState])
+  }, [
+    questIds,
+    router,
+    setCheckedQuests,
+    setDropMergeMethod,
+    setHalfDailyAp,
+    setItemCounts,
+    setObjective,
+  ])
 
   const handleSubmit = useCallback(
     async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault()
       setIsLoading.on()
-      const query = inputToQuery(inputState)
+      const query = inputToQuery({
+        objective,
+        itemCounts,
+        checkedQuests,
+        halfDailyAp,
+        dropMergeMethod,
+      })
       const params = new URLSearchParams({ ...query, fields: 'id' })
-      const origin =
+      const apiEndpoint =
         'https://pgdz683mk2.execute-api.ap-northeast-1.amazonaws.com/fgo-farming-solver'
-      const url = origin + '?' + params
+      const url = apiEndpoint + '?' + params
       const { id } = await fetch(url).then((res) => res.json())
       if (id == null) {
         router.push('/500')
@@ -155,22 +183,48 @@ export const Index: NextPage<FarmingIndexProps> = ({ items, quests }) => {
         router.push(url)
       }
     },
-    [inputState, router, setIsLoading]
+    [
+      checkedQuests,
+      dropMergeMethod,
+      halfDailyAp,
+      itemCounts,
+      objective,
+      router,
+      setIsLoading,
+    ]
   )
 
   const onReset = useCallback(() => {
-    setInputState(initialInputState)
-  }, [initialInputState, setInputState])
+    setObjective('ap')
+    setItemCounts(initialItemCounts)
+    setCheckedQuests(questIds)
+    setHalfDailyAp(false)
+    setDropMergeMethod('add')
+  }, [
+    initialItemCounts,
+    questIds,
+    setCheckedQuests,
+    setDropMergeMethod,
+    setHalfDailyAp,
+    setItemCounts,
+    setObjective,
+  ])
 
   const handleItemChange = useCallback(
     (event: React.FormEvent<HTMLInputElement>) => {
       const { name, value } = event.currentTarget
-      setInputState((state) => ({
-        ...state,
-        items: { ...state.items, [name]: value },
-      }))
+      setItemCounts((itemCounts) => ({ ...itemCounts, [name]: value }))
     },
-    [setInputState]
+    [setItemCounts]
+  )
+  const handleHalfDailyApChange = useCallback<
+    ChangeEventHandler<HTMLInputElement>
+  >(
+    (event) => {
+      const { checked } = event.currentTarget
+      setHalfDailyAp(checked)
+    },
+    [setHalfDailyAp]
   )
 
   const itemGroups = Object.entries(
@@ -183,18 +237,13 @@ export const Index: NextPage<FarmingIndexProps> = ({ items, quests }) => {
   return (
     <form onSubmit={handleSubmit}>
       <VStack alignItems="start" spacing={8}>
-        <ObjectiveFieldset
-          objective={inputState.objective}
-          setObjective={(objective) => {
-            setInputState((state) => ({ ...state, objective }))
-          }}
-        />
+        <ObjectiveFieldset objective={objective} setObjective={setObjective} />
         <ItemFieldset
           itemGroups={itemGroups}
-          inputItems={inputState.items}
+          inputItems={itemCounts}
           handleChange={handleItemChange}
         />
-        {Object.values(inputState.items).every((s) => !s) && (
+        {Object.values(itemCounts).every((count) => count == '') && (
           <Alert status="error">
             <AlertIcon />
             {t('集めたいアイテムの数を最低1つ入力してください。')}
@@ -210,7 +259,7 @@ export const Index: NextPage<FarmingIndexProps> = ({ items, quests }) => {
             onExpand={onExpand}
           />
         </FormControl>
-        {inputState.quests.length == 0 && (
+        {checkedQuests.length == 0 && (
           <Alert status="error">
             <AlertIcon />
             {t('周回対象に含めるクエストを最低1つ選択してください。')}
@@ -218,28 +267,20 @@ export const Index: NextPage<FarmingIndexProps> = ({ items, quests }) => {
         )}
         <FormControl as="fieldset">
           <FormLabel as="legend">{t('キャンペーン')}</FormLabel>
-          <Checkbox
-            isChecked={inputState.halfDailyAp}
-            onChange={(event) => {
-              const { checked } = event.currentTarget
-              setInputState((state) => ({ ...state, halfDailyAp: checked }))
-            }}
-          >
+          <Checkbox isChecked={halfDailyAp} onChange={handleHalfDailyApChange}>
             {t('修練場AP半減')}
           </Checkbox>
         </FormControl>
         <DropRateSelect
-          dropMergeMethod={inputState.dropMergeMethod}
-          setDropMergeMethod={(dropMergeMethod) =>
-            setInputState((state) => ({ ...state, dropMergeMethod }))
-          }
+          dropMergeMethod={dropMergeMethod}
+          setDropMergeMethod={setDropMergeMethod}
         />
         <ButtonGroup>
           <Button
             type="submit"
             disabled={
-              Object.values(inputState.items).every((s) => !s) ||
-              inputState.quests.length == 0
+              Object.values(itemCounts).every((count) => count == '') ||
+              checkedQuests.length == 0
             }
             colorScheme="blue"
             isLoading={isLoading}
@@ -260,7 +301,13 @@ export const Index: NextPage<FarmingIndexProps> = ({ items, quests }) => {
         <Link
           href={{
             pathname: '/farming/import-export',
-            query: inputToQuery(inputState),
+            query: inputToQuery({
+              objective,
+              itemCounts,
+              checkedQuests,
+              halfDailyAp,
+              dropMergeMethod,
+            }),
           }}
         >
           {t('入力内容のエクスポート')}
