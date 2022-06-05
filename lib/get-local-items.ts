@@ -1,5 +1,5 @@
 import { getItems } from './get-items'
-import { priorityToApiId } from './priority-to-api-id'
+import { toApiItemId } from './to-api-item-id'
 
 type Item = { id: string; category: string; name: string }
 export type Localized<I extends Item> = I & {
@@ -13,9 +13,7 @@ export const getLocalItems = async <I extends Item>(
 ): Promise<Localized<I>[]> => {
   const atlasItems = await getItems(locale)
   return items.map(({ id, category, name, ...rest }) => {
-    const atlasItem = atlasItems.find(
-      ({ priority }) => priorityToApiId(priority) == id
-    )
+    const atlasItem = atlasItems.find((item) => toApiItemId(item) == id)
     return {
       id,
       category: atlasItem?.category ?? category,

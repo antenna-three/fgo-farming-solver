@@ -2,7 +2,7 @@ import { Input, Table, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react'
 import React, { FormEventHandler, Fragment } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Item } from '../../interfaces/atlas-academy'
-import { priorityToApiId } from '../../lib/priority-to-api-id'
+import { toApiItemId } from '../../lib/to-api-item-id'
 import { ItemLink } from '../common/item-link'
 
 const showPositive = (value: number) => (value > 0 ? value : '')
@@ -50,10 +50,7 @@ export const ResultTable = ({
             {items.map((item) => (
               <Tr key={item.id}>
                 <Td px={px} py={3}>
-                  <ItemLink
-                    name={item.name}
-                    id={priorityToApiId(item.priority)}
-                  />
+                  <ItemLink name={item.name} id={toApiItemId(item)} />
                 </Td>
                 <Td px={px} py={3} isNumeric>
                   {amounts[item.id.toString()]}
