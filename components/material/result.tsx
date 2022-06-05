@@ -1,12 +1,12 @@
-import React, { FormEvent, useCallback, useMemo, useState } from 'react'
+import { Box, Button, Checkbox, Text, VStack } from '@chakra-ui/react'
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
-import { Box, Button, Checkbox, Text, VStack } from '@chakra-ui/react'
+import React, { FormEvent, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Item } from '../../interfaces/atlas-academy'
 import { useLocalStorage } from '../../hooks/use-local-storage'
 import { useSelectOnFocus } from '../../hooks/use-select-on-focus'
-import { priorityToApiId } from '../../lib/priority-to-api-id'
+import { Item } from '../../interfaces/atlas-academy'
+import { toApiItemId } from '../../lib/to-api-item-id'
 import { MaterialResultProps } from '../../pages/material/result'
 import { groupBy } from '../../utils/group-by'
 import { Title } from '../common/title'
@@ -63,12 +63,10 @@ export const Result: NextPage<MaterialResultProps> = ({ items }) => {
         .filter(
           (item) =>
             deficiencies[item.id] > 0 &&
-            priorityToApiId(item.priority) &&
+            toApiItemId(item) &&
             targetCategories.includes(item.largeCategory)
         )
-        .map(
-          (item) => priorityToApiId(item.priority) + ':' + deficiencies[item.id]
-        )
+        .map((item) => toApiItemId(item) + ':' + deficiencies[item.id])
         .join(',')
       router.push({
         pathname: '/farming',

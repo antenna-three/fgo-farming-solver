@@ -1,7 +1,14 @@
 import { useCallback, useMemo } from 'react'
+import itemIds from '../data/item-ids.json'
 import { Item } from '../interfaces/atlas-academy'
 
-const itemToMsItemId = (item: Item) => {
+export const toMsItemId = (item: Item) => {
+  const msItemId = itemIds.find(
+    ({ aaItemId }) => (aaItemId = item.id)
+  )?.msItemId
+  if (msItemId != null) {
+    return msItemId
+  }
   if (100 <= item.priority && item.priority < 107) {
     //輝石
     return item.priority - 100 + 200
@@ -41,13 +48,11 @@ const itemToMsItemId = (item: Item) => {
 
 export const useMsItemId = (items: Item[]) => {
   const itemIdToMsItemId = useMemo(
-    () =>
-      Object.fromEntries(items.map((item) => [item.id, itemToMsItemId(item)])),
+    () => Object.fromEntries(items.map((item) => [item.id, toMsItemId(item)])),
     [items]
   )
   const msItemIdToItemId = useMemo(
-    () =>
-      Object.fromEntries(items.map((item) => [itemToMsItemId(item), item.id])),
+    () => Object.fromEntries(items.map((item) => [toMsItemId(item), item.id])),
     [items]
   )
   const getItemId = useCallback(

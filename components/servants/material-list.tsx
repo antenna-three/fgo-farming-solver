@@ -1,15 +1,15 @@
 import {
-  VStack,
+  chakra,
   Heading,
-  StatNumber,
   Stat,
   StatGroup,
   StatLabel,
-  chakra,
+  StatNumber,
+  VStack,
 } from '@chakra-ui/react'
 import React from 'react'
 import type { Materials } from '../../interfaces/atlas-academy'
-import { priorityToApiId } from '../../lib/priority-to-api-id'
+import { toApiItemId } from '../../lib/to-api-item-id'
 import { ItemLink } from '../common/item-link'
 
 export const MaterialList = ({ materials }: { materials: Materials }) => {
@@ -24,10 +24,7 @@ export const MaterialList = ({ materials }: { materials: Materials }) => {
             {materials.items.map(({ item, amount }) => (
               <Stat key={item.id} mx={2}>
                 <StatLabel>
-                  <ItemLink
-                    id={priorityToApiId(item.priority)}
-                    name={item.name}
-                  />
+                  <ItemLink id={toApiItemId(item)} name={item.name} />
                 </StatLabel>
                 <StatNumber>{amount}</StatNumber>
               </Stat>
