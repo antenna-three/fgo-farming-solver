@@ -1,19 +1,19 @@
+import { ExternalLinkIcon } from '@chakra-ui/icons'
 import {
-  Heading,
-  chakra,
-  VStack,
   Box,
+  chakra,
   ChakraComponent,
-  Text,
-  SimpleGrid,
   GridItem,
+  Heading,
+  SimpleGrid,
+  Text,
+  VStack,
 } from '@chakra-ui/react'
-import React, { useEffect, useState } from 'react'
 import { motion, TargetAndTransition, Transition } from 'framer-motion'
+import React, { useEffect, useState } from 'react'
+import { Trans, useTranslation } from 'react-i18next'
 import { ExternalLink, Link } from '../components/common/link'
 import { theme } from '../theme'
-import { ExternalLinkIcon } from '@chakra-ui/icons'
-import { Trans, useTranslation } from 'react-i18next'
 
 const MotionSpan = motion<any>(chakra.span)
 

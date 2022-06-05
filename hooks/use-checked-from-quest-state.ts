@@ -1,5 +1,5 @@
-import { functionToAction } from './function-to-action'
 import { Dispatch, SetStateAction, useMemo } from 'react'
+import { functionToAction } from './function-to-action'
 import { LeafState } from './use-checkbox-tree'
 
 const _questsToChecked = (
@@ -8,31 +8,30 @@ const _questsToChecked = (
 ): LeafState =>
   Object.fromEntries(questIds.map((id) => [id, checkedQuests.includes(id)]))
 
-const _questsToSetChecked = <T extends { quests: string[] }>(
+const _questsToSetChecked = (
   questIds: string[],
-  setInputState: Dispatch<SetStateAction<T>>
+  setCheckedQuests: Dispatch<SetStateAction<string[]>>
 ) => {
   const functional = (action: (state: LeafState) => LeafState) =>
-    setInputState((state) => ({
-      ...state,
-      quests: Object.entries(action(_questsToChecked(questIds, state.quests)))
+    setCheckedQuests((quests) =>
+      Object.entries(action(_questsToChecked(questIds, quests)))
         .filter(([, checked]) => checked)
-        .map(([id]) => id),
-    }))
+        .map(([id]) => id)
+    )
   return functionToAction(functional)
 }
 
-export const useChecked = <T extends { quests: string[] }>(
+export const useChecked = (
   questIds: string[],
   checkedQuests: string[],
-  setInputState: Dispatch<SetStateAction<T>>
+  setCheckedQuests: Dispatch<SetStateAction<string[]>>
 ): [LeafState, Dispatch<SetStateAction<LeafState>>] => [
   useMemo(
     () => _questsToChecked(questIds, checkedQuests),
     [checkedQuests, questIds]
   ),
   useMemo(
-    () => _questsToSetChecked(questIds, setInputState),
-    [questIds, setInputState]
+    () => _questsToSetChecked(questIds, setCheckedQuests),
+    [questIds, setCheckedQuests]
   ),
 ]

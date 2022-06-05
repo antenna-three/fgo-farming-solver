@@ -1,14 +1,6 @@
-import React, { FormEventHandler, memo } from 'react'
-import {
-  Box,
-  Checkbox,
-  Collapse,
-  HStack,
-  IconButton,
-  VStack,
-} from '@chakra-ui/react'
+import { Box, Checkbox, HStack, IconButton, VStack } from '@chakra-ui/react'
+import React, { FormEventHandler } from 'react'
 import { NodeState } from '../../hooks/use-checkbox-tree'
-import { zip } from '../../utils/group-by'
 import { ExpandChevronIcon } from './expand-chevron'
 
 export type Node = { label: string; value: string; children?: Node[] }
@@ -19,20 +11,10 @@ type CheckboxTreeProps = {
   onCheck: FormEventHandler<HTMLInputElement>
   expanded: { [value: string]: boolean }
   onExpand: FormEventHandler<HTMLButtonElement>
+  debug?: boolean
 }
 
-const getValues = (tree: Node[]): string[] =>
-  tree.flatMap((node) =>
-    node.children == null
-      ? [node.value]
-      : [node.value, ...getValues(node.children)]
-  )
-const filterObject = (object: { [key: string]: any }, keys: string[]) =>
-  Object.fromEntries(
-    Object.entries(object).filter(([key]) => keys.includes(key))
-  )
-
-const _CheckboxTree = ({
+export const CheckboxTree = ({
   tree,
   checked,
   onCheck,
@@ -72,36 +54,18 @@ const _CheckboxTree = ({
                 {label}
               </Checkbox>
             </HStack>
-            <Collapse in={expanded[value]}>
+            {expanded[value] && (
               <CheckboxTree
                 tree={children}
-                checked={filterObject(checked, getValues(children))}
+                checked={checked}
                 onCheck={onCheck}
-                expanded={filterObject(expanded, getValues(children))}
+                expanded={expanded}
                 onExpand={onExpand}
               />
-            </Collapse>
+            )}
           </Box>
         )
       )}
     </VStack>
   )
 }
-
-const areTreesEqual = (prevTree: Node[], nextTree: Node[]): boolean =>
-  zip(prevTree, nextTree).every(
-    ([prevNode, nextNode]) => prevNode.label == nextNode.label
-  )
-
-const areObjectEqual = (
-  prevObj: { [key: string]: any },
-  nextObj: { [key: string]: any }
-): boolean =>
-  Object.entries(prevObj).every(([key, value]) => nextObj[key] == value)
-
-const areEqual = (prevProps: CheckboxTreeProps, nextProps: CheckboxTreeProps) =>
-  areObjectEqual(prevProps.checked, nextProps.checked) &&
-  areObjectEqual(prevProps.expanded, nextProps.expanded) &&
-  areTreesEqual(prevProps.tree, nextProps.tree)
-
-export const CheckboxTree = memo(_CheckboxTree, areEqual)
