@@ -44,7 +44,7 @@
         "2": "Use new data primarily",
         "入力内容のリセット": "Reset Form Values",
         "本当にリセットしますか？": "Do you really want to reset the form?",
-        "you-can-use-export": "You can save form values to bookmarks using \"Export\".",
+        "you-can-use-export": "You can save form values to the server using \"Cloud Save\".",
         "キャンセル": "Cancel",
         "結果が見つかりませんでした": "No Results Found",
         "新しく追加された素材のためドロップ率のデータがない場合などがあります。": "There may be no drop data because the item is newly added.",
