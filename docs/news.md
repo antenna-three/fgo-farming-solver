@@ -1,5 +1,8 @@
 # News
 
+## Fixed Problem in ID Translation - 2022/06/06
+
+Material calculator, farming solver and material simulator use different IDs for items, so they need to be translated, which is performed by simple addtion/subtraction. However, after new material is added and the items' attributes are changed, id translation failed and items are displayed in wrong names. In new releases, items ID translation is performed by statically saved data.
 ## Added Save-to-Cloud Function - 2022/03/15
 
 Now input of material calculator and farming solver can be stored in server tagged with your Twitter account. You can use it to share your input between your devices.
