@@ -1,6 +1,6 @@
-import React, { FormEventHandler, useCallback } from 'react'
 import { Select } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
+import React, { FormEventHandler, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { classNames } from '../../lib/class-names'
 
@@ -13,7 +13,7 @@ export const PageSelect = ({
   const onChange: FormEventHandler<HTMLSelectElement> = useCallback(
     (event) => {
       const { value } = event.currentTarget
-      router.push(`/material/${value}`)
+      router.push(`/material/${value}`).catch((error) => console.error(error))
     },
     [router]
   )

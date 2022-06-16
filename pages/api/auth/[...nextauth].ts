@@ -14,11 +14,11 @@ export default NextAuth({
       if (profile) {
         token.userId = profile.id
       }
-      return token
+      return Promise.resolve(token)
     },
     session: async ({ session, token }) => {
       session.user.id = token.sub
-      return session
+      return Promise.resolve(session)
     },
   },
 })

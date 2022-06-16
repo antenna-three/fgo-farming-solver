@@ -15,9 +15,9 @@ import { Trans, useTranslation } from 'react-i18next'
 import { ExternalLink, Link } from '../components/common/link'
 import { theme } from '../theme'
 
-const MotionSpan = motion<any>(chakra.span)
+const MotionSpan = motion(chakra.span)
 
-const NoWrap: ChakraComponent<'span', {}> = ({ children, ...props }) => (
+const NoWrap: ChakraComponent<'span'> = ({ children, ...props }) => (
   <chakra.span whiteSpace="nowrap" {...props}>
     {children}
   </chakra.span>
@@ -50,10 +50,12 @@ const CardBody: ChakraComponent<'div', { href: string }> = ({
   </Link>
 )
 
-const gray = theme.colors.gray[800]
-const blue = theme.colors.blue[500]
-const green = theme.colors.green[500]
-const orange = theme.colors.orange[500]
+const colors = theme.colors as Record<string, Record<number, string>>
+
+const gray = colors.gray[800]
+const blue = colors.blue[500]
+const green = colors.green[500]
+const orange = colors.orange[500]
 
 const blueAnimate: TargetAndTransition = { color: [gray, blue, blue, gray] }
 const greenAnimate: TargetAndTransition = { color: [gray, green, green, gray] }

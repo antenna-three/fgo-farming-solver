@@ -1,8 +1,8 @@
+import { Input } from '@chakra-ui/input'
 import { ChangeEventHandler, Dispatch, SetStateAction, useMemo } from 'react'
+import { useMsItemId } from '../../hooks/use-ms-item-id'
 import { useSelectOnFocus } from '../../hooks/use-select-on-focus'
 import { Item } from '../../interfaces/atlas-academy'
-import { useMsItemId } from '../../hooks/use-ms-item-id'
-import { Input } from '@chakra-ui/input'
 
 export const MsItemsIo = ({
   items,
@@ -10,8 +10,8 @@ export const MsItemsIo = ({
   setPosession,
 }: {
   items: Item[]
-  posession: { [id: number]: number }
-  setPosession: Dispatch<SetStateAction<{ [id: number]: number }>>
+  posession: Record<number, number>
+  setPosession: Dispatch<SetStateAction<Record<number, number>>>
 }) => {
   const { getItemId, getMsItemId } = useMsItemId(items)
   const msItems = useMemo(
@@ -32,15 +32,13 @@ export const MsItemsIo = ({
     const { value } = event.currentTarget
     if (!value) {
       setPosession((posession) =>
-        Object.fromEntries(
-          Object.entries(posession).map(([id, amount]) => [id, 0])
-        )
+        Object.fromEntries(Object.entries(posession).map(([id]) => [id, 0]))
       )
       return
     }
-    let msItems: { [key: string]: number } = {}
+    let msItems: Record<string, number> = {}
     try {
-      msItems = JSON.parse(value)
+      msItems = JSON.parse(value) as Record<string, number>
     } catch (e) {
       if (e instanceof SyntaxError) {
         return

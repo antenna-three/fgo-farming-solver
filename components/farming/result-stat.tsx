@@ -1,10 +1,10 @@
 import { Checkbox } from '@chakra-ui/checkbox'
 import { VStack } from '@chakra-ui/layout'
 import {
-  StatGroup,
-  Stat,
-  StatLabel,
   Skeleton,
+  Stat,
+  StatGroup,
+  StatLabel,
   StatNumber,
 } from '@chakra-ui/react'
 import React, { FormEventHandler, useState } from 'react'
@@ -36,7 +36,7 @@ export const ResultStat = ({
           { label: '聖晶石', value: Math.round(totalAp / 144) },
           {
             label: '費用',
-            value: '¥' + Math.round((totalAp / 144 / 168) * 10000),
+            value: `¥${Math.round((totalAp / 144 / 168) * 10000)}`,
           },
         ].map(({ label, value }) => (
           <Stat flexWrap="wrap" key={label} m={5}>

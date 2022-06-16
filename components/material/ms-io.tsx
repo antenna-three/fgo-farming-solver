@@ -1,5 +1,4 @@
 import { FormControl, FormLabel } from '@chakra-ui/form-control'
-import { HStack } from '@chakra-ui/layout'
 import { Wrap, WrapItem } from '@chakra-ui/react'
 import React, { Dispatch, SetStateAction } from 'react'
 import { useTranslation } from 'react-i18next'

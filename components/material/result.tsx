@@ -21,18 +21,14 @@ export const Result: NextPage<MaterialResultProps> = ({ items }) => {
       parseInt(typeof v == 'string' ? v : '0') || 0,
     ])
   )
-  const amounts: { [id: string]: number } =
-    typeof window == 'undefined'
-      ? initialAmounts
-      : JSON.parse(localStorage.getItem('material/result') ?? '{}')
+  const [amounts] = useLocalStorage('material/result', initialAmounts)
   const requiredItems = useMemo(
     () => items.filter((item) => item.id.toString() in amounts),
     [amounts, items]
   )
-  const [possession, setPosession] = useLocalStorage(
-    'posession',
-    Object.fromEntries(requiredItems.map((item) => [item.id, 0]))
-  )
+  const [possession, setPosession] = useLocalStorage<
+    Record<string, number | undefined>
+  >('posession', Object.fromEntries(requiredItems.map((item) => [item.id, 0])))
   const [hideSufficient, setHideSufficient] = useState(false)
   const { locale } = useRouter()
   const commonItems = locale == 'en' ? 'Common Items' : '強化素材'
@@ -46,14 +42,17 @@ export const Result: NextPage<MaterialResultProps> = ({ items }) => {
   const onChange = useCallback(
     (event: FormEvent<HTMLInputElement>) => {
       const { name, valueAsNumber } = event.currentTarget
-      setPosession((state) => ({ ...state, [name]: valueAsNumber ?? 0 }))
+      setPosession((state) => ({
+        ...state,
+        [name]: isNaN(valueAsNumber) ? undefined : valueAsNumber,
+      }))
     },
     [setPosession]
   )
   const deficiencies = Object.fromEntries(
     requiredItems.map((item) => [
       item.id,
-      amounts[item.id.toString()] - possession[item.id],
+      amounts[item.id.toString()] - (possession[item.id] ?? 0),
     ])
   )
   const goSolver = useCallback<React.FormEventHandler<HTMLFormElement>>(
@@ -66,12 +65,14 @@ export const Result: NextPage<MaterialResultProps> = ({ items }) => {
             toApiItemId(item) &&
             targetCategories.includes(item.largeCategory)
         )
-        .map((item) => toApiItemId(item) + ':' + deficiencies[item.id])
+        .map((item) => `${toApiItemId(item)}:${deficiencies[item.id]}`)
         .join(',')
-      router.push({
-        pathname: '/farming',
-        query: { items: queryItems },
-      })
+      router
+        .push({
+          pathname: '/farming',
+          query: { items: queryItems },
+        })
+        .catch((error) => console.error(error))
     },
     [requiredItems, router, deficiencies, targetCategories]
   )

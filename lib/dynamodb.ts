@@ -30,7 +30,7 @@ export async function getDynamoDb({
   })
   const { Item } = await client.send(command)
   if (Item == null) {
-    throw new DBError(`DB returned null for key ${key}`)
+    throw new DBError(`DB returned null for key ${JSON.stringify(key)}`)
   }
   return unmarshall(Item)
 }
@@ -57,7 +57,7 @@ export async function putDynamoDb({
     credentials: { accessKeyId, secretAccessKey },
     region,
   })
-  client.send(command)
+  await client.send(command)
 }
 
 export class DBError extends Error {

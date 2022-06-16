@@ -19,7 +19,9 @@ export const Head = ({
       <meta property="og:title" content={title} />
       <meta
         property="og:image"
-        content={`https://${process.env.VERCEL_URL}/ogp-image.png`}
+        content={`https://${
+          process.env.VERCEL_URL ?? 'fgo-farming-solver'
+        }/ogp-image.png`}
       />
       <meta name="twitter:card" content="summary" />
       {children}

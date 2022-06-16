@@ -55,9 +55,11 @@ const Cloud = () => {
       {session && (
         <HStack>
           <Button
-            onClick={async () => {
+            onClick={() => {
               setIsSaving(true)
-              await save(session?.user?.id ?? '')
+              save(session?.user?.id ?? '').catch((error) =>
+                console.error(error)
+              )
               setIsSaved(true)
               setIsSaving(false)
             }}
@@ -67,10 +69,12 @@ const Cloud = () => {
             {t(isSaved ? '保存しました' : '保存')}
           </Button>
           <Button
-            onClick={async () => {
+            onClick={() => {
               setIsLoading(true)
               try {
-                await load(session?.user?.id ?? '')
+                load(session?.user?.id ?? '').catch((error) =>
+                  console.error(error)
+                )
                 setIsLoaded(true)
               } catch {
                 setIsLoaded('failed')

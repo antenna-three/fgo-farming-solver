@@ -7,7 +7,11 @@ export const AuthMenuItem = () => {
   const { t } = useTranslation('common')
   if (session) {
     return (
-      <MenuItem onClick={() => signOut()}>
+      <MenuItem
+        onClick={() => {
+          signOut().catch((error) => console.error(error))
+        }}
+      >
         <Image
           boxSize={6}
           borderRadius="full"
@@ -20,6 +24,12 @@ export const AuthMenuItem = () => {
     )
   }
   return (
-    <MenuItem onClick={() => signIn('twitter')}>{t('サインイン')}</MenuItem>
+    <MenuItem
+      onClick={() => {
+        signIn('twitter').catch((error) => console.error(error))
+      }}
+    >
+      {t('サインイン')}
+    </MenuItem>
   )
 }

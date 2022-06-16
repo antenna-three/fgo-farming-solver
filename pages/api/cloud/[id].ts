@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
+import { gunzipSync, gzipSync } from 'zlib'
 import { DBError, getDynamoDb, putDynamoDb } from '../../../lib/dynamodb'
-import { gzipSync, gunzipSync } from 'zlib'
 
 const region = 'ap-northeast-1'
 const tableName = 'fgo-farming-solver-input'
@@ -10,8 +10,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const savedTime = Math.floor(Date.now() / 1000)
 
   if (req.method == 'POST') {
+    if (typeof req.body != 'string') {
+      throw new Error('Request body must be string.')
+    }
     const item = { id, savedTime, input: gzipSync(req.body) }
-    putDynamoDb({
+    await putDynamoDb({
       region,
       tableName,
       item,
@@ -24,7 +27,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         tableName,
         key: { id },
       })
-      res.status(200).send(gunzipSync(item.input))
+      res.status(200).send(gunzipSync(item.input as string))
     } catch (error) {
       if (error instanceof DBError) {
         res.status(404).send(null)

@@ -14,7 +14,7 @@ export const useLocalStorage = <T>(
     if (options?.useInitial) return
     const json = localStorage.getItem(key)
     if (json) {
-      let obj: T = JSON.parse(json)
+      let obj = JSON.parse(json) as T
       if (options?.onGet != null) {
         obj = options.onGet(obj)
       }

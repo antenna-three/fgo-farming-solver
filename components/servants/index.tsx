@@ -1,15 +1,15 @@
-import React from 'react'
 import { Heading, List, ListItem, SimpleGrid, VStack } from '@chakra-ui/react'
-import { Link } from '../common/link'
-import { getClassName } from '../../lib/class-names'
-import { Title } from '../common/title'
 import { NextPage } from 'next'
-import { ServantIndexProps } from '../../pages/servants'
 import { useRouter } from 'next/router'
+import React from 'react'
 import { useTranslation } from 'react-i18next'
+import { Servant } from '../../interfaces/atlas-academy'
+import { getClassName } from '../../lib/class-names'
+import { ServantIndexProps } from '../../pages/servants'
 import { groupBy } from '../../utils/group-by'
 import { orderBy } from '../../utils/order-by'
-import { Servant } from '../../interfaces/atlas-academy'
+import { Link } from '../common/link'
+import { Title } from '../common/title'
 
 export const Index: NextPage<ServantIndexProps> = ({ servants }) => {
   const { locale } = useRouter()
@@ -43,7 +43,7 @@ export const Index: NextPage<ServantIndexProps> = ({ servants }) => {
                   <List spacing={1}>
                     {servants.map((servant) => (
                       <ListItem key={servant.id}>
-                        <Link href={'/servants/' + servant.id}>
+                        <Link href={`/servants/${servant.id}`}>
                           {servant.name}
                         </Link>
                       </ListItem>

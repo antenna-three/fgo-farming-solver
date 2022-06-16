@@ -1,6 +1,6 @@
 import { GetServerSideProps } from 'next'
-import { getDrops } from '../../lib/get-drops'
 import { Page } from '../../components/farming/result'
+import { getDrops } from '../../lib/get-drops'
 import { getLocalItems } from '../../lib/get-local-items'
 import { getLocalQuests } from '../../lib/get-local-quests'
 import { ResultProps } from './results/[id]'
@@ -25,7 +25,10 @@ export const getServerSideProps: GetServerSideProps<ResultProps> = async ({
   const props = {
     params: {
       items: Object.fromEntries(
-        _query.queries.split(',').map((p) => p.split(':'))
+        _query.queries
+          .split(',')
+          .map((p) => p.split(':', 2) as [string, string])
+          .map(([k, v]) => [k, Number(v)])
       ),
       quests: [],
       objective: '',

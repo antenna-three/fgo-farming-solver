@@ -5,7 +5,8 @@ import { Item } from '../../interfaces/atlas-academy'
 import { toApiItemId } from '../../lib/to-api-item-id'
 import { ItemLink } from '../common/item-link'
 
-const showPositive = (value: number) => (value > 0 ? value : '')
+const showPositive = (value?: number) =>
+  value == null || value < 0 ? '' : value
 const px = [2, 4, 6]
 
 export const ResultTable = ({
@@ -18,7 +19,7 @@ export const ResultTable = ({
 }: {
   itemGroup: [string, Item[]][]
   amounts: { [id: string]: number }
-  possession: { [id: string]: number }
+  possession: Record<string, number | undefined>
   deficiencies: { [id: string]: number }
   onChange: FormEventHandler
   onFocus: FormEventHandler

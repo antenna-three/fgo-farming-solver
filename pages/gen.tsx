@@ -7,7 +7,7 @@ export const getStaticProps: GetStaticProps = async () => {
     return { notFound: true }
   }
   const items = await getItems()
-  generateItemIds(items)
+  await generateItemIds(items)
   return { props: {} }
 }
 

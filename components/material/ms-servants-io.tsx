@@ -1,3 +1,4 @@
+import { Input } from '@chakra-ui/input'
 import {
   ChangeEventHandler,
   Dispatch,
@@ -5,16 +6,16 @@ import {
   useCallback,
   useMemo,
 } from 'react'
-import { useSelectOnFocus } from '../../hooks/use-select-on-focus'
-import { Servant } from '../../interfaces/atlas-academy'
-import { useMsServantId } from '../../hooks/use-ms-servant-id'
-import { range } from '../../utils/range'
-import { Input } from '@chakra-ui/input'
 import {
   ChaldeaState,
   createChaldeaState,
+  ServantState,
 } from '../../hooks/create-chaldea-state'
+import { useMsServantId } from '../../hooks/use-ms-servant-id'
+import { useSelectOnFocus } from '../../hooks/use-select-on-focus'
+import { Servant } from '../../interfaces/atlas-academy'
 import { orderBy } from '../../utils/order-by'
+import { range } from '../../utils/range'
 
 export const MsServantsIo = ({
   servants,
@@ -71,16 +72,21 @@ export const MsServantsIo = ({
       }
       let msServants_: number[][] = []
       try {
-        msServants_ = JSON.parse(value)
+        const parsed = JSON.parse(value) as unknown
+        if (
+          !(
+            Array.isArray(parsed) &&
+            parsed.every(
+              (servant): servant is number[] =>
+                Array.isArray(servant) &&
+                servant.every((status) => typeof status == 'number')
+            )
+          )
+        ) {
+          return
+        }
+        msServants_ = parsed
       } catch (e) {
-        return
-      }
-      if (
-        !(
-          Array.isArray(msServants_) &&
-          msServants_.every((item) => Array.isArray(item))
-        )
-      ) {
         return
       }
       setState((state) => ({
@@ -99,7 +105,7 @@ export const MsServantsIo = ({
                 ],
                 [] as { start: number; end: number }[]
               )
-              const newState = [
+              const newState: [number, ServantState] = [
                 id,
                 {
                   disabled: false,
@@ -115,7 +121,10 @@ export const MsServantsIo = ({
                     appendSkill:
                       id.toString() in state
                         ? state[id.toString()].targets.appendSkill
-                        : range(3).map(() => ({ start: 1, end: 10 })),
+                        : {
+                            disabled: false,
+                            ranges: range(3).map(() => ({ start: 1, end: 10 })),
+                          },
                   },
                 },
               ]
