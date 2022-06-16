@@ -1,15 +1,10 @@
-import React, { Dispatch, FormEventHandler, memo } from 'react'
-import { RangeSliderWithInput } from './range-slider-with-input'
 import { Checkbox, VStack } from '@chakra-ui/react'
-import { TargetKey } from '../../interfaces/atlas-academy'
-import { ServantState, TargetState } from '../../hooks/create-chaldea-state'
+import React, { Dispatch, FormEventHandler, memo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { ServantState, TargetState } from '../../hooks/create-chaldea-state'
+import { TargetKey } from '../../interfaces/atlas-academy'
+import { RangeSliderWithInput } from './range-slider-with-input'
 
-const labels: { [key: string]: string } = {
-  ascension: '再臨',
-  skill: 'スキル',
-  appendSkill: 'アペンドスキル',
-}
 const mins: { [key: string]: number } = {
   ascension: 0,
   skill: 1,

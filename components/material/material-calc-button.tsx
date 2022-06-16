@@ -1,11 +1,11 @@
-import { useRouter } from 'next/router'
-import { sumMaterials } from '../../lib/sum-materials'
 import { Button, ButtonProps } from '@chakra-ui/button'
-import { ComponentWithAs } from '@chakra-ui/system'
-import { ChaldeaState } from '../../hooks/create-chaldea-state'
 import { useBoolean } from '@chakra-ui/hooks'
-import { MaterialsForServants } from '../../lib/get-materials'
+import { ComponentWithAs } from '@chakra-ui/system'
+import { useRouter } from 'next/router'
 import { useTranslation } from 'react-i18next'
+import { ChaldeaState } from '../../hooks/create-chaldea-state'
+import { MaterialsForServants } from '../../lib/get-materials'
+import { sumMaterials } from '../../lib/sum-materials'
 
 export const CalcButton: ComponentWithAs<
   'button',
@@ -21,7 +21,7 @@ export const CalcButton: ComponentWithAs<
     setCalculating.on()
     const result = sumMaterials(state, materials)
     localStorage.setItem('material/result', JSON.stringify(result))
-    router.push('/material/result')
+    router.push('/material/result').catch((error) => console.error(error))
   }
   return (
     <Button onClick={calc} isLoading={calculating} {...props}>

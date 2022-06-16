@@ -1,3 +1,4 @@
+import { VStack } from '@chakra-ui/react'
 import React, {
   Dispatch,
   FormEvent,
@@ -6,10 +7,9 @@ import React, {
   useCallback,
   useMemo,
 } from 'react'
-import { VStack } from '@chakra-ui/react'
+import { ChaldeaState, ServantState } from '../../hooks/create-chaldea-state'
 import { TargetKey } from '../../interfaces/atlas-academy'
 import { entries } from '../../utils/typed-entries'
-import { ChaldeaState, ServantState } from '../../hooks/create-chaldea-state'
 import { TargetLevelSelect } from './target-level-select'
 
 const _ServantLevelSelect = ({
@@ -38,7 +38,7 @@ const _ServantLevelSelect = ({
   )
   const handleChangeDisabled = useCallback(
     (e: FormEvent<HTMLInputElement>) => {
-      const [id, target] = e.currentTarget.name.split('-')
+      const [, target] = e.currentTarget.name.split('-')
       const disabled = !e.currentTarget.checked
       setServantStateSafe((state) => ({
         ...state,

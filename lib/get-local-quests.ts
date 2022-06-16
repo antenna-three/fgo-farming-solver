@@ -6,7 +6,7 @@ type Quest = { id: string; section: string; area: string; name: string }
 
 export const getLocalQuests = async <Q extends Quest>(
   quests: Q[],
-  locale: string = 'ja'
+  locale = 'ja'
 ): Promise<Q[]> => {
   if (locale == 'ja') return quests
   const [translation, wars] = await Promise.all([

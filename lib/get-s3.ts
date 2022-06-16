@@ -1,9 +1,9 @@
 import {
-  S3Client,
   GetObjectCommand,
   PutObjectCommand,
+  S3Client,
 } from '@aws-sdk/client-s3'
-import { Readable, PassThrough } from 'stream'
+import { PassThrough, Readable } from 'stream'
 import { createGunzip, createGzip } from 'zlib'
 
 export const getGzip = async (region: string, bucket: string, key: string) => {
@@ -33,12 +33,12 @@ export const getGzip = async (region: string, bucket: string, key: string) => {
     const dst = new PassThrough()
     src.pipe(gunzip).pipe(dst)
 
-    let data: string = ''
+    let data = ''
     for await (const chunk of dst) {
       data += chunk
     }
 
-    return JSON.parse(data)
+    return JSON.parse(data) as Record<string, unknown>
   } catch (e) {
     if (e instanceof Error) {
       console.error(e, e.stack)

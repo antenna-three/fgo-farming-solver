@@ -77,15 +77,21 @@ export const migrateLocalInput = () => {
   if (json == null) {
     return
   }
-  const input: InputState = JSON.parse(json)
+  const input = JSON.parse(json) as InputState
   Object.entries(input).forEach(([key, value]) =>
     localStorage.setItem(key, JSON.stringify(value))
   )
   localStorage.removeItem('input')
 }
 
-const isInputState = (arg: any): arg is QueryInputState =>
-  typeof arg.items == 'string'
+const hasItems = (arg: unknown): arg is { items: unknown } =>
+  typeof arg == 'object' && arg != null && 'items' in arg
+
+const isInputState = (arg: unknown): arg is QueryInputState =>
+  hasItems(arg) && typeof arg.items == 'string'
+
+const hasId = (arg: unknown): arg is { id: unknown } =>
+  typeof arg == 'object' && arg != null && 'id' in arg
 
 export const Index: NextPage<FarmingIndexProps> = ({ items, quests }) => {
   useEffect(migrateLocalInput, [])
@@ -128,7 +134,9 @@ export const Index: NextPage<FarmingIndexProps> = ({ items, quests }) => {
       setItemCounts(
         (itemCounts) =>
           Object.fromEntries(
-            query.items.split(',').map((itemCount) => itemCount.split(':'))
+            query.items
+              .split(',')
+              .map((itemCount) => itemCount.split(':', 2) as [string, string])
           ) ?? itemCounts
       )
       setCheckedQuests((checkedQuests) => {
@@ -146,7 +154,9 @@ export const Index: NextPage<FarmingIndexProps> = ({ items, quests }) => {
       })
       setHalfDailyAp(query.ap_coefficients == '0:0.5')
       setDropMergeMethod(query.drop_merge_method ?? 'add')
-      router.replace('/farming', undefined, { scroll: false, shallow: true })
+      router
+        .replace('/farming', undefined, { scroll: false, shallow: true })
+        .catch((error) => console.error(error))
     }
   }, [
     questIds,
@@ -172,15 +182,25 @@ export const Index: NextPage<FarmingIndexProps> = ({ items, quests }) => {
       const params = new URLSearchParams({ ...query, fields: 'id' })
       const apiEndpoint =
         'https://pgdz683mk2.execute-api.ap-northeast-1.amazonaws.com/fgo-farming-solver'
-      const url = apiEndpoint + '?' + params
-      const { id } = await fetch(url).then((res) => res.json())
-      if (id == null) {
-        router.push('/500')
-      } else {
-        const url = `/farming/results/${id}`
-        localStorage.setItem('farming/results', url)
-        router.push(url)
+      const url = `${apiEndpoint}?${params.toString()}`
+      const result = await fetch(url).then((res) => res.json() as unknown)
+      const submit = async () => {
+        try {
+          if (hasId(result) && typeof result.id == 'string') {
+            const url = `/farming/results/${result.id}`
+            localStorage.setItem('farming/results', url)
+            await router.push(url)
+          } else {
+            await router.push('/500')
+          }
+        } catch (error) {
+          console.error(error)
+          setTimeout(() => {
+            void submit()
+          }, 100)
+        }
       }
+      void submit()
     },
     [
       checkedQuests,
@@ -234,7 +254,7 @@ export const Index: NextPage<FarmingIndexProps> = ({ items, quests }) => {
   ])
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={void handleSubmit}>
       <VStack alignItems="start" spacing={8}>
         <ObjectiveFieldset objective={objective} setObjective={setObjective} />
         <ItemFieldset

@@ -1,11 +1,10 @@
-import { Table, Thead, Tr, Th, Tbody, Td, TableProps } from '@chakra-ui/react'
+import { Table, TableProps, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react'
 import React, { Fragment } from 'react'
+import { useTranslation } from 'react-i18next'
 import { DropRate, DropRateKey, Item, Quest } from '../../interfaces/fgodrop'
+import { Localized } from '../../lib/get-local-items'
 import { ItemLink } from '../common/item-link'
 import { DropTd } from './drop-td'
-import { useTranslation } from 'react-i18next'
-import { useRouter } from 'next/router'
-import { Localized } from '../../lib/get-local-items'
 
 type DropRateStyle = 'ap' | 'rate'
 

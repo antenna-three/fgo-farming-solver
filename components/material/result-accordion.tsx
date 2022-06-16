@@ -21,7 +21,7 @@ export const ResultAccordion = ({
 }: {
   itemGroup: [string, [string, Item[]][]][]
   amounts: { [id: string]: number }
-  possession: { [id: string]: number }
+  possession: Record<string, number | undefined>
   deficiencies: { [id: string]: number }
   onChange: FormEventHandler
   onFocus: FormEventHandler
@@ -30,7 +30,7 @@ export const ResultAccordion = ({
   return (
     <Accordion
       defaultIndex={[
-        itemGroup.findIndex(([category, _]) => category == '強化素材'),
+        itemGroup.findIndex(([category]) => category == '強化素材'),
       ]}
       allowMultiple
     >

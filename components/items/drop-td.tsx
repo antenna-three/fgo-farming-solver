@@ -1,4 +1,4 @@
-import { chakra, Td } from '@chakra-ui/react'
+import { Td } from '@chakra-ui/react'
 import React from 'react'
 import { DropRateStyle } from './item'
 

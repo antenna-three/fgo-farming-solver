@@ -1,11 +1,12 @@
-import React from 'react'
-import type { AppProps } from 'next/app'
-import { SessionProvider } from 'next-auth/react'
 import { ChakraProvider } from '@chakra-ui/react'
-import { theme } from '../theme'
+import { Session } from 'next-auth'
+import { SessionProvider } from 'next-auth/react'
+import type { AppProps } from 'next/app'
+import React from 'react'
 import { Head } from '../components/common/head'
 import { Layout } from '../components/common/layout'
 import { useLanguage } from '../hooks/use-language'
+import { theme } from '../theme'
 
 const MyApp = ({
   Component,
@@ -15,7 +16,7 @@ const MyApp = ({
   return (
     <>
       <Head />
-      <SessionProvider session={session}>
+      <SessionProvider session={session as Session}>
         <ChakraProvider theme={theme}>
           <Layout>
             <Component {...pageProps} />

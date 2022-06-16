@@ -9,7 +9,11 @@ export const AuthButton = () => {
   if (session) {
     return (
       <Button
-        onClick={() => signOut()}
+        onClick={() => {
+          signOut().catch((error) => {
+            console.error(error)
+          })
+        }}
         size="lg"
         colorScheme="twitter"
         leftIcon={
@@ -27,7 +31,9 @@ export const AuthButton = () => {
   }
   return (
     <Button
-      onClick={() => signIn('twitter')}
+      onClick={() => {
+        signIn('twitter').catch((error) => console.error(error))
+      }}
       size="lg"
       colorScheme="twitter"
       leftIcon={<FaTwitter />}

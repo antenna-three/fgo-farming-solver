@@ -19,7 +19,7 @@ const pages: {
   LICENSE: { en: { path: 'LICENSE', title: 'License' } },
 }
 
-export const getStaticPaths: GetStaticPaths = async () => {
+export const getStaticPaths: GetStaticPaths = () => {
   const paths = Object.entries(pages).flatMap(([page, locales]) =>
     Object.keys(locales).map((locale) => ({
       params: { page },
@@ -32,7 +32,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   }
 }
 
-export const getStaticProps: GetStaticProps<PageProps> = async ({
+export const getStaticProps: GetStaticProps<PageProps> = ({
   params,
   locale,
 }) => {

@@ -1,8 +1,8 @@
 import { promises as fs } from 'fs'
-import path from 'path'
-import { readJson } from './read-json'
-import { getHash } from './get-hash'
 import got, { OptionsOfJSONResponseBody, OptionsOfTextResponseBody } from 'got'
+import path from 'path'
+import { getHash } from './get-hash'
+import { readJson } from './read-json'
 
 const option: OptionsOfTextResponseBody & OptionsOfJSONResponseBody = {
   timeout: { request: 60000 },
@@ -22,7 +22,7 @@ const fetchAndWriteJson = async (
     .catch((e) => console.error(e))
   fs.writeFile(hashPath, hash, 'utf-8').catch((e) => console.error(e))
   fs.writeFile(cachePath, res.body, 'utf-8').catch((e) => console.error(e))
-  return JSON.parse(res.body)
+  return JSON.parse(res.body) as Record<string, unknown>
 }
 
 export const fetchJsonWithCache = async (url: string) => {

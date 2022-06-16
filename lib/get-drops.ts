@@ -10,7 +10,7 @@ export type Drops = {
   drop_rates: DropRate[]
 }
 
-export const getDrops = async (): Promise<Drops> =>
-  process.env.NODE_ENV == 'development'
+export const getDrops = async () =>
+  (process.env.NODE_ENV == 'development'
     ? readJson(path.resolve('mocks', 'all.json'))
-    : getGzip(region, bucket, key)
+    : getGzip(region, bucket, key)) as Promise<Drops>

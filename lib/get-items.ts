@@ -1,6 +1,6 @@
-import { fetchJsonWithCache } from './cache'
 import { Item } from '../interfaces/atlas-academy'
 import { orderBy } from '../utils/order-by'
+import { fetchJsonWithCache } from './cache'
 import { getUrl } from './get-url'
 
 const largeCategories: { [locale: string]: string[] } = {
@@ -33,7 +33,7 @@ const getCategory = (item: Item, locale: string) => {
   return { largeCategory, category }
 }
 
-export const getItems = async (locale: string = 'ja') => {
+export const getItems = async (locale = 'ja') => {
   const url = getUrl('nice_item', locale)
   const targetTypes = ['qp', 'skillLvUp', 'tdLvUp']
   const items = fetchJsonWithCache(url).then((items: Item[]) =>

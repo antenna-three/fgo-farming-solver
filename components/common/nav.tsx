@@ -1,4 +1,3 @@
-import NextLink from 'next/link'
 import { HamburgerIcon } from '@chakra-ui/icons'
 import {
   IconButton,
@@ -9,10 +8,10 @@ import {
   MenuItem,
   MenuList,
 } from '@chakra-ui/react'
-import React from 'react'
+import NextLink from 'next/link'
 import { useRouter } from 'next/router'
+import React from 'react'
 import { LangMenuItem } from './lang-menu-item'
-import { AuthMenuItem } from './auth-menu-item'
 
 export const menuGroups = [
   {
