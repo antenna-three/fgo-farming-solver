@@ -184,23 +184,13 @@ export const Index: NextPage<FarmingIndexProps> = ({ items, quests }) => {
         'https://pgdz683mk2.execute-api.ap-northeast-1.amazonaws.com/fgo-farming-solver'
       const url = `${apiEndpoint}?${params.toString()}`
       const result = await fetch(url).then((res) => res.json() as unknown)
-      const submit = async () => {
-        try {
-          if (hasId(result) && typeof result.id == 'string') {
-            const url = `/farming/results/${result.id}`
-            localStorage.setItem('farming/results', url)
-            await router.push(url)
-          } else {
-            await router.push('/500')
-          }
-        } catch (error) {
-          console.error(error)
-          setTimeout(() => {
-            void submit()
-          }, 100)
-        }
+      if (hasId(result) && typeof result.id == 'string') {
+        const url = `/farming/results/${result.id}`
+        localStorage.setItem('farming/results', url)
+        await router.push(url)
+      } else {
+        await router.push('/500')
       }
-      void submit()
     },
     [
       checkedQuests,
@@ -254,7 +244,8 @@ export const Index: NextPage<FarmingIndexProps> = ({ items, quests }) => {
   ])
 
   return (
-    <form onSubmit={void handleSubmit}>
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
+    <form onSubmit={handleSubmit}>
       <VStack alignItems="start" spacing={8}>
         <ObjectiveFieldset objective={objective} setObjective={setObjective} />
         <ItemFieldset
