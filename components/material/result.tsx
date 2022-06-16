@@ -42,7 +42,10 @@ export const Result: NextPage<MaterialResultProps> = ({ items }) => {
   const onChange = useCallback(
     (event: FormEvent<HTMLInputElement>) => {
       const { name, valueAsNumber } = event.currentTarget
-      setPosession((state) => ({ ...state, [name]: valueAsNumber }))
+      setPosession((state) => ({
+        ...state,
+        [name]: isNaN(valueAsNumber) ? undefined : valueAsNumber,
+      }))
     },
     [setPosession]
   )
