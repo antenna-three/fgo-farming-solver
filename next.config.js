@@ -3,6 +3,9 @@
  */
 
 const nextConfig = {
+  experimental: {
+    reactRoot: 'concurrent',
+  },
   i18n: {
     defaultLocale: 'ja',
     locales: ['en', 'ja'],

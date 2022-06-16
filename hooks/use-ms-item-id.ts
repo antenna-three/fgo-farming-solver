@@ -3,9 +3,7 @@ import itemIds from '../data/item-ids.json'
 import { Item } from '../interfaces/atlas-academy'
 
 export const toMsItemId = (item: Item) => {
-  const msItemId = itemIds.find(
-    ({ aaItemId }) => (aaItemId = item.id)
-  )?.msItemId
+  const msItemId = itemIds.find(({ aaItemId }) => aaItemId == item.id)?.msItemId
   if (msItemId != null) {
     return msItemId
   }
