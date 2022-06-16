@@ -10,9 +10,9 @@ export const getServants = async (locale?: string) => {
     Object.values((obj as { SvtClass: string }).SvtClass)
   )
   const servantsUrl = getUrl('basic_servant', locale)
-  const servants = fetchJsonWithCache(servantsUrl)
+  const servants = fetchJsonWithCache<Servant[]>(servantsUrl)
     //exclude npc servants
-    .then((servants: Servant[]) =>
+    .then((servants) =>
       servants.filter(({ type }) => type == 'normal' || type == 'heroine')
     )
     //sort by class name as a primary key and by rarity as a secondary key

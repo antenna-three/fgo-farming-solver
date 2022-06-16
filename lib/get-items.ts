@@ -36,7 +36,7 @@ const getCategory = (item: Item, locale: string) => {
 export const getItems = async (locale = 'ja') => {
   const url = getUrl('nice_item', locale)
   const targetTypes = ['qp', 'skillLvUp', 'tdLvUp']
-  const items = fetchJsonWithCache(url).then((items: Item[]) =>
+  const items = fetchJsonWithCache<Item[]>(url).then((items) =>
     items
       .filter((item) => targetTypes.includes(item.type))
       .map((item) => ({ ...item, ...getCategory(item, locale) }))

@@ -9,7 +9,7 @@ const option: OptionsOfTextResponseBody & OptionsOfJSONResponseBody = {
   retry: { limit: 10 },
 }
 
-const fetchAndWriteJson = async (
+const fetchAndWriteJson = async <T>(
   url: string,
   hash: string,
   hashPath: string,
@@ -22,12 +22,12 @@ const fetchAndWriteJson = async (
     .catch((e) => console.error(e))
   fs.writeFile(hashPath, hash, 'utf-8').catch((e) => console.error(e))
   fs.writeFile(cachePath, res.body, 'utf-8').catch((e) => console.error(e))
-  return JSON.parse(res.body) as Record<string, unknown>
+  return JSON.parse(res.body) as T
 }
 
-export const fetchJsonWithCache = async (url: string) => {
+export const fetchJsonWithCache = async <T>(url: string) => {
   if (process.env.NODE_ENV == 'production' && process.env.CI != '1')
-    return got(url, option).json()
+    return got(url, option).json<T>()
   const cacheDir = path.resolve('.next/cache/atlasacademy')
   const stem = path.basename(url, '.json')
   const hashPath = path.resolve(cacheDir, `${stem}.hash.txt`)
@@ -37,9 +37,9 @@ export const fetchJsonWithCache = async (url: string) => {
     .readFile(hashPath, 'utf-8')
     .then((localHash) =>
       localHash == hash
-        ? readJson(cachePath)
-        : fetchAndWriteJson(url, hash, hashPath, cachePath)
+        ? readJson<T>(cachePath)
+        : fetchAndWriteJson<T>(url, hash, hashPath, cachePath)
     )
-    .catch(async () => fetchAndWriteJson(url, hash, hashPath, cachePath))
+    .catch(async () => fetchAndWriteJson<T>(url, hash, hashPath, cachePath))
   return obj
 }
