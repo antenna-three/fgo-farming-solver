@@ -2,6 +2,8 @@
  * @type {import('next').NextConfig}
  */
 
+const { withSentryConfig } = require('@sentry/nextjs');
+
 const nextConfig = {
   experimental: {
     reactRoot: 'concurrent',
@@ -30,4 +32,10 @@ const nextConfig = {
     ]
   },
 }
-module.exports = nextConfig
+
+const sentryWebpackPluginOptions = {
+  silent: true,
+};
+
+module.exports = withSentryConfig(nextConfig, sentryWebpackPluginOptions);
+
