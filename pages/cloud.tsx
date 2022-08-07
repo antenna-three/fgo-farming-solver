@@ -8,6 +8,7 @@ const keys = [
   'material',
   'material/result',
   'posession',
+  'input',
   'objective',
   'items',
   'quests',
