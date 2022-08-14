@@ -21,7 +21,7 @@ const keys = [
 
 const save = async (id: string) => {
   const body = JSON.stringify(
-    Object.fromEntries(keys.map((key) => [key, localStorage.getItem(key)]))
+    Object.fromEntries(keys.map((key) => [key, localStorage.getItem(key)]).filter(([,value]) => value))
   )
   await fetch(`/api/cloud/${id}`, { method: 'POST', body })
 }

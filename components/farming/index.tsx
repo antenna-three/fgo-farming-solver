@@ -7,7 +7,7 @@ import {
   FormControl,
   FormLabel,
   useBoolean,
-  VStack,
+  VStack
 } from '@chakra-ui/react'
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
@@ -15,7 +15,7 @@ import React, {
   ChangeEventHandler,
   useCallback,
   useEffect,
-  useMemo,
+  useMemo
 } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useCheckboxTree } from '../../hooks/use-checkbox-tree'
@@ -72,18 +72,19 @@ const inputToQuery = ({
   drop_merge_method: dropMergeMethod,
 })
 
-export const migrateLocalInput = () => {
+const migrateLocalInput = () => {
   const json = localStorage.getItem('input')
   if (json == null) {
     return
   }
-  const input = JSON.parse(json) as InputState
-  Object.entries(input).forEach(([key, value]) =>
-    localStorage.setItem(key, JSON.stringify(value))
-  )
+  const input = JSON.parse(json) as unknown
+  if (typeof input == 'object' && input != null) {
+    Object.entries(input).forEach(([key, value]) =>
+      localStorage.setItem(key, JSON.stringify(value))
+    )
+  }
   localStorage.removeItem('input')
 }
-
 const hasItems = (arg: unknown): arg is { items: unknown } =>
   typeof arg == 'object' && arg != null && 'items' in arg
 
