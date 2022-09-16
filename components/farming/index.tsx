@@ -74,7 +74,7 @@ const inputToQuery = ({
 
 const migrateLocalInput = () => {
   const json = localStorage.getItem('input')
-  if (json == null) {
+  if (json == null || json == 'undefined') {
     return
   }
   const input = JSON.parse(json) as unknown

@@ -37,7 +37,9 @@ const load = async (id: string) => {
     })
     .then((obj) => {
       keys.forEach((key) => {
-        localStorage.setItem(key, obj[key])
+        if (obj[key] != null) {
+          localStorage.setItem(key, obj[key])
+        }
       })
     })
 }
