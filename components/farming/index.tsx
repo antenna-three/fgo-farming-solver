@@ -7,7 +7,7 @@ import {
   FormControl,
   FormLabel,
   useBoolean,
-  VStack,
+  VStack
 } from '@chakra-ui/react'
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
@@ -15,7 +15,7 @@ import React, {
   ChangeEventHandler,
   useCallback,
   useEffect,
-  useMemo,
+  useMemo
 } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useCheckboxTree } from '../../hooks/use-checkbox-tree'
@@ -74,7 +74,7 @@ const inputToQuery = ({
 
 export const migrateLocalInput = () => {
   const json = localStorage.getItem('input')
-  if (json == null) {
+  if (json == null || json == 'undefined') {
     return
   }
   const input = JSON.parse(json) as InputState
