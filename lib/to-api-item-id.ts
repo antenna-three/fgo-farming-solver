@@ -15,17 +15,17 @@ export const toApiItemId = (item: Item) => {
   } else if (114 <= item.priority && item.priority < 121) {
     //秘石
     return '5' + (item.priority - 114).toString(36)
-  } else if (200 <= item.priority && item.priority < 212) {
+  } else if (200 <= item.priority && item.priority < 213) {
     //銅素材
     return '0' + (item.priority - 200).toString(36)
-  } else if (212 <= item.priority && item.priority < 222) {
+  } else if (213 <= item.priority && item.priority < 223) {
     //銀素材
-    return '1' + (item.priority - 212).toString(36)
-  } else if (222 <= item.priority && item.priority < 234) {
     return '1' + (item.priority - 213).toString(36)
-  } else if (234 <= item.priority && item.priority < 299) {
+  } else if (223 <= item.priority && item.priority < 236) {
+    return '1' + (item.priority - 214).toString(36)
+  } else if (236 <= item.priority && item.priority < 299) {
     //金素材
-    return '2' + (item.priority - 234).toString(36)
+    return '2' + (item.priority - 236).toString(36)
   } else if (300 <= item.priority && item.priority < 307) {
     //ピース
     return '6' + (item.priority - 300).toString(36)
