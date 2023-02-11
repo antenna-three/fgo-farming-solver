@@ -10,16 +10,11 @@ export const options: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    jwt: async ({ token, profile }) => {
-      if (profile) {
-        token.userId = profile.id
-      }
-      return Promise.resolve(token)
-    },
-    session: async ({ session, token }) => {
-      session.user.id = token.sub
-      return Promise.resolve(session)
-    },
+    jwt: ({ token, profile }) => ({ ...token, userId: profile?.id }),
+    session: ({ session, token }) => ({
+      ...session,
+      user: { ...session.user, id: token.sub },
+    }),
   },
 }
 
