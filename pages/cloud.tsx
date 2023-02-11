@@ -19,15 +19,15 @@ const keys = [
   'dropRateStyle',
 ]
 
-const save = async (id: string) => {
+const save = async () => {
   const body = JSON.stringify(
     Object.fromEntries(keys.map((key) => [key, localStorage.getItem(key)]).filter(([,value]) => value))
   )
-  await fetch(`/api/cloud/${id}`, { method: 'POST', body })
+  await fetch(`/api/cloud`, { method: 'POST', body, credentials: 'include' })
 }
 
-const load = async (id: string) => {
-  await fetch(`/api/cloud/${id}`, { method: 'GET' })
+const load = async () => {
+  await fetch(`/api/cloud`, { method: 'GET', credentials: 'include' })
     .then((res) => {
       if (res.status != 200) {
         throw 404
@@ -66,7 +66,7 @@ const Cloud = () => {
           <Button
             onClick={() => {
               setIsSaving(true)
-              save(session?.user?.id ?? '').catch((error) =>
+              save().catch((error) =>
                 console.error(error)
               )
               setIsSaved(true)
@@ -81,7 +81,7 @@ const Cloud = () => {
             onClick={() => {
               setIsLoading(true)
               try {
-                load(session?.user?.id ?? '').catch((error) =>
+                load().catch((error) =>
                   console.error(error)
                 )
                 setIsLoaded(true)
