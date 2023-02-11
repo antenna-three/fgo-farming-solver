@@ -21,6 +21,7 @@
         "cloud-description": "Saves input data to server tagged with your Twitter account.",
         "保存": "Save",
         "保存しました": "Saved",
+        "保存に失敗しました": "Failed to save",
         "読み込み": "Load",
         "読み込みました": "Loaded",
         "データがありません": "Not found"

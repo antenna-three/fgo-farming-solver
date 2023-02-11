@@ -1,7 +1,7 @@
-import NextAuth from 'next-auth'
+import NextAuth, { NextAuthOptions } from 'next-auth'
 import TwitterProvider from 'next-auth/providers/twitter'
 
-export default NextAuth({
+export const options: NextAuthOptions = {
   providers: [
     TwitterProvider({
       clientId: process.env.TWITTER_CLIENT_ID || '',
@@ -10,15 +10,12 @@ export default NextAuth({
     }),
   ],
   callbacks: {
-    jwt: async ({ token, profile }) => {
-      if (profile) {
-        token.userId = profile.id
-      }
-      return Promise.resolve(token)
-    },
-    session: async ({ session, token }) => {
-      session.user.id = token.sub
-      return Promise.resolve(session)
-    },
+    jwt: ({ token, profile }) => ({ ...token, userId: profile?.id }),
+    session: ({ session, token }) => ({
+      ...session,
+      user: { ...session.user, id: token.sub },
+    }),
   },
-})
+}
+
+export default NextAuth(options)
