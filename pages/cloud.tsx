@@ -21,29 +21,28 @@ const keys = [
 
 const save = async () => {
   const body = JSON.stringify(
-    Object.fromEntries(keys.map((key) => [key, localStorage.getItem(key)]).filter(([,value]) => value))
+    Object.fromEntries(
+      keys
+        .map((key) => [key, localStorage.getItem(key)])
+        .filter(([, value]) => value)
+    )
   )
   await fetch(`/api/cloud`, { method: 'POST', body, credentials: 'include' })
 }
 
 const load = async () => {
-  await fetch(`/api/cloud`, { method: 'GET', credentials: 'include' })
-    .then((res) => {
-      if (res.status != 200) {
-        throw 404
-      } else {
-        return res.json() as Promise<Record<string, string>>
-      }
-    })
-    .then((obj) => {
-      keys.forEach((key) => {
-        if (obj[key] != null) {
-          localStorage.setItem(key, obj[key])
-        } else {
-          localStorage.removeItem(key)
-        }
-      })
-    })
+  const res = await fetch(`/api/cloud`, { credentials: 'include' })
+  if (res.status != 200) {
+    throw new Error()
+  }
+  const obj = (await res.json()) as Record<string, string>
+  keys.forEach((key) => {
+    if (obj[key] != null) {
+      localStorage.setItem(key, obj[key])
+    } else {
+      localStorage.removeItem(key)
+    }
+  })
 }
 
 const Cloud = () => {
@@ -51,7 +50,7 @@ const Cloud = () => {
   const { data: session } = useSession()
   const [isSaving, setIsSaving] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [isSaved, setIsSaved] = useState(false)
+  const [isSaved, setIsSaved] = useState(false as boolean | 'failed')
   const [isLoaded, setIsLoaded] = useState(false as boolean | 'failed')
 
   return (
@@ -66,33 +65,32 @@ const Cloud = () => {
           <Button
             onClick={() => {
               setIsSaving(true)
-              save().catch((error) =>
-                console.error(error)
-              )
-              setIsSaved(true)
-              setIsSaving(false)
+              save()
+                .then(() => setIsSaved(true))
+                .catch(() => setIsSaved('failed'))
+                .finally(() => setIsSaving(false))
             }}
             isLoading={isSaving}
-            isDisabled={isSaved}
+            isDisabled={isSaved !== false}
           >
-            {t(isSaved ? '保存しました' : '保存')}
+            {t(
+              isSaved === false
+                ? '保存'
+                : isSaved === true
+                ? '保存しました'
+                : '保存に失敗しました'
+            )}
           </Button>
           <Button
             onClick={() => {
               setIsLoading(true)
-              try {
-                load().catch((error) =>
-                  console.error(error)
-                )
-                setIsLoaded(true)
-              } catch {
-                setIsLoaded('failed')
-              } finally {
-                setIsLoading(false)
-              }
+              load()
+                .then(() => setIsLoaded(true))
+                .catch(() => setIsLoaded('failed'))
+                .finally(() => setIsLoading(false))
             }}
             isLoading={isLoading}
-            isDisabled={isLoaded != false}
+            isDisabled={isLoaded !== false}
           >
             {t(
               isLoaded == false
