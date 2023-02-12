@@ -8,7 +8,7 @@ const region = 'ap-northeast-1'
 const tableName = 'fgo-farming-solver-input'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  const session = await getServerSession({ req, res }, options)
+  const session = await getServerSession(req, res, options)
   if (session == null) {
     res.status(401).send(null)
     return
