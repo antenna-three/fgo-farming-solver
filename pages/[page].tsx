@@ -15,8 +15,14 @@ const pages: {
     en: { path: 'docs/news.md', title: 'News' },
     ja: { path: 'docs/news-ja.md', title: 'お知らせ' },
   },
-  contributing: { en: { path: 'docs/contributing.md', title: 'Contributing' } },
-  LICENSE: { en: { path: 'LICENSE', title: 'License' } },
+  contributing: {
+    en: { path: 'docs/contributing.md', title: 'Contributing' },
+    ja: { path: 'docs/contributing.md', title: 'Contributing' },
+  },
+  LICENSE: {
+    en: { path: 'LICENSE', title: 'License' },
+    ja: { path: 'LICENSE', title: 'License' },
+  },
 }
 
 export const getStaticPaths: GetStaticPaths = () => {
