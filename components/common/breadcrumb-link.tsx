@@ -3,19 +3,17 @@ import {
   BreadcrumbLinkProps,
 } from '@chakra-ui/breadcrumb'
 import { ComponentWithAs } from '@chakra-ui/system'
-import Link from 'next/link'
+import NextLink from 'next/link'
 
 export const BreadcrumbLink: ComponentWithAs<'a', BreadcrumbLinkProps> = ({
-  href,
   children,
   ...props
 }) => (
-  <Link href={href || '#'} passHref>
-    <ChakraBreadcrumbLink
-      {...props}
-      color={props.isCurrentPage ? 'inherit' : 'blue.500'}
-    >
-      {children}
-    </ChakraBreadcrumbLink>
-  </Link>
+  <ChakraBreadcrumbLink
+    color={props.isCurrentPage ? 'inherit' : 'blue.500'}
+    {...props}
+    as={NextLink}
+  >
+    {children}
+  </ChakraBreadcrumbLink>
 )

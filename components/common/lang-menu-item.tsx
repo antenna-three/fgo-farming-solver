@@ -10,9 +10,7 @@ export const LangMenuItem = () => {
   const label = locale == 'en' ? '日本語' : 'English'
   return (
     <Link href={url} locale={nextLocale}>
-      <a>
-        <MenuItem>{label}</MenuItem>
-      </a>
+      <MenuItem>{label}</MenuItem>
     </Link>
   )
 }

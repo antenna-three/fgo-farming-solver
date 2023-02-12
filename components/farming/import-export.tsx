@@ -1,15 +1,19 @@
 import NextLink from 'next/link'
-import { Heading, HStack, Link, Text, VStack } from '@chakra-ui/react'
+import { Heading, HStack, Text, VStack } from '@chakra-ui/react'
 import React from 'react'
 import { BiWindows } from 'react-icons/bi'
 import { MdDevices, MdDownload, MdImportExport } from 'react-icons/md'
 import { useTranslation } from 'react-i18next'
 import { Title } from '../common/title'
 import { useRouter } from 'next/router'
+import { Link } from '../common/link'
 
 export const ImportExport = () => {
   const { t } = useTranslation('farming')
   const { locale, query } = useRouter()
+  const url = `/farming?${new URLSearchParams(
+    query as Record<string, string>
+  ).toString()}`
 
   return (
     <>
@@ -51,9 +55,9 @@ export const ImportExport = () => {
           </Heading>
           <Text>
             {locale == 'en' && 'Return to the form from '}
-            <NextLink href={{ pathname: '/farming', query: query }} passHref>
-              <Link>{locale == 'en' ? 'here.' : 'こちら'}</Link>
-            </NextLink>
+            <Link as={NextLink} href={url}>
+              {locale == 'en' ? 'here.' : 'こちら'}
+            </Link>
             {locale != 'en' && 'から入力フォームへ戻ってください。'}
           </Text>
         </VStack>
