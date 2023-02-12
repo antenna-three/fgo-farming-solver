@@ -14,6 +14,10 @@
     "prettier"
   ],
   "rules": {
-    "@next/next/no-document-import-in-page": "off"
+    "@next/next/no-document-import-in-page": "off",
+    "@typescript-eslint/no-misused-promises": [
+      "error",
+      {"checksVoidReturn": {"attributes": false}}
+    ]
   }
 }
