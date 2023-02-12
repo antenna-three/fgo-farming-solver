@@ -11,9 +11,9 @@ export const useQuery = <
   const [state, setState] = useState(initialState)
 
   const setQuery = useCallback(
-    (newState: ParsedUrlQuery) => {
+    async (newState: ParsedUrlQuery) => {
       setState(newState)
-      router.replace({ query: newState }, undefined, {
+      await router.replace({ query: newState }, undefined, {
         scroll: false,
         shallow: true,
       })

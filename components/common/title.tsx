@@ -4,9 +4,16 @@ import { Head } from './head'
 
 export const Title: ComponentWithAs<
   'h1',
-  Omit<HeadingProps, 'children'> & { children: string | string[] }
+  Omit<HeadingProps, 'children'> & {
+    children: string | string[] | null | undefined
+  }
 > = ({ children, ...props }) => {
-  const title = typeof children == 'string' ? children : children.join()
+  const title =
+    children == null
+      ? undefined
+      : typeof children == 'string'
+      ? children
+      : children.join()
   return (
     <>
       <Head title={title} />
