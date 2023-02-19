@@ -56,11 +56,7 @@ export const Nav = () => {
             <MenuGroup title={title} key={title}>
               {items.map(({ href, label }) => (
                 <NextLink href={href} key={href}>
-                  <a>
-                    <MenuItem>
-                      {label[(locale ?? 'ja') as 'en' | 'ja']}
-                    </MenuItem>
-                  </a>
+                  <MenuItem>{label[(locale ?? 'ja') as 'en' | 'ja']}</MenuItem>
                 </NextLink>
               ))}
             </MenuGroup>

@@ -7,7 +7,7 @@ import {
   FormControl,
   FormLabel,
   useBoolean,
-  VStack
+  VStack,
 } from '@chakra-ui/react'
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
@@ -15,7 +15,7 @@ import React, {
   ChangeEventHandler,
   useCallback,
   useEffect,
-  useMemo
+  useMemo,
 } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useCheckboxTree } from '../../hooks/use-checkbox-tree'
@@ -159,15 +159,8 @@ export const Index: NextPage<FarmingIndexProps> = ({ items, quests }) => {
         .replace('/farming', undefined, { scroll: false, shallow: true })
         .catch((error) => console.error(error))
     }
-  }, [
-    questIds,
-    router,
-    setCheckedQuests,
-    setDropMergeMethod,
-    setHalfDailyAp,
-    setItemCounts,
-    setObjective,
-  ])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const handleSubmit = useCallback(
     async (event: React.FormEvent<HTMLFormElement>) => {

@@ -10,7 +10,6 @@ export const options: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    jwt: ({ token, profile }) => ({ ...token, userId: profile?.id }),
     session: ({ session, token }) => ({
       ...session,
       user: { ...session.user, id: token.sub },

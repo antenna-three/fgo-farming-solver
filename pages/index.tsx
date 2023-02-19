@@ -7,13 +7,13 @@ import {
   Heading,
   SimpleGrid,
   Text,
+  theme,
   VStack,
 } from '@chakra-ui/react'
 import { motion, TargetAndTransition, Transition } from 'framer-motion'
 import React, { useEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { ExternalLink, Link } from '../components/common/link'
-import { theme } from '../theme'
 
 const MotionSpan = motion(chakra.span)
 

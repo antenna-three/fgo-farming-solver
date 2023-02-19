@@ -1,5 +1,9 @@
 # News
 
+## Added Web Font - 2023/02/13
+
+The font differed depending on the environment, but now a web font (Noto Sans JP) is applied.
+
 ## Fixed Problem in ID Translation - 2022/06/06
 
 Material calculator, farming solver and material simulator use different IDs for items, so they need to be translated, which is performed by simple addtion/subtraction. However, after new material is added and the items' attributes are changed, id translation failed and items are displayed in wrong names. In new releases, items ID translation is performed by statically saved data.

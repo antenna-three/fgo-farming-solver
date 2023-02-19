@@ -18,7 +18,7 @@ export const useFarmingResult = (
       )
       .slice(0, 3)
       .map(({ id, name }) => t('required', { name, count: paramItems[id] }))
-      .join(t('comma'))
+      .join(t('comma') ?? ', ')
     const displayedLaps = quests
       .slice()
       .sort(orderBy(({ lap }) => lap, 'desc'))

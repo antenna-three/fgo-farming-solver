@@ -11,15 +11,7 @@ export const Logo = () => {
     <Box>
       <Link href="/" aria-label="Go to top">
         <HStack align="center">
-          <Flex flex={0} align="center">
-            <Image
-              src="/hermes.png"
-              height={32}
-              width={32}
-              alt="site logo"
-              layout="fixed"
-            />
-          </Flex>
+          <Image src="/hermes.png" width={32} height={32} alt="site logo" />
           <Heading as="h1">
             <Flex flexWrap="wrap">
               <Box as="span">FGO{space}</Box>

@@ -1,25 +1,21 @@
 // <reference types="node"/>
-import NextLink, { LinkProps as NextLinkProps } from 'next/link'
+import NextLink from 'next/link'
 import {
   ComponentWithAs,
   Link as ChakraLink,
-  LinkProps as ChakraLinkProps,
+  LinkProps,
 } from '@chakra-ui/react'
 import React from 'react'
 
-export type LinkProps = Omit<ChakraLinkProps, 'href'> & NextLinkProps
-
 export const Link: ComponentWithAs<'a', LinkProps> = ({
-  href,
-  locale,
   children,
   ...props
 }) => (
-  <NextLink href={href} locale={locale} passHref>
-    <ChakraLink {...props}>{children}</ChakraLink>
-  </NextLink>
+  <ChakraLink {...props} as={NextLink}>
+    {children}
+  </ChakraLink>
 )
 
-export const ExternalLink: ComponentWithAs<'a', ChakraLinkProps> = (props) => (
+export const ExternalLink: ComponentWithAs<'a', LinkProps> = (props) => (
   <ChakraLink isExternal {...props} />
 )

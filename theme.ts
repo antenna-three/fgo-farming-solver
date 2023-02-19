@@ -1,4 +1,12 @@
 import { extendTheme } from '@chakra-ui/react'
+import { Noto_Sans_JP } from '@next/font/google'
+
+const font = Noto_Sans_JP({
+  weight: ['400', '700'],
+  preload: false,
+})
+
+const fontFamily = `${font.style.fontFamily}, "Hiragino Kaku Gothic ProN", "Hiragino Sans", sans-serif`
 
 export const theme = extendTheme({
   colors: {
@@ -44,7 +52,7 @@ export const theme = extendTheme({
     },
   },
   fonts: {
-    heading: '"Hiragino Kaku Gothic ProN", "Hiragino Sans", sans-serif',
-    body: '"Hiragino Kaku Gothic ProN", "Hiragino Sans", sans-serif',
+    heading: fontFamily,
+    body: fontFamily,
   },
 })
