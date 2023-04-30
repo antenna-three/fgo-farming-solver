@@ -15,6 +15,7 @@ export const classNames: { [locale: string]: { [className: string]: string } } =
       moonCancer: 'ムーンキャンサー',
       foreigner: 'フォーリナー',
       pretender: 'プリテンダー',
+      beast: 'ビースト',
     },
     en: {
       saber: 'Saber',
@@ -31,6 +32,7 @@ export const classNames: { [locale: string]: { [className: string]: string } } =
       moonCancer: 'Moon Cancer',
       foreigner: 'Foreigner',
       pretender: 'Pretender',
+      beast: 'beast',
     },
   }
 
