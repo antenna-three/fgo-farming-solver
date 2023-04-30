@@ -1,14 +1,10 @@
 import { useMemo } from 'react'
-import { jpClassNames } from '../constants/jp-class-names'
 import { Servant } from '../interfaces/atlas-academy'
 import { Node } from '../components/common/checkbox-tree'
 import { groupBy } from '../utils/group-by'
 import { getClassName } from '../lib/class-names'
 
-export const useServantTree = (
-  servants: Servant[],
-  locale: string = 'ja'
-): Node[] =>
+export const useServantTree = (servants: Servant[], locale = 'ja'): Node[] =>
   useMemo(() => {
     return [
       {
@@ -26,7 +22,7 @@ export const useServantTree = (
 export const getClassNode = (
   className: string,
   servants: Servant[],
-  locale: string = 'ja'
+  locale = 'ja'
 ): Node => ({
   label: getClassName(className, locale),
   value: className,
