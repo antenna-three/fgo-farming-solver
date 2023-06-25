@@ -49,7 +49,7 @@ export const Page: NextPage<ItemProps> = ({ id, items, quests, dropRates }) => {
   )
   const dropGroups = groupBy(sortedDropRates, ({ quest_id }) => quest_id)
   const idToDropRate = (quest_id: string) =>
-    dropGroups[quest_id].find((row) => row.item_id == id)
+    dropGroups[quest_id]?.find((row) => row.item_id == id)
   const getDropRate = (quest_id: string) => {
     const dropRate = idToDropRate(quest_id)
     return dropRate == null ? -1 : dropRate[`drop_rate_${dropRateKey}`]

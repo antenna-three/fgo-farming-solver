@@ -16,17 +16,17 @@ export const toMsItemId = (item: Item) => {
   } else if (114 <= item.priority && item.priority < 121) {
     //秘石
     return item.priority - 114 + 220
-  } else if (200 <= item.priority && item.priority < 213) {
+  } else if (200 <= item.priority && item.priority < 214) {
     //銅素材
     return item.priority - 200 + 300
-  } else if (213 <= item.priority && item.priority < 223) {
+  } else if (214 <= item.priority && item.priority < 223) {
     //銀素材
-    return item.priority - 213 + 400
-  } else if (223 <= item.priority && item.priority < 236) {
     return item.priority - 214 + 400
-  } else if (236 <= item.priority && item.priority < 299) {
+  } else if (224 <= item.priority && item.priority < 238) {
+    return item.priority - 215 + 400
+  } else if (238 <= item.priority && item.priority < 299) {
     //金素材
-    return item.priority - 236 + 500
+    return item.priority - 238 + 500
   } else if (300 <= item.priority && item.priority < 307) {
     //ピース
     return item.priority - 300 + 100
