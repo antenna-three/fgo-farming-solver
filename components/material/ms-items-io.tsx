@@ -18,8 +18,8 @@ export const MsItemsIo = ({
     () =>
       Object.fromEntries(
         Object.entries(posession)
-          .filter(([id]) => getMsItemId(id) != null)
-          .map(([id, amount]) => [getMsItemId(id), amount])
+          .map(([id, amount]) => [getMsItemId(parseInt(id)), amount])
+          .filter((pair): pair is [number, number] => pair[0] != null)
       ),
     [getMsItemId, posession]
   )
@@ -51,10 +51,9 @@ export const MsItemsIo = ({
     }
     setPosession(
       Object.fromEntries(
-        Object.entries(msItems).map(([msId, amount]) => [
-          getItemId(msId),
-          amount,
-        ])
+        Object.entries(msItems)
+          .map(([msId, amount]) => [getItemId(parseInt(msId)), amount])
+          .filter((pair): pair is [number, number] => pair[0] != null)
       )
     )
   }

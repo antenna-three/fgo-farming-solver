@@ -12,8 +12,12 @@ export const getLocalItems = async <I extends Item>(
   locale = 'ja'
 ): Promise<Localized<I>[]> => {
   const atlasItems = await getItems(locale)
+  const atlasItemMap = atlasItems.reduce(
+    (map, item) => map.set(toApiItemId(item, atlasItems), item),
+    new Map<string, (typeof atlasItems)[number]>()
+  )
   return items.map(({ id, category, name, ...rest }) => {
-    const atlasItem = atlasItems.find((item) => toApiItemId(item) == id)
+    const atlasItem = atlasItemMap.get(id)
     return {
       id,
       category: atlasItem?.category ?? category,

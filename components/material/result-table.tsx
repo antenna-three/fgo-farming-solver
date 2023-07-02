@@ -51,7 +51,7 @@ export const ResultTable = ({
             {items.map((item) => (
               <Tr key={item.id}>
                 <Td px={px} py={3}>
-                  <ItemLink name={item.name} id={toApiItemId(item)} />
+                  <ItemLink name={item.name} id={toApiItemId(item, items)} />
                 </Td>
                 <Td px={px} py={3} isNumeric>
                   {amounts[item.id.toString()]}

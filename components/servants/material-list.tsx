@@ -13,6 +13,9 @@ import { toApiItemId } from '../../lib/to-api-item-id'
 import { ItemLink } from '../common/item-link'
 
 export const MaterialList = ({ materials }: { materials: Materials }) => {
+  const items = Object.values(materials).flatMap(({ items }) =>
+    items.map(({ item }) => item)
+  )
   return (
     <VStack align="stretch" spacing={8}>
       {Object.entries(materials).map(([lv, materials]) => (
@@ -24,7 +27,7 @@ export const MaterialList = ({ materials }: { materials: Materials }) => {
             {materials.items.map(({ item, amount }) => (
               <Stat key={item.id} mx={2}>
                 <StatLabel>
-                  <ItemLink id={toApiItemId(item)} name={item.name} />
+                  <ItemLink id={toApiItemId(item, items)} name={item.name} />
                 </StatLabel>
                 <StatNumber>{amount}</StatNumber>
               </Stat>

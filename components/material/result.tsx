@@ -62,10 +62,10 @@ export const Result: NextPage<MaterialResultProps> = ({ items }) => {
         .filter(
           (item) =>
             deficiencies[item.id] > 0 &&
-            toApiItemId(item) &&
+            toApiItemId(item, items) &&
             targetCategories.includes(item.largeCategory)
         )
-        .map((item) => `${toApiItemId(item)}:${deficiencies[item.id]}`)
+        .map((item) => `${toApiItemId(item, items)}:${deficiencies[item.id]}`)
         .join(',')
       router
         .push({
@@ -74,7 +74,7 @@ export const Result: NextPage<MaterialResultProps> = ({ items }) => {
         })
         .catch((error) => console.error(error))
     },
-    [requiredItems, router, deficiencies, targetCategories]
+    [requiredItems, router, deficiencies, items, targetCategories]
   )
   const sufficientItems = useMemo(
     () => requiredItems.filter(({ id }) => deficiencies[id] > 0),

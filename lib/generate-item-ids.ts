@@ -8,8 +8,8 @@ export const generateItemIds = async (items: Item[]) => {
   const itemIds = items
     .map((item) => ({
       aaItemId: item.id,
-      msItemId: toMsItemId(item),
-      apiItemId: toApiItemId(item),
+      msItemId: toMsItemId(item, items),
+      apiItemId: toApiItemId(item, items),
     }))
     .filter(({ msItemId, apiItemId }) => msItemId || apiItemId)
   const json = JSON.stringify(itemIds, null, 4)
