@@ -1,37 +1,69 @@
-import itemIds from '../data/item-ids.json'
 import { Item } from '../interfaces/atlas-academy'
 
-export const toApiItemId = (item: Item) => {
-  const apiItemId = itemIds.find((ids) => ids.aaItemId == item.id)?.apiItemId
-  if (apiItemId != null) {
-    return apiItemId
+function getAscensionItemIntercept(item: Item): number | undefined {
+  switch (item.background) {
+    case 'silver':
+      return 6
+    case 'gold':
+      return 7
+    default:
+      return undefined
   }
-  if (100 <= item.priority && item.priority < 107) {
-    //輝石
-    return '3' + (item.priority - 100).toString(36)
-  } else if (107 <= item.priority && item.priority < 114) {
-    //魔石
-    return '4' + (item.priority - 107).toString(36)
-  } else if (114 <= item.priority && item.priority < 121) {
-    //秘石
-    return '5' + (item.priority - 114).toString(36)
-  } else if (200 <= item.priority && item.priority < 214) {
-    //銅素材
-    return '0' + (item.priority - 200).toString(36)
-  } else if (214 <= item.priority && item.priority < 223) {
-    //銀素材
-    return '1' + (item.priority - 214).toString(36)
-  } else if (224 <= item.priority && item.priority < 238) {
-    return '1' + (item.priority - 215).toString(36)
-  } else if (238 <= item.priority && item.priority < 299) {
-    //金素材
-    return '2' + (item.priority - 238).toString(36)
-  } else if (300 <= item.priority && item.priority < 307) {
-    //ピース
-    return '6' + (item.priority - 300).toString(36)
-  } else if (307 <= item.priority && item.priority < 314) {
-    //モニュメント
-    return '7' + (item.priority - 307).toString(36)
+}
+
+function getSkillItemIntercept(item: Item): number | undefined {
+  switch (item.background) {
+    case 'bronze':
+      return 3
+    case 'silver':
+      return 4
+    case 'gold':
+      return 5
+    default:
+      return undefined
   }
-  return ''
+}
+
+function getGenericItemIntercept(item: Item): number | undefined {
+  switch (item.background) {
+    case 'bronze':
+      return 0
+    case 'silver':
+      return 1
+    case 'gold':
+      return 2
+    default:
+      return undefined
+  }
+}
+
+function getItemIntercept(item: Item): number | undefined {
+  switch (Math.floor(item.priority / 100)) {
+    case 1:
+      return getSkillItemIntercept(item)
+    case 2:
+      return getGenericItemIntercept(item)
+    case 3:
+      return getAscensionItemIntercept(item)
+    default:
+      return undefined
+  }
+}
+
+function getItemIndex(item: Item, items: Item[]): number {
+  return items
+    .filter(
+      ({ background, priority }) =>
+        background === item.background &&
+        Math.floor(priority / 100) === Math.floor(item.priority / 100)
+    )
+    .findIndex(({ id }) => id === item.id)
+}
+
+export function toApiItemId(item: Item, items: Item[]): string {
+  const intercept = getItemIntercept(item)
+  if (intercept == null) {
+    return ''
+  }
+  return `${intercept}${getItemIndex(item, items).toString(36)}`
 }
