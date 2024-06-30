@@ -30,7 +30,8 @@ const noToMsIdMap = new Map([
   [300, 296],
   [301, 295],
   [302, 297],
-  [334, 328]
+  [334, 328],
+  [413, 405]
 ])
 
 function interpolate(map: Map<number, number>, index: number): number {
