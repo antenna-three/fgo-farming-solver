@@ -2,9 +2,10 @@ import { GetStaticPaths, GetStaticProps } from 'next'
 import { getNiceServants } from '../../lib/get-nice-servants'
 import { getServants } from '../../lib/get-servants'
 import { Page } from '../../components/servants/servant'
-import { NiceServant } from '../../interfaces/atlas-academy'
+import { Item, NiceServant } from '../../interfaces/atlas-academy'
+import { getItems } from '../../lib/get-items'
 
-export type ServantProps = { servant: NiceServant }
+export type ServantProps = { servant: NiceServant; items: Item[] }
 
 export const getStaticPaths: GetStaticPaths = async ({ locales = ['ja'] }) => {
   const servants = await getServants()
@@ -21,10 +22,13 @@ export const getStaticProps: GetStaticProps<ServantProps> = async ({
   params,
   locale,
 }) => {
-  const servant = await getNiceServants(locale).then((servants) =>
-    servants.find(({ id }) => id.toString() == params?.id)
-  )
-  return servant == null ? { notFound: true } : { props: { servant } }
+  const [servant, items] = await Promise.all([
+    getNiceServants(locale).then((servants) =>
+      servants.find(({ id }) => id.toString() == params?.id)
+    ),
+    getItems(locale),
+  ])
+  return servant == null ? { notFound: true } : { props: { servant, items } }
 }
 
 export default Page
