@@ -8,14 +8,17 @@ import {
   VStack,
 } from '@chakra-ui/react'
 import React from 'react'
-import type { Materials } from '../../interfaces/atlas-academy'
+import type { Item, Materials } from '../../interfaces/atlas-academy'
 import { toApiItemId } from '../../lib/to-api-item-id'
 import { ItemLink } from '../common/item-link'
 
-export const MaterialList = ({ materials }: { materials: Materials }) => {
-  const items = Object.values(materials).flatMap(({ items }) =>
-    items.map(({ item }) => item)
-  )
+export const MaterialList = ({
+  materials,
+  items,
+}: {
+  materials: Materials
+  items: Item[]
+}) => {
   return (
     <VStack align="stretch" spacing={8}>
       {Object.entries(materials).map(([lv, materials]) => (
