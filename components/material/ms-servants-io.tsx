@@ -11,7 +11,7 @@ import {
   createChaldeaState,
   ServantState,
 } from '../../hooks/create-chaldea-state'
-import { useMsServantId } from '../../hooks/use-ms-servant-id'
+import { noToMsId, msIdToNo } from '../../lib/to-ms-servant-id'
 import { useSelectOnFocus } from '../../hooks/use-select-on-focus'
 import { Servant } from '../../interfaces/atlas-academy'
 import { orderBy } from '../../utils/order-by'
@@ -26,7 +26,6 @@ export const MsServantsIo = ({
   state: ChaldeaState
   setState: Dispatch<SetStateAction<ChaldeaState>>
 }) => {
-  const { getId, getMsId } = useMsServantId(servants)
   const initialState = createChaldeaState([
     'all',
     ...servants.map(({ id }) => id.toString()),
@@ -39,7 +38,7 @@ export const MsServantsIo = ({
             !isNaN(Number(id)) && !disabled && targets
         )
         .map(([id, { targets }]) => [
-          getMsId(parseInt(id)),
+          noToMsId(parseInt(id)),
           targets.ascension.ranges[0].start,
           targets.ascension.ranges[0].end,
           ...targets.skill.ranges.flatMap(({ start, end }) => [start, end]),
@@ -48,7 +47,7 @@ export const MsServantsIo = ({
           0,
         ])
         .sort(orderBy(([id]) => id)),
-    [getMsId, state]
+    [state]
   )
   const strMsServants = useMemo(
     () => (msServants.length == 0 ? '' : JSON.stringify(msServants)),
@@ -93,9 +92,9 @@ export const MsServantsIo = ({
         ...initialState,
         ...Object.fromEntries(
           msServants_
-            .filter((msServant: number[]) => getId(msServant[0]) != null)
+            .filter((msServant: number[]) => msIdToNo(msServant[0]) != null)
             .map((msServant: number[]) => {
-              const id = getId(msServant[0])
+              const id = msIdToNo(msServant[0])
               const ascentionRanges = { start: msServant[1], end: msServant[2] }
               const msSkill = msServant.slice(3, 9)
               const skillRanges = range(3).reduce(
@@ -133,7 +132,7 @@ export const MsServantsIo = ({
         ),
       }))
     },
-    [getId, initialState, setState]
+    [initialState, setState]
   )
   const selectOnFocus = useSelectOnFocus()
 
