@@ -38,7 +38,9 @@ export const MsServantsIo = ({
             !isNaN(Number(id)) && !disabled && targets
         )
         .map(([id, { targets }]) => [
-          noToMsId(parseInt(id)),
+          noToMsId(
+            servants.find((s) => s.id.toString() == id)?.collectionNo ?? 0
+          ),
           targets.ascension.ranges[0].start,
           targets.ascension.ranges[0].end,
           ...targets.skill.ranges.flatMap(({ start, end }) => [start, end]),
@@ -47,7 +49,7 @@ export const MsServantsIo = ({
           0,
         ])
         .sort(orderBy(([id]) => id)),
-    [state]
+    [servants, state]
   )
   const strMsServants = useMemo(
     () => (msServants.length == 0 ? '' : JSON.stringify(msServants)),
@@ -94,7 +96,8 @@ export const MsServantsIo = ({
           msServants_
             .filter((msServant: number[]) => msIdToNo(msServant[0]) != null)
             .map((msServant: number[]) => {
-              const id = msIdToNo(msServant[0])
+              const no = msIdToNo(msServant[0])
+              const id = servants.find((s) => s.collectionNo == no)?.id ?? 0
               const ascentionRanges = { start: msServant[1], end: msServant[2] }
               const msSkill = msServant.slice(3, 9)
               const skillRanges = range(3).reduce(
@@ -132,7 +135,7 @@ export const MsServantsIo = ({
         ),
       }))
     },
-    [initialState, setState]
+    [initialState, servants, setState]
   )
   const selectOnFocus = useSelectOnFocus()
 
