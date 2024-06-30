@@ -1,9 +1,7 @@
-import got from 'got'
 import { origin, region } from '../constants/atlasacademy'
+import { fetchJson } from './fetch-json'
 
-export const getHash = async (): Promise<string> =>
-  got(`${origin}/info`)
-    .json()
-    .then(
-      (info) => (info as { [region: string]: { hash: string } })[region].hash
-    )
+export async function getHash(): Promise<string> {
+  const info = await fetchJson<Record<string, { hash: string }>>(`${origin}/info`)
+  return info[region].hash
+}
