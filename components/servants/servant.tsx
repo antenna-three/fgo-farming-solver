@@ -20,7 +20,7 @@ import { useTranslation } from 'react-i18next'
 
 const keys: TargetKey[] = ['ascension', 'skill', 'appendSkill']
 
-export const Page: NextPage<ServantProps> = ({ servant }) => {
+export const Page: NextPage<ServantProps> = ({ servant, items }) => {
   const router = useRouter()
   const { t } = useTranslation(['servants', 'common'])
   if (router.isFallback) {
@@ -51,7 +51,10 @@ export const Page: NextPage<ServantProps> = ({ servant }) => {
         {keys.map((key) => (
           <VStack align="stretch" key={key} spacing={4}>
             <Heading size="lg">{t(key, { ns: 'common' })}</Heading>
-            <MaterialList materials={servant[`${key}Materials`]} />
+            <MaterialList
+              materials={servant[`${key}Materials`]}
+              items={items}
+            />
           </VStack>
         ))}
       </SimpleGrid>
