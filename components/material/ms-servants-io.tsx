@@ -44,9 +44,12 @@ export const MsServantsIo = ({
           targets.ascension.ranges[0].start,
           targets.ascension.ranges[0].end,
           ...targets.skill.ranges.flatMap(({ start, end }) => [start, end]),
-          //...targets.appendSkill.ranges.flatMap(({start, end}) => [start, end]),
           1,
           0,
+          ...targets.appendSkill.ranges.flatMap(({ start, end }) => [
+            start,
+            end,
+          ]),
         ])
         .sort(orderBy(([id]) => id)),
     [servants, state]
@@ -90,7 +93,7 @@ export const MsServantsIo = ({
       } catch (e) {
         return
       }
-      setState((state) => ({
+      setState(() => ({
         ...initialState,
         ...Object.fromEntries(
           msServants_
@@ -99,14 +102,16 @@ export const MsServantsIo = ({
               const no = msIdToNo(msServant[0])
               const id = servants.find((s) => s.collectionNo == no)?.id ?? 0
               const ascentionRanges = { start: msServant[1], end: msServant[2] }
+              function toSkillRanges(array: number[]) {
+                return range(3).map((i) => ({
+                  start: array[i * 2],
+                  end: array[i * 2 + 1],
+                }))
+              }
               const msSkill = msServant.slice(3, 9)
-              const skillRanges = range(3).reduce(
-                (acc, i) => [
-                  ...acc,
-                  { start: msSkill[i * 2], end: msSkill[i * 2 + 1] },
-                ],
-                [] as { start: number; end: number }[]
-              )
+              const skillRanges = toSkillRanges(msSkill)
+              const msAppendSkill = msServant.slice(11, 17)
+              const appendSkillRanges = toSkillRanges(msAppendSkill)
               const newState: [number, ServantState] = [
                 id,
                 {
@@ -117,16 +122,17 @@ export const MsServantsIo = ({
                       ranges: [ascentionRanges],
                     },
                     skill: {
-                      disabled: false,
+                      disabled: skillRanges.every(
+                        ({ start, end }) => start === end
+                      ),
                       ranges: skillRanges,
                     },
-                    appendSkill:
-                      id.toString() in state
-                        ? state[id.toString()].targets.appendSkill
-                        : {
-                            disabled: false,
-                            ranges: range(3).map(() => ({ start: 1, end: 10 })),
-                          },
+                    appendSkill: {
+                      disabled: appendSkillRanges.every(
+                        ({ start, end }) => start === end
+                      ),
+                      ranges: appendSkillRanges,
+                    },
                   },
                 },
               ]
